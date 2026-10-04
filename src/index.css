@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --forest: #173b32;
+  --forest-2: #245447;
+  --moss: #68a691;
+  --mint: #d9eee4;
+  --cream: #f7f3e8;
+  --paper: #fffdf8;
+  --ink: #18302a;
+  --muted: #6c7b75;
+  --line: #dfe5df;
+  --coral: #e76f51;
+  --sun: #f4c95d;
+  --sky: #a8d8e8;
+  --lilac: #d8c7e8;
+  color: var(--ink);
+  background: #dfe8e3;
+  font-family: 'DM Sans', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body, #root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(23, 59, 50, 0.15);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(23, 59, 50, 0.3);
+}
+
+/* Scan line animation */
+@keyframes scanline {
+  0% { top: 10%; opacity: 0.8; }
+  50% { top: 88%; opacity: 1; }
+  100% { top: 10%; opacity: 0.8; }
+}
+
+.animate-scan {
+  animation: scanline 2.4s ease-in-out infinite;
+}
+
+/* Pulse glow animation for pins and active items */
+@keyframes pulseGlow {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 0 rgba(77, 158, 209, 0.4)); }
+  50% { transform: scale(1.08); filter: drop-shadow(0 0 10px rgba(77, 158, 209, 0.8)); }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.5s infinite;
+}
+
+/* Puzzle pieces background sprite simulation */
+.puzzle-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+
+.puzzle-piece {
+  aspect-ratio: 1;
+  background-image: url('https://images.unsplash.com/photo-1733063670581-cb44b1c807ec?auto=format&fit=crop&w=900&q=85');
+  background-size: 300% 300%;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.puzzle-piece:hover {
+  transform: scale(0.98);
+}
+
+.puzzle-piece.p-1 { background-position: 0% 0%; }
+.puzzle-piece.p-2 { background-position: 50% 0%; }
+.puzzle-piece.p-3 { background-position: 100% 0%; }
+.puzzle-piece.p-4 { background-position: 0% 50%; }
+.puzzle-piece.p-5 { background-position: 50% 50%; }
+.puzzle-piece.p-6 { background-position: 100% 50%; }
+.puzzle-piece.p-7 { background-position: 0% 100%; }
+.puzzle-piece.p-8 { background-position: 50% 100%; }
+.puzzle-empty {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  background: repeating-linear-gradient(45deg, #dce9e2, #dce9e2 8px, #e7f0eb 8px 16px);
+}
+
+/* Perspective for 3D flip card effect */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
