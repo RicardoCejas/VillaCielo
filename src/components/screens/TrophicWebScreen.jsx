@@ -24,7 +24,10 @@ import {
   Network,
   Eye,
   SlidersHorizontal,
-  Sparkles
+  Sparkles,
+  CircleDot,
+  ListFilter,
+  Zap
 } from 'lucide-react';
 import { playClick, playPop, playSuccess, playError, playCelebration } from '../../utils/audio';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -34,6 +37,9 @@ export const TrophicWebScreen = () => {
 
   // Active view: 'web' (Pirámide y conexiones) or 'scenarios' (Crisis y simulador de incendios)
   const [activeTab, setActiveTab] = useState('web');
+
+  // Sub-modo de visualización en la pestaña web: 'circles' (Grafo Dinámico) vs 'list' (Tarjetas por niveles)
+  const [viewMode, setViewMode] = useState('circles');
 
   // Species currently missing/disabled (for sandbox & scenarios)
   const [disabledSpeciesIds, setDisabledSpeciesIds] = useState([]);
@@ -90,6 +96,21 @@ export const TrophicWebScreen = () => {
     setActiveCrisisId(null);
     addPoints(100, '¡Red Trófica de Villa Cielo restaurada!');
   };
+
+  // Generar lista de enlaces tróficos dirigidos (de Presa/Alimento -> a Depredador/Consumidor)
+  const connections = [];
+  TROPHIC_SPECIES.forEach(predator => {
+    predator.eats.forEach(preyId => {
+      const prey = TROPHIC_SPECIES.find(s => s.id === preyId);
+      if (prey) {
+        connections.push({
+          from: prey,       // Presa / Alimento
+          to: predator,     // Depredador
+          id: `${prey.id}->${predator.id}`
+        });
+      }
+    });
+  });
 
   return (
     <section className="relative w-full h-full bg-[#081510] text-[#e8f1ec] flex flex-col justify-between overflow-hidden">
@@ -198,122 +219,507 @@ export const TrophicWebScreen = () => {
           </button>
         </div>
 
-        {/* TAB 1: RED TRÓFICA POR NIVELES */}
+        {/* TAB 1: GRAFO DE CÍRCULOS Y RED TRÓFICA */}
         {activeTab === 'web' && (
-          <div className="space-y-3 pb-4">
-            <p className="text-[11px] text-white/70 px-1 leading-snug">
-              Tocá cualquier especie para ver <strong>qué come, quién la depreda</strong> y su rol vital en el monte. Podés apagarla con el interruptor para ver el impacto.
-            </p>
-
-            {TROPHIC_LEVELS.map(level => {
-              const levelSpecies = TROPHIC_SPECIES.filter(s => s.level === level.id);
-
-              return (
-                <div
-                  key={level.id}
-                  className={`rounded-3xl p-3 border ${level.color} bg-black/30 backdrop-blur-sm space-y-2`}
+          <div className="space-y-2.5 pb-4">
+            {/* View Sub-Toggle: Red de Círculos vs Vista Lista */}
+            <div className="flex items-center justify-between bg-black/30 p-1.5 rounded-2xl border border-white/10">
+              <div className="flex items-center gap-1 text-[10px] text-white/80 pl-1 font-semibold">
+                <Zap className="w-3 h-3 text-sun" />
+                <span>Modo de Visualización:</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => {
+                    playPop();
+                    setViewMode('circles');
+                  }}
+                  className={`px-2.5 py-1 rounded-xl text-[10px] font-bold transition flex items-center gap-1 ${
+                    viewMode === 'circles'
+                      ? 'bg-sun text-forest shadow'
+                      : 'text-white/60 hover:text-white bg-white/5'
+                  }`}
                 >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <strong className="text-xs font-bold text-white block">
-                        {level.name}
-                      </strong>
-                      <small className="text-[9px] opacity-75 text-white/80 block">
-                        {level.subtitle}
-                      </small>
-                    </div>
-                    <span className={`text-[8px] font-bold px-2 py-0.5 rounded-full ${level.badgeBg}`}>
-                      {levelSpecies.length} Especies
-                    </span>
+                  <CircleDot className="w-3 h-3" />
+                  <span>Red de Círculos</span>
+                </button>
+                <button
+                  onClick={() => {
+                    playPop();
+                    setViewMode('list');
+                  }}
+                  className={`px-2.5 py-1 rounded-xl text-[10px] font-bold transition flex items-center gap-1 ${
+                    viewMode === 'list'
+                      ? 'bg-emerald-700 text-white shadow'
+                      : 'text-white/60 hover:text-white bg-white/5'
+                  }`}
+                >
+                  <ListFilter className="w-3 h-3" />
+                  <span>Lista por Niveles</span>
+                </button>
+              </div>
+            </div>
+
+            {/* SUB-VIEW 1: RED DE NODOS CIRCULARES INTERACTIVA (GRAFO SVG DE RETROALIMENTACIÓN) */}
+            {viewMode === 'circles' && (
+              <div className="space-y-2">
+                <p className="text-[10.5px] text-white/80 px-1 leading-tight flex items-center gap-1">
+                  <span>Tocá cualquier <strong>círculo</strong> para iluminar su red de alimentación y predación.</span>
+                </p>
+
+                {/* SVG & Circle Nodes Board Container */}
+                <div 
+                  onClick={() => setSelectedSpeciesId(null)}
+                  className="relative w-full h-[470px] bg-gradient-to-b from-[#0b1d15] via-[#091811] to-[#050f0b] border border-[#1b3d2e] rounded-3xl p-2 overflow-hidden shadow-2xl select-none"
+                >
+                  {/* Layer Background Badges for Trophic Tiers */}
+                  <div className="absolute top-2 left-3 text-[8px] font-extrabold uppercase tracking-widest text-rose-400/50 pointer-events-none">
+                    ▲ Depredadores Tope & Carroñeros
+                  </div>
+                  <div className="absolute top-[28%] left-3 text-[8px] font-extrabold uppercase tracking-widest text-amber-400/50 pointer-events-none">
+                    ▲ Mesodepredadores (Carnívoros)
+                  </div>
+                  <div className="absolute top-[54%] left-3 text-[8px] font-extrabold uppercase tracking-widest text-emerald-400/50 pointer-events-none">
+                    ▲ Herbívoros / Presas Base
+                  </div>
+                  <div className="absolute top-[78%] left-3 text-[8px] font-extrabold uppercase tracking-widest text-teal-400/50 pointer-events-none">
+                    ▲ Flora Autóctona & Productores
                   </div>
 
-                  {/* Species Grid for this Level */}
-                  <div className="grid grid-cols-2 gap-2 pt-1">
-                    {levelSpecies.map(sp => {
-                      const isDisabled = disabledSpeciesIds.includes(sp.id);
-                      const isSelected = selectedSpeciesId === sp.id;
+                  {/* SVG Canvas for Feedback Arrows and Connection Lines */}
+                  <svg
+                    viewBox="0 0 100 100"
+                    preserveAspectRatio="none"
+                    className="absolute inset-0 w-full h-full pointer-events-none z-10"
+                  >
+                    <defs>
+                      <marker
+                        id="arrow-default"
+                        viewBox="0 0 10 10"
+                        refX="7"
+                        refY="5"
+                        markerWidth="4.5"
+                        markerHeight="4.5"
+                        orient="auto-start-reverse"
+                      >
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="rgba(255,255,255,0.4)" />
+                      </marker>
+                      <marker
+                        id="arrow-prey"
+                        viewBox="0 0 10 10"
+                        refX="7"
+                        refY="5"
+                        markerWidth="5.5"
+                        markerHeight="5.5"
+                        orient="auto-start-reverse"
+                      >
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#10b981" />
+                      </marker>
+                      <marker
+                        id="arrow-predator"
+                        viewBox="0 0 10 10"
+                        refX="7"
+                        refY="5"
+                        markerWidth="5.5"
+                        markerHeight="5.5"
+                        orient="auto-start-reverse"
+                      >
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#f43f5e" />
+                      </marker>
+                      <marker
+                        id="arrow-alert"
+                        viewBox="0 0 10 10"
+                        refX="8"
+                        refY="5"
+                        markerWidth="6.5"
+                        markerHeight="6.5"
+                        orient="auto-start-reverse"
+                      >
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#f43f5e" />
+                      </marker>
+                      <marker
+                        id="arrow-amber"
+                        viewBox="0 0 10 10"
+                        refX="8"
+                        refY="5"
+                        markerWidth="6.5"
+                        markerHeight="6.5"
+                        orient="auto-start-reverse"
+                      >
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#fb923c" />
+                      </marker>
+                    </defs>
 
-                      // Check relation with selected species
-                      const isPreyOfSelected = selectedSpecies?.eats?.includes(sp.id);
-                      const isPredatorOfSelected = selectedSpecies?.eatenBy?.includes(sp.id);
+                    {/* Render Connection Lines */}
+                    {connections.map(conn => {
+                      const fromDisabled = disabledSpeciesIds.includes(conn.from.id);
+                      const toDisabled = disabledSpeciesIds.includes(conn.to.id);
 
-                      let borderClass = 'border-white/10';
-                      if (isSelected) borderClass = 'ring-2 ring-sun border-sun shadow-[0_0_15px_#f4c95d55]';
-                      else if (isPreyOfSelected) borderClass = 'ring-2 ring-emerald-400 border-emerald-400';
-                      else if (isPredatorOfSelected) borderClass = 'ring-2 ring-rose-400 border-rose-400';
+                      const isSelectedPrey = selectedSpeciesId === conn.to.id && selectedSpecies?.eats?.includes(conn.from.id);
+                      const isSelectedPredator = selectedSpeciesId === conn.from.id && selectedSpecies?.eatenBy?.includes(conn.to.id);
 
+                      // Curve mid-point calculation
+                      const dx = conn.to.x - conn.from.x;
+                      const dy = conn.to.y - conn.from.y;
+                      const cx = (conn.from.x + conn.to.x) / 2 + (dx === 0 ? 8 : -dy * 0.12);
+                      const cy = (conn.from.y + conn.to.y) / 2 + (dy === 0 ? 8 : dx * 0.12);
+
+                      const pathD = `M ${conn.from.x} ${conn.from.y} Q ${cx} ${cy} ${conn.to.x} ${conn.to.y}`;
+
+                      // 🚨 SI FALTA LA PRESA/ALIMENTO: Mostrar flecha de impacto de hambre hacia el depredador
+                      if (fromDisabled && !toDisabled) {
+                        return (
+                          <g key={conn.id}>
+                            <path
+                              d={pathD}
+                              fill="none"
+                              stroke="#f43f5e"
+                              strokeWidth="1.6"
+                              strokeDasharray="3 3"
+                              markerEnd="url(#arrow-alert)"
+                              className="animate-pulse"
+                              style={{ filter: 'drop-shadow(0 0 5px #f43f5e)' }}
+                            />
+                          </g>
+                        );
+                      }
+
+                      // 🚨 SI FALTA EL DEPREDADOR: Mostrar flecha de impacto de sobrepoblación hacia las presas
+                      if (toDisabled && !fromDisabled) {
+                        return (
+                          <g key={conn.id}>
+                            <path
+                              d={`M ${conn.to.x} ${conn.to.y} Q ${cx} ${cy} ${conn.from.x} ${conn.from.y}`}
+                              fill="none"
+                              stroke="#fb923c"
+                              strokeWidth="1.6"
+                              strokeDasharray="3 3"
+                              markerEnd="url(#arrow-amber)"
+                              className="animate-pulse"
+                              style={{ filter: 'drop-shadow(0 0 5px #fb923c)' }}
+                            />
+                          </g>
+                        );
+                      }
+
+                      if (fromDisabled && toDisabled) {
+                        return (
+                          <path
+                            key={conn.id}
+                            d={pathD}
+                            fill="none"
+                            stroke="rgba(244,63,94,0.2)"
+                            strokeWidth="0.5"
+                            strokeDasharray="1.5 1.5"
+                          />
+                        );
+                      }
+
+                      if (isSelectedPrey) {
+                        return (
+                          <g key={conn.id}>
+                            <path
+                              d={pathD}
+                              fill="none"
+                              stroke="#10b981"
+                              strokeWidth="1.4"
+                              markerEnd="url(#arrow-prey)"
+                              className="animate-pulse"
+                              style={{ filter: 'drop-shadow(0 0 5px #10b981)' }}
+                            />
+                          </g>
+                        );
+                      }
+
+                      if (isSelectedPredator) {
+                        return (
+                          <g key={conn.id}>
+                            <path
+                              d={pathD}
+                              fill="none"
+                              stroke="#f43f5e"
+                              strokeWidth="1.4"
+                              markerEnd="url(#arrow-predator)"
+                              className="animate-pulse"
+                              style={{ filter: 'drop-shadow(0 0 5px #f43f5e)' }}
+                            />
+                          </g>
+                        );
+                      }
+
+                      // Default background line when no active filter or unrelated
+                      const opacity = selectedSpeciesId ? 0.08 : 0.25;
                       return (
-                        <div
-                          key={sp.id}
-                          onClick={() => {
-                            playClick();
-                            setSelectedSpeciesId(isSelected ? null : sp.id);
-                          }}
-                          className={`relative rounded-2xl p-2 border transition-all cursor-pointer flex flex-col justify-between ${borderClass} ${
-                            isDisabled
-                              ? 'bg-rose-950/40 opacity-40 grayscale'
-                              : isSelected
-                              ? 'bg-[#1b3d2e]'
-                              : 'bg-[#10241b] hover:bg-[#163024]'
-                          }`}
-                        >
-                          {/* Top Row: Thumbnail & Status */}
-                          <div className="flex items-center gap-2">
-                            <div className="w-10 h-10 rounded-xl overflow-hidden shrink-0 border border-white/20 bg-black">
-                              <img
-                                src={sp.image}
-                                alt={sp.name}
-                                className="w-full h-full object-cover"
-                              />
-                            </div>
-                            <div className="overflow-hidden flex-1">
-                              <strong className="text-[11px] font-bold text-white block truncate leading-tight">
-                                {sp.name}
-                              </strong>
-                              <span className="text-[8px] text-white/60 italic block truncate">
-                                {sp.scientific}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Role tag */}
-                          <div className="mt-1.5 flex items-center justify-between text-[8px]">
-                            <span className="text-mint font-semibold truncate max-w-[100px]">
-                              {sp.role}
-                            </span>
-                            
-                            {/* Toggle Button to Simulate Extinction */}
-                            <button
-                              onClick={(e) => handleToggleSpecies(sp.id, e)}
-                              title={isDisabled ? 'Restaurar especie' : 'Simular desaparición'}
-                              className={`px-1.5 py-0.5 rounded text-[7.5px] font-bold transition ${
-                                isDisabled
-                                  ? 'bg-rose-600 text-white'
-                                  : 'bg-white/10 hover:bg-white/20 text-white/80'
-                              }`}
-                            >
-                              {isDisabled ? 'Extinta' : 'Activa'}
-                            </button>
-                          </div>
-
-                          {/* Connection Indicators */}
-                          {isPreyOfSelected && (
-                            <span className="absolute -top-1.5 right-2 bg-emerald-500 text-black text-[7px] font-extrabold px-1.5 py-0.2 rounded-full shadow">
-                              Alimento
-                            </span>
-                          )}
-                          {isPredatorOfSelected && (
-                            <span className="absolute -top-1.5 right-2 bg-rose-500 text-white text-[7px] font-extrabold px-1.5 py-0.2 rounded-full shadow">
-                              Depredador
-                            </span>
-                          )}
-                        </div>
+                        <path
+                          key={conn.id}
+                          d={pathD}
+                          fill="none"
+                          stroke="rgba(255,255,255,0.4)"
+                          strokeWidth="0.6"
+                          strokeOpacity={opacity}
+                          markerEnd="url(#arrow-default)"
+                        />
                       );
                     })}
+                  </svg>
+
+                  {/* Species Circular Nodes Layer */}
+                  {TROPHIC_SPECIES.map(sp => {
+                    const isDisabled = disabledSpeciesIds.includes(sp.id);
+                    const isSelected = selectedSpeciesId === sp.id;
+                    const isPreyOfSelected = selectedSpecies?.eats?.includes(sp.id);
+                    const isPredatorOfSelected = selectedSpecies?.eatenBy?.includes(sp.id);
+
+                    // Check if this active species is affected by a missing food or predator
+                    const hasMissingFood = sp.eats.some(eId => disabledSpeciesIds.includes(eId));
+                    const hasMissingPredator = sp.eatenBy.some(pId => disabledSpeciesIds.includes(pId));
+
+                    // Border style based on trophic level
+                    let ringBorder = 'border-teal-400/80 shadow-[0_0_8px_#2dd4bf55]';
+                    if (sp.level === 'apex') ringBorder = 'border-rose-500 shadow-[0_0_10px_#f43f5e77]';
+                    if (sp.level === 'carnivores') ringBorder = 'border-amber-400 shadow-[0_0_10px_#f59e0b77]';
+                    if (sp.level === 'herbivores') ringBorder = 'border-emerald-400 shadow-[0_0_10px_#10b98177]';
+
+                    if (isDisabled) {
+                      ringBorder = 'border-rose-700 ring-2 ring-rose-500/50 shadow-[0_0_15px_#f43f5e88]';
+                    } else if (isSelected) {
+                      ringBorder = 'ring-4 ring-sun border-sun shadow-[0_0_20px_#f4c95d] scale-110 z-30';
+                    } else if (hasMissingFood) {
+                      ringBorder = 'ring-3 ring-rose-500 border-rose-500 shadow-[0_0_15px_#f43f5e] z-20 animate-pulse';
+                    } else if (isPreyOfSelected) {
+                      ringBorder = 'ring-3 ring-emerald-400 border-emerald-400 shadow-[0_0_12px_#10b981] z-20';
+                    } else if (isPredatorOfSelected) {
+                      ringBorder = 'ring-3 ring-rose-400 border-rose-400 shadow-[0_0_12px_#f43f5e] z-20';
+                    }
+
+                    return (
+                      <div
+                        key={sp.id}
+                        style={{ left: `${sp.x}%`, top: `${sp.y}%` }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          playClick();
+                          setSelectedSpeciesId(isSelected ? null : sp.id);
+                        }}
+                        className={`absolute transform -translate-x-1/2 -translate-y-1/2 cursor-pointer z-20 transition-all duration-300 flex flex-col items-center ${
+                          isDisabled ? 'opacity-85 hover:scale-105' : 'hover:scale-110'
+                        }`}
+                      >
+                        {/* Feedback Badge overlay */}
+                        {isDisabled && (
+                          <span className="absolute -top-3.5 bg-rose-600 text-white text-[7.5px] font-extrabold px-1.5 py-0.2 rounded-full shadow-lg z-30 whitespace-nowrap border border-rose-400">
+                            ❌ Extinta (Falta)
+                          </span>
+                        )}
+                        {!isDisabled && hasMissingFood && (
+                          <span className="absolute -top-3.5 bg-rose-600 text-white text-[7.5px] font-extrabold px-1.5 py-0.2 rounded-full shadow-lg z-30 whitespace-nowrap animate-bounce border border-rose-300">
+                            ⚠️ ¡Sin Alimento!
+                          </span>
+                        )}
+                        {!isDisabled && !hasMissingFood && hasMissingPredator && (
+                          <span className="absolute -top-3.5 bg-amber-500 text-black text-[7.5px] font-extrabold px-1.5 py-0.2 rounded-full shadow-lg z-30 whitespace-nowrap animate-pulse border border-amber-200">
+                            ⚠️ Sobrepoblación
+                          </span>
+                        )}
+                        {!isDisabled && isPreyOfSelected && !hasMissingFood && (
+                          <span className="absolute -top-3.5 bg-emerald-500 text-black text-[7px] font-extrabold px-1.5 py-0.2 rounded-full shadow z-30 whitespace-nowrap">
+                            Alimento
+                          </span>
+                        )}
+                        {!isDisabled && isPredatorOfSelected && !hasMissingFood && (
+                          <span className="absolute -top-3.5 bg-rose-500 text-white text-[7px] font-extrabold px-1.5 py-0.2 rounded-full shadow z-30 whitespace-nowrap">
+                            Depredador
+                          </span>
+                        )}
+
+                        {/* Circular Avatar Button */}
+                        <div
+                          className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full border-2 bg-black relative overflow-hidden transition-all flex items-center justify-center ${ringBorder}`}
+                        >
+                          <img
+                            src={sp.image}
+                            alt={sp.name}
+                            className={`w-full h-full object-cover rounded-full ${isDisabled ? 'grayscale opacity-40' : ''}`}
+                          />
+
+                          {/* Extinction overlay indicator */}
+                          {isDisabled && (
+                            <div className="absolute inset-0 bg-rose-950/70 flex items-center justify-center">
+                              <X className="w-7 h-7 text-rose-400 stroke-[3]" />
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Species Name Tag & Quick Toggle Button Below Circle */}
+                        <div className="flex items-center gap-0.5 mt-0.5">
+                          <span className={`text-[8px] sm:text-[9px] font-bold px-1.5 py-0.2 rounded-full backdrop-blur border whitespace-nowrap shadow ${
+                            isSelected
+                              ? 'bg-sun text-forest border-sun'
+                              : isDisabled
+                              ? 'bg-rose-950 text-rose-300 border-rose-600 font-extrabold'
+                              : 'bg-black/85 text-white border-white/20'
+                          }`}>
+                            {sp.name.split(' ')[0]}
+                          </span>
+
+                          {/* Quick Apagar / Restaurar Power Button */}
+                          <button
+                            onClick={(e) => handleToggleSpecies(sp.id, e)}
+                            title={isDisabled ? 'Restaurar especie' : 'Simular falta de esta especie'}
+                            className={`p-0.5 rounded-full text-[8px] font-extrabold shadow transition ${
+                              isDisabled
+                                ? 'bg-emerald-500 text-black hover:bg-emerald-400'
+                                : 'bg-rose-600/80 hover:bg-rose-600 text-white'
+                            }`}
+                          >
+                            {isDisabled ? '+' : '✕'}
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+
+                  {/* Bottom Interactive Legend */}
+                  <div className="absolute bottom-2 left-2 right-2 bg-black/85 backdrop-blur-md rounded-2xl p-2 border border-white/10 flex items-center justify-between text-[8px] sm:text-[8.5px] text-white/90 z-20">
+                    <div className="flex items-center gap-2">
+                      <span className="flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 inline-block shadow-[0_0_5px_#10b981]" />
+                        <span>Alimento</span>
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <span className="w-2 h-2 rounded-full bg-rose-500 inline-block shadow-[0_0_5px_#f43f5e]" />
+                        <span>Depredador</span>
+                      </span>
+                      <span className="flex items-center gap-1 text-rose-300 font-semibold">
+                        <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping inline-block" />
+                        <span>Flechas ↗️: Impacto de Ausencia</span>
+                      </span>
+                    </div>
+
+                    <span className="text-sun font-bold italic">
+                      {disabledSpeciesIds.length > 0
+                        ? `¡${disabledSpeciesIds.length} Especie(s) Ausente(s)!`
+                        : selectedSpecies
+                        ? `Red de ${selectedSpecies.name}`
+                        : 'Tocá ✕ en un círculo para apagarlo'}
+                    </span>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            )}
+
+            {/* SUB-VIEW 2: VISTA LISTA TRADICIONAL POR NIVELES */}
+            {viewMode === 'list' && (
+              <div className="space-y-3">
+                <p className="text-[11px] text-white/70 px-1 leading-snug">
+                  Exploración de la pirámide ecológica desglosada por niveles. Tocá una tarjeta para ver sus detalles.
+                </p>
+
+                {TROPHIC_LEVELS.map(level => {
+                  const levelSpecies = TROPHIC_SPECIES.filter(s => s.level === level.id);
+
+                  return (
+                    <div
+                      key={level.id}
+                      className={`rounded-3xl p-3 border ${level.color} bg-black/30 backdrop-blur-sm space-y-2`}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <strong className="text-xs font-bold text-white block">
+                            {level.name}
+                          </strong>
+                          <small className="text-[9px] opacity-75 text-white/80 block">
+                            {level.subtitle}
+                          </small>
+                        </div>
+                        <span className={`text-[8px] font-bold px-2 py-0.5 rounded-full ${level.badgeBg}`}>
+                          {levelSpecies.length} Especies
+                        </span>
+                      </div>
+
+                      {/* Species Grid for this Level */}
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        {levelSpecies.map(sp => {
+                          const isDisabled = disabledSpeciesIds.includes(sp.id);
+                          const isSelected = selectedSpeciesId === sp.id;
+                          const isPreyOfSelected = selectedSpecies?.eats?.includes(sp.id);
+                          const isPredatorOfSelected = selectedSpecies?.eatenBy?.includes(sp.id);
+
+                          let borderClass = 'border-white/10';
+                          if (isSelected) borderClass = 'ring-2 ring-sun border-sun shadow-[0_0_15px_#f4c95d55]';
+                          else if (isPreyOfSelected) borderClass = 'ring-2 ring-emerald-400 border-emerald-400';
+                          else if (isPredatorOfSelected) borderClass = 'ring-2 ring-rose-400 border-rose-400';
+
+                          return (
+                            <div
+                              key={sp.id}
+                              onClick={() => {
+                                playClick();
+                                setSelectedSpeciesId(isSelected ? null : sp.id);
+                              }}
+                              className={`relative rounded-2xl p-2 border transition-all cursor-pointer flex flex-col justify-between ${borderClass} ${
+                                isDisabled
+                                  ? 'bg-rose-950/40 opacity-40 grayscale'
+                                  : isSelected
+                                  ? 'bg-[#1b3d2e]'
+                                  : 'bg-[#10241b] hover:bg-[#163024]'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2">
+                                <div className="w-10 h-10 rounded-full overflow-hidden shrink-0 border border-white/20 bg-black">
+                                  <img
+                                    src={sp.image}
+                                    alt={sp.name}
+                                    className="w-full h-full object-cover"
+                                  />
+                                </div>
+                                <div className="overflow-hidden flex-1">
+                                  <strong className="text-[11px] font-bold text-white block truncate leading-tight">
+                                    {sp.name}
+                                  </strong>
+                                  <span className="text-[8px] text-white/60 italic block truncate">
+                                    {sp.scientific}
+                                  </span>
+                                </div>
+                              </div>
+
+                              <div className="mt-1.5 flex items-center justify-between text-[8px]">
+                                <span className="text-mint font-semibold truncate max-w-[100px]">
+                                  {sp.role}
+                                </span>
+                                
+                                <button
+                                  onClick={(e) => handleToggleSpecies(sp.id, e)}
+                                  title={isDisabled ? 'Restaurar especie' : 'Simular desaparición'}
+                                  className={`px-1.5 py-0.5 rounded text-[7.5px] font-bold transition ${
+                                    isDisabled
+                                      ? 'bg-rose-600 text-white'
+                                      : 'bg-white/10 hover:bg-white/20 text-white/80'
+                                  }`}
+                                >
+                                  {isDisabled ? 'Extinta' : 'Activa'}
+                                </button>
+                              </div>
+
+                              {isPreyOfSelected && (
+                                <span className="absolute -top-1.5 right-2 bg-emerald-500 text-black text-[7px] font-extrabold px-1.5 py-0.2 rounded-full shadow">
+                                  Alimento
+                                </span>
+                              )}
+                              {isPredatorOfSelected && (
+                                <span className="absolute -top-1.5 right-2 bg-rose-500 text-white text-[7px] font-extrabold px-1.5 py-0.2 rounded-full shadow">
+                                  Depredador
+                                </span>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
 
