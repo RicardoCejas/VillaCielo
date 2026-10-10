@@ -51,11 +51,60 @@ export const IMAGES = {
 };
 
 export const RANKS = [
-  { level: 1, title: 'Explorador Inicial', minExp: 0, maxExp: 300, icon: '🌱' },
-  { level: 2, title: 'Rastreador del Monte', minExp: 300, maxExp: 800, icon: '🐾' },
-  { level: 3, title: 'Guardián Serrano', minExp: 800, maxExp: 1500, icon: '🛡️' },
-  { level: 4, title: 'Centinela de los Balcones', minExp: 1500, maxExp: 2400, icon: '🦅' },
-  { level: 5, title: 'Protector del Uritorco', minExp: 2400, maxExp: 4000, icon: '👑' },
+  {
+    level: 1,
+    title: 'Explorador Inicial',
+    minExp: 0,
+    maxExp: 250,
+    icon: '🌱',
+    perk: 'Sendero Bajo y Cartas Básicas',
+    perkDesc: 'Acceso habilitado al Sendero Bajo y 6 cartas iniciales del álbum.'
+  },
+  {
+    level: 2,
+    title: 'Rastreador de Huellas',
+    minExp: 250,
+    maxExp: 650,
+    icon: '🐾',
+    perk: 'Brújula y Safari Fotográfico',
+    perkDesc: 'Desbloquea misiones de campo de avistamiento y visor de huellas nativas.'
+  },
+  {
+    level: 3,
+    title: 'Guardián del Sendero',
+    minExp: 650,
+    maxExp: 1300,
+    icon: '🌿',
+    perk: 'Simulador de Red Trófica',
+    perkDesc: 'Habilita el laboratorio ecológico y simulador de impacto de incendios.'
+  },
+  {
+    level: 4,
+    title: 'Centinela de los Balcones',
+    minExp: 1300,
+    maxExp: 2200,
+    icon: '🦅',
+    perk: 'Sendero Nocturno & Estrellas',
+    perkDesc: 'Acceso al observatorio de constelaciones y fichas de rapaces del Uritorco.'
+  },
+  {
+    level: 5,
+    title: 'Protector del Ecosistema',
+    minExp: 2200,
+    maxExp: 3400,
+    icon: '🛡️',
+    perk: 'Alertas Ciudadanas de Guardaparque',
+    perkDesc: 'Herramienta para reportar focos de calor o basura en senderos a guardaparques.'
+  },
+  {
+    level: 6,
+    title: 'Maestro Guardaparque de Villa Cielo',
+    minExp: 3400,
+    maxExp: 5000,
+    icon: '👑',
+    perk: 'Credencial Oficial Honoraria & Descuentos',
+    perkDesc: 'Insignia de honor municipal, álbum completo y beneficios en comercios sustentables de Capilla.'
+  },
 ];
 
 export const INITIAL_UNLOCKED_IDS = [

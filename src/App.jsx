@@ -4,6 +4,8 @@ import { DeviceShell } from './components/layout/DeviceShell';
 import { ToastContainer } from './components/ui/ToastContainer';
 import { CardUnlockedModal } from './components/ui/CardUnlockedModal';
 import { LevelUpModal } from './components/ui/LevelUpModal';
+import { RanksModal } from './components/ui/RanksModal';
+import { RegisterScreen } from './components/screens/RegisterScreen';
 import { ProfileScreen } from './components/screens/ProfileScreen';
 import { HomeScreen } from './components/screens/HomeScreen';
 import { FullMapScreen } from './components/screens/FullMapScreen';
@@ -32,6 +34,7 @@ export const App = () => {
         <ToastContainer />
         <CardUnlockedModal />
         <LevelUpModal />
+        <RanksModal />
         <WireframeOverview />
       </>
     );
@@ -39,6 +42,8 @@ export const App = () => {
 
   const renderScreen = () => {
     switch (currentScreen) {
+      case 'register':
+        return <RegisterScreen />;
       case 'profile':
         return <ProfileScreen />;
       case 'home':
@@ -83,6 +88,7 @@ export const App = () => {
       <ToastContainer />
       <CardUnlockedModal />
       <LevelUpModal />
+      <RanksModal />
       <DeviceShell>
         <AnimatePresence mode="wait">
           <motion.div

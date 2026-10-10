@@ -1,39 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
 import { TopBar } from '../layout/TopBar';
-import { Leaf, Sparkles, User, Palette, RotateCcw, Trophy, Check } from 'lucide-react';
+import { IMAGES } from '../../data/speciesData';
+import { RotateCcw, Trophy, Check } from 'lucide-react';
 import { playCardFlip, playSuccess, playCelebration } from '../../utils/audio';
 import { motion } from 'framer-motion';
 
 export const MemoryScreen = () => {
-  const { navigate, addPoints, triggerCelebration, unlockSpecies } = useApp();
+  const { navigate, addPoints, triggerCelebration, unlockSpecies, profile, theme } = useApp();
 
-  // 8 cards (4 pairs) of native species
-  const initialCards = ['peperina', 'calandria', 'zorro', 'espinillo', 'peperina', 'calandria', 'zorro', 'espinillo'];
-  const [cards, setCards] = useState(initialCards);
+  const [mode, setMode] = useState(() => {
+    return profile === 'Niños' ? 'kids' : 'adults';
+  });
+
+  // Sets of cards
+  const kidsSet = [
+    { id: 'zorro', name: 'Zorro', img: IMAGES.zorro },
+    { id: 'hornero', name: 'Hornero', img: IMAGES.hornero },
+    { id: 'peperina', name: 'Peperina', img: IMAGES.peperina },
+    { id: 'espinillo', name: 'Espinillo', img: IMAGES.espinillo },
+  ];
+
+  const adultsSet = [
+    { id: 'corzuela', name: 'Corzuela', img: IMAGES.corzuela },
+    { id: 'jote', name: 'Jote', img: IMAGES.jote },
+    { id: 'algarrobo', name: 'Algarrobo', img: IMAGES.algarroboBlanco },
+    { id: 'molle', name: 'Molle', img: IMAGES.molle },
+    { id: 'puma', name: 'Puma', img: IMAGES.puma },
+    { id: 'picaflor', name: 'Picaflor', img: IMAGES.picaflor },
+  ];
+
+  const activeBaseSet = mode === 'kids' ? kidsSet : adultsSet;
+  const targetPairsCount = activeBaseSet.length;
+
+  const generateShuffledCards = (baseSet) => {
+    const doubled = [...baseSet, ...baseSet].map((item, index) => ({
+      ...item,
+      uniqueKey: `${item.id}-${index}`
+    }));
+    return doubled.sort(() => Math.random() - 0.5);
+  };
+
+  const [cards, setCards] = useState(() => generateShuffledCards(activeBaseSet));
   const [flippedIndices, setFlippedIndices] = useState([]);
-  const [matchedIndices, setMatchedIndices] = useState([]);
+  const [matchedIds, setMatchedIds] = useState([]);
   const [attempts, setAttempts] = useState(0);
-
-  const icons = {
-    peperina: Leaf,
-    calandria: Sparkles,
-    zorro: User,
-    espinillo: Palette
-  };
-
-  const labels = {
-    peperina: 'Peperina',
-    calandria: 'Calandria',
-    zorro: 'Zorro Gris',
-    espinillo: 'Espinillo'
-  };
 
   const handleCardClick = (idx) => {
     if (
       flippedIndices.length === 2 ||
       flippedIndices.includes(idx) ||
-      matchedIndices.includes(idx)
+      matchedIds.includes(cards[idx].id)
     ) {
       return;
     }
@@ -44,23 +61,24 @@ export const MemoryScreen = () => {
 
     if (newFlipped.length === 2) {
       setAttempts(a => a + 1);
-      const [first, second] = newFlipped;
+      const [firstIdx, secondIdx] = newFlipped;
+      const firstCard = cards[firstIdx];
+      const secondCard = cards[secondIdx];
 
-      if (cards[first] === cards[second]) {
+      if (firstCard.id === secondCard.id) {
         // Match!
         setTimeout(() => {
           playSuccess();
-          const nextMatched = [...matchedIndices, first, second];
-          setMatchedIndices(nextMatched);
+          const nextMatched = [...matchedIds, firstCard.id];
+          setMatchedIds(nextMatched);
           setFlippedIndices([]);
 
-          if (nextMatched.length === cards.length) {
+          if (nextMatched.length === targetPairsCount) {
             triggerCelebration();
-            addPoints(200, '¡Juego de memoria silvestre completado!');
-            unlockSpecies('calandria-grande', 'memory');
-            unlockSpecies('peperina-serrana', 'memory');
+            addPoints(mode === 'kids' ? 120 : 200, '¡Juego de memoria silvestre completado!');
+            unlockSpecies(firstCard.id === 'corzuela' ? 'corzuela-parda' : 'calandria-grande', 'memory');
           }
-        }, 400);
+        }, 350);
       } else {
         // No match
         setTimeout(() => {
@@ -70,17 +88,19 @@ export const MemoryScreen = () => {
     }
   };
 
-  const handleRestart = () => {
-    // Shuffle cards
-    const shuffled = [...initialCards].sort(() => Math.random() - 0.5);
-    setCards(shuffled);
+  const handleRestart = (newMode = mode) => {
+    setMode(newMode);
+    const newBase = newMode === 'kids' ? kidsSet : adultsSet;
+    setCards(generateShuffledCards(newBase));
     setFlippedIndices([]);
-    setMatchedIndices([]);
+    setMatchedIds([]);
     setAttempts(0);
   };
 
   return (
-    <section className="relative w-full h-full bg-paper flex flex-col justify-between overflow-hidden">
+    <section className={`relative w-full h-full flex flex-col justify-between overflow-hidden ${
+      theme === 'dark' ? 'bg-[#0a1813] text-[#e8f2ec]' : 'bg-paper text-ink'
+    }`}>
       {/* TopBar with styled back button */}
       <TopBar
         title="Memoria silvestre"
@@ -88,56 +108,90 @@ export const MemoryScreen = () => {
         backLabel="Volver"
       />
 
-      <div className="flex-1 flex flex-col justify-between px-5 py-3 overflow-y-auto">
-        {/* Topline Info with Memory Icon */}
-        <div className="flex items-center justify-between text-xs bg-cream p-2 rounded-2xl border border-line">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl overflow-hidden shadow-2xs shrink-0">
-              <img src="/icons/memory.png" alt="Memoria" className="w-full h-full object-contain" />
-            </div>
-            <div>
-              <strong className="text-forest font-bold block text-[11px] leading-tight">Memoria silvestre</strong>
-              <span className="text-muted text-[9px]">Intentos: {attempts}</span>
-            </div>
+      <div className="flex-1 flex flex-col justify-between px-4 py-2 overflow-y-auto">
+        {/* Top Controls: Mode Switcher */}
+        <div className="flex items-center justify-between text-xs mb-1.5">
+          <div className="flex bg-black/10 dark:bg-white/10 p-0.5 rounded-xl text-[10px] font-bold">
+            <button
+              onClick={() => handleRestart('kids')}
+              className={`py-1 px-2.5 rounded-lg transition ${
+                mode === 'kids'
+                  ? 'bg-forest text-white shadow-xs'
+                  : 'text-muted hover:text-ink dark:hover:text-white'
+              }`}
+            >
+              🧒 Niños (4 pares)
+            </button>
+            <button
+              onClick={() => handleRestart('adults')}
+              className={`py-1 px-2.5 rounded-lg transition ${
+                mode === 'adults'
+                  ? 'bg-forest text-white shadow-xs'
+                  : 'text-muted hover:text-ink dark:hover:text-white'
+              }`}
+            >
+              🌿 Adultos (6 pares)
+            </button>
           </div>
-          <strong className="text-forest font-bold text-xs bg-white px-2.5 py-1 rounded-xl shadow-2xs">
-            Parejas: {matchedIndices.length / 2} / 4
-          </strong>
+
+          <button
+            onClick={() => handleRestart(mode)}
+            className="p-1.5 rounded-xl border border-line dark:border-[#204535] text-muted hover:text-ink dark:hover:text-white transition active:scale-95"
+            title="Reiniciar partida"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+          </button>
         </div>
 
-        {/* 2x4 Memory Board */}
-        <div className="grid grid-cols-2 gap-3 max-w-[270px] mx-auto w-full my-auto">
-          {cards.map((type, idx) => {
-            const isFlipped = flippedIndices.includes(idx) || matchedIndices.includes(idx);
-            const isMatched = matchedIndices.includes(idx);
-            const Icon = icons[type];
+        {/* Status Row */}
+        <div className={`flex items-center justify-between p-2 rounded-2xl border text-[11px] mb-2 ${
+          theme === 'dark' ? 'bg-[#11261e] border-[#1f4535]' : 'bg-cream border-line'
+        }`}>
+          <span>Intentos: <strong className="font-bold">{attempts}</strong></span>
+          <span className="font-bold text-forest">
+            Aciertos: {matchedIds.length} / {targetPairsCount}
+          </span>
+        </div>
+
+        {/* Memory Grid */}
+        <div className={`grid gap-2 max-w-[320px] mx-auto w-full my-auto ${
+          mode === 'kids' ? 'grid-cols-2 max-w-[240px]' : 'grid-cols-3'
+        }`}>
+          {cards.map((card, idx) => {
+            const isFlipped = flippedIndices.includes(idx) || matchedIds.includes(card.id);
+            const isMatched = matchedIds.includes(card.id);
 
             return (
               <motion.button
-                key={idx}
+                key={card.uniqueKey}
                 whileTap={{ scale: 0.94 }}
                 onClick={() => handleCardClick(idx)}
-                className={`h-24 rounded-2xl flex flex-col items-center justify-center gap-1 transition-all duration-300 shadow-md ${
+                className={`relative rounded-2xl flex flex-col items-center justify-center overflow-hidden transition-all duration-300 shadow-sm border ${
+                  mode === 'kids' ? 'h-24' : 'h-20'
+                } ${
                   isFlipped
-                    ? 'bg-mint text-forest border-2 border-moss/40'
+                    ? isMatched
+                      ? 'border-emerald-500 bg-emerald-500/20'
+                      : 'border-sun bg-sun/20'
+                    : theme === 'dark'
+                    ? 'bg-[#153427] border-[#224f3c] hover:bg-[#1b4131]'
                     : 'bg-forest text-mint/80 hover:bg-forest-light'
                 }`}
-                aria-label={`Carta ${idx + 1}`}
               >
                 {isFlipped ? (
-                  <motion.div
-                    initial={{ scale: 0.8 }}
-                    animate={{ scale: 1 }}
-                    className="flex flex-col items-center"
-                  >
-                    <Icon className="w-8 h-8 stroke-[2.2]" />
-                    <span className="text-[10px] font-bold mt-1">
-                      {labels[type]}
+                  <div className="w-full h-full flex flex-col items-center justify-center p-1.5">
+                    <img
+                      src={card.img}
+                      alt={card.name}
+                      className="w-10 h-10 rounded-xl object-cover shadow-2xs mb-1"
+                    />
+                    <span className="text-[10px] font-bold truncate max-w-full leading-tight">
+                      {card.name}
                     </span>
-                  </motion.div>
+                  </div>
                 ) : (
-                  <div className="w-10 h-10 rounded-xl overflow-hidden opacity-90 transition-transform">
-                    <img src="/icons/memory.png" alt="Dorso de carta" className="w-full h-full object-contain" />
+                  <div className="w-7 h-7 rounded-xl overflow-hidden opacity-85">
+                    <img src="/icons/memory.png" alt="Dorso" className="w-full h-full object-contain" />
                   </div>
                 )}
               </motion.button>
@@ -145,30 +199,16 @@ export const MemoryScreen = () => {
           })}
         </div>
 
-        {/* Bottom Banner */}
-        {matchedIndices.length === cards.length ? (
+        {/* Completion Message */}
+        {matchedIds.length === targetPairsCount && (
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-sun text-forest rounded-2xl p-3 flex items-center justify-between shadow-lg"
+            className="text-center p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 mt-2"
           >
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 fill-current" />
-              <strong className="text-xs font-bold font-serif">
-                ¡Completaste el desafío!
-              </strong>
-            </div>
-            <button
-              onClick={() => navigate('games')}
-              className="px-3 py-1.5 rounded-xl bg-forest text-white text-[10px] font-bold shadow-sm active:scale-95 transition"
-            >
-              Volver a juegos
-            </button>
+            <strong className="text-xs font-bold block">¡Completaste todas las parejas!</strong>
+            <span className="text-[10px]">Demostraste gran memoria silvestre en {attempts} intentos.</span>
           </motion.div>
-        ) : (
-          <p className="text-center text-xs text-muted mb-2 font-medium">
-            Tocá dos cartas para encontrar la pareja.
-          </p>
         )}
       </div>
     </section>

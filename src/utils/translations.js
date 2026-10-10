@@ -1,0 +1,417 @@
+// Diccionario de internacionalización (i18n) para Villa Cielo Abierto
+// Soporte para Español (ES), English (EN) y Português (PT)
+
+export const translations = {
+  ES: {
+    // App Branding
+    appName: 'Villa Cielo Abierto',
+    appSubtitle: 'Reserva Natural Municipal · Capilla del Monte',
+    tagline: 'Explorá · Jugá · Aprendé',
+    capillaDelMonte: 'Capilla del Monte, Córdoba',
+
+    // Navegación
+    navHome: 'Inicio',
+    navTrophic: 'Red Trófica',
+    navScan: 'Escanear',
+    navGames: 'Juegos',
+    navWiki: 'Wiki',
+    back: 'Volver',
+
+    // Registro & Onboarding
+    welcomeTitle: 'Bienvenido a Villa Cielo',
+    welcomeSubtitle: 'Tu guía interactiva para explorar el monte serrano y proteger la biodiversidad.',
+    registerHeader: 'Registro de Explorador',
+    registerSubtitle: 'Ingresá tus datos para adaptar las misiones y juegos a tu edad.',
+    userNameLabel: 'Nombre o Apodo',
+    userNamePlaceholder: 'Ej: Mateo, Valentina, Carlos...',
+    userAgeLabel: 'Edad',
+    userAgePlaceholder: 'Ej: 10 o 35',
+    emailLabel: 'Correo Electrónico',
+    emailPlaceholder: 'explorador@ejemplo.com',
+    passwordLabel: 'Contraseña',
+    passwordPlaceholder: '••••••••',
+    btnRegister: 'COMENZAR AVENTURA',
+    orContinueWith: 'o ingresá rápidamente con',
+    btnGoogle: 'Google',
+    btnFacebook: 'Facebook',
+    ageHintKids: '👶 Menores de 13 años jugarán en Modo Niños (juegos visuales y simples).',
+    ageHintAdults: '🌿 A partir de 13 años jugarán en Modo Adultos (datos analíticos y científicos).',
+
+    // Inicio / Dashboard
+    greetingMorning: 'Buen día',
+    greetingAfternoon: 'Buenas tardes',
+    greetingEvening: 'Buenas noches',
+    homeQuestion: '¿Qué descubrimos hoy?',
+    currentRankLabel: 'Rango Activo',
+    expAccumulated: 'EXP acumulada',
+    nextRankLabel: 'Próximo Rango',
+    viewAllRanks: 'Ver los 6 Rangos',
+    unlockedCards: 'Cartas',
+    trophicBannerTitle: 'Concientización Serrana',
+    trophicBannerBadge: 'Simulador de Incendios',
+    trophicBannerDesc: 'Descubrí qué pasa si desaparece una especie o si el fuego daña el monte.',
+    quickMapTitle: 'Plano Interactivo del Sendero',
+    quickMapDesc: 'Recorré los Balcones del Uritorco y encontrá los hitos.',
+
+    // 6 Rangos & Utilidad de EXP
+    ranksModalTitle: 'Los 6 Rangos de Guardaparque',
+    ranksModalSubtitle: 'Cada nivel de EXP desbloquea herramientas reales y utilidades en la reserva.',
+    rankCompleted: 'Completado',
+    rankCurrent: 'Rango Actual',
+    rankLocked: 'Bloqueado',
+    maxRankReached: '¡Tope máximo alcanzado!',
+    rankPerkLabel: 'Utilidad desbloqueada:',
+
+    // Escáner QR
+    scanTitle: 'Escáner QR',
+    scanSubtitle: 'Posta Interactiva · Villa Cielo',
+    scanInstructions: 'Apuntá al código QR de un poste o ingresá el código manual.',
+    scanTabCamera: '📷 Usar Cámara',
+    scanTabManual: '⌨️ Código Manual',
+    scanManualPlaceholder: 'Ingresá código (ej: VC-01, ZORRO, PEPERINA)',
+    btnValidateCode: 'Validar Código',
+    btnPauseCamera: 'Pausar Cámara',
+    btnStartCamera: 'Activar Cámara',
+    quickCodesTitle: 'Códigos físicos de los postes de la reserva:',
+    codeNotFound: 'Código no reconocido. Probá con los postes sugeridos.',
+
+    // Juegos
+    gamesTitle: 'Juegos y Misiones',
+    gamesSubtitle: 'Elegí tu desafío de acuerdo a tu edad y explorá la reserva.',
+    tabKidsGames: '🧒 Solo Niños',
+    tabAllGames: '👨‍👩‍👧 Adultos y Niños',
+    tabFieldMissions: '🧭 Misiones de Campo',
+    badgeKidsOnly: 'Solo Niños',
+    badgeKidsAdults: 'Adultos y Niños',
+    badgeField: 'Misión de Campo',
+    rewardLabel: 'Recompensa',
+    
+    // Nombres de juegos
+    gameTriviaTitle: 'Trivia Serrana',
+    gameTriviaDesc: 'Cuestionario contra reloj sobre flora, fauna y Uritorco.',
+    gameColorTitle: 'Coloreá la Fauna',
+    gameColorDesc: 'Taller de pintura y pelajes de especies autóctonas.',
+    gamePuzzleTitle: 'Puzzle del Paisaje',
+    gamePuzzleDesc: 'Reconstruye el sendero y los miradores serranos.',
+    gameMemoryTitle: 'Memoria Silvestre',
+    gameMemoryDesc: 'Encuentra las parejas de flora y fauna nativa.',
+    gameSafariTitle: 'Safari Fotográfico',
+    gameSafariDesc: 'Avistamiento veloz de animales entre la vegetación.',
+    gameRecycleTitle: 'Guardián del Sendero',
+    gameRecycleDesc: 'Clasificación de residuos en contenedores ecológicos.',
+    gameStarsTitle: 'Observatorio de Estrellas',
+    gameStarsDesc: 'Uní constelaciones sobre el cielo limpio de Capilla.',
+
+    // Mapa
+    mapTitle: 'Plano de Villa Cielo',
+    mapTabTrails: 'Mapa y Balcones',
+    mapTabLandmarks: 'Hitos Clave',
+    filterAll: 'Todos',
+    filterTrails: 'Senderos',
+    filterFlora: 'Flora',
+    filterFauna: 'Fauna',
+    filterPoints: 'Miradores',
+    simulateGps: 'Simular mi ubicación GPS',
+    dayMap: 'Modo Día',
+    nightMap: 'Modo Noche',
+
+    // Ajustes
+    settingsTitle: 'Ajustes',
+    settingsProfile: 'Perfil Activo',
+    settingsLanguage: 'Idioma',
+    settingsLanguageDesc: 'Idioma de la aplicación',
+    settingsTheme: 'Modo de Pantalla',
+    settingsThemeDesc: 'Claro (Día) u Oscuro (Noche)',
+    themeLight: 'Día (Claro)',
+    themeDark: 'Noche (Oscuro)',
+    settingsSound: 'Sonidos',
+    settingsSoundDesc: 'Efectos suaves de audio',
+    settingsLargeText: 'Texto Grande',
+    settingsLargeTextDesc: 'Mejora contraste y lectura bajo el sol',
+    settingsAccount: 'Cuenta de Usuario',
+    btnLogout: 'Cambiar de Usuario',
+    btnSaveSettings: 'GUARDAR CAMBIOS',
+
+    // Toasts & Alertas
+    toastSettingsSaved: 'Ajustes actualizados con éxito',
+    toastCodeSuccess: '¡Posta identificada con éxito!',
+    toastWelcome: '¡Bienvenido a la Reserva Villa Cielo!'
+  },
+
+  EN: {
+    // App Branding
+    appName: 'Villa Cielo Nature Reserve',
+    appSubtitle: 'Municipal Nature Reserve · Capilla del Monte',
+    tagline: 'Explore · Play · Learn',
+    capillaDelMonte: 'Capilla del Monte, Cordoba',
+
+    // Navegación
+    navHome: 'Home',
+    navTrophic: 'Food Web',
+    navScan: 'Scan',
+    navGames: 'Games',
+    navWiki: 'Wiki',
+    back: 'Back',
+
+    // Registro & Onboarding
+    welcomeTitle: 'Welcome to Villa Cielo',
+    welcomeSubtitle: 'Your interactive guide to explore the mountain forest and protect biodiversity.',
+    registerHeader: 'Explorer Registration',
+    registerSubtitle: 'Enter your details to tailor missions and games to your age.',
+    userNameLabel: 'Name or Nickname',
+    userNamePlaceholder: 'E.g.: Matthew, Emily, Charles...',
+    userAgeLabel: 'Age',
+    userAgePlaceholder: 'E.g.: 10 or 35',
+    emailLabel: 'Email Address',
+    emailPlaceholder: 'explorer@example.com',
+    passwordLabel: 'Password',
+    passwordPlaceholder: '••••••••',
+    btnRegister: 'START ADVENTURE',
+    orContinueWith: 'or sign in quickly with',
+    btnGoogle: 'Google',
+    btnFacebook: 'Facebook',
+    ageHintKids: '👶 Under 13 will play in Kids Mode (visual and simple games).',
+    ageHintAdults: '🌿 Ages 13+ will play in Adults Mode (analytical & ecological data).',
+
+    // Inicio / Dashboard
+    greetingMorning: 'Good morning',
+    greetingAfternoon: 'Good afternoon',
+    greetingEvening: 'Good evening',
+    homeQuestion: 'What shall we discover today?',
+    currentRankLabel: 'Active Rank',
+    expAccumulated: 'EXP earned',
+    nextRankLabel: 'Next Rank',
+    viewAllRanks: 'View all 6 Ranks',
+    unlockedCards: 'Cards',
+    trophicBannerTitle: 'Forest Preservation',
+    trophicBannerBadge: 'Wildfire Simulator',
+    trophicBannerDesc: 'Learn what happens if a species vanishes or fire hits the woodland.',
+    quickMapTitle: 'Interactive Trail Map',
+    quickMapDesc: 'Explore Uritorco Viewpoints and discover milestones.',
+
+    // 6 Rangos & Utilidad de EXP
+    ranksModalTitle: 'The 6 Park Ranger Ranks',
+    ranksModalSubtitle: 'Each EXP tier unlocks practical tools and reserve utilities.',
+    rankCompleted: 'Completed',
+    rankCurrent: 'Current Rank',
+    rankLocked: 'Locked',
+    maxRankReached: 'Top rank achieved!',
+    rankPerkLabel: 'Unlocked perk:',
+
+    // Escáner QR
+    scanTitle: 'QR Scanner',
+    scanSubtitle: 'Trail Station · Villa Cielo',
+    scanInstructions: 'Point at a physical trail QR code or type a manual code.',
+    scanTabCamera: '📷 Use Camera',
+    scanTabManual: '⌨️ Manual Code',
+    scanManualPlaceholder: 'Enter code (e.g. VC-01, ZORRO, PEPERINA)',
+    btnValidateCode: 'Validate Code',
+    btnPauseCamera: 'Pause Camera',
+    btnStartCamera: 'Start Camera',
+    quickCodesTitle: 'Physical post codes in the reserve:',
+    codeNotFound: 'Unrecognized code. Try one of the suggested post codes.',
+
+    // Juegos
+    gamesTitle: 'Games & Missions',
+    gamesSubtitle: 'Pick your challenge based on your age and explore the mountain.',
+    tabKidsGames: '🧒 Kids Only',
+    tabAllGames: '👨‍👩‍👧 Adults & Kids',
+    tabFieldMissions: '🧭 Field Missions',
+    badgeKidsOnly: 'Kids Only',
+    badgeKidsAdults: 'Adults & Kids',
+    badgeField: 'Field Mission',
+    rewardLabel: 'Reward',
+
+    // Nombres de juegos
+    gameTriviaTitle: 'Mountain Trivia',
+    gameTriviaDesc: 'Timed quiz about native wildlife, flora and Uritorco peak.',
+    gameColorTitle: 'Color the Fauna',
+    gameColorDesc: 'Creative workshop painting native animals of Córdoba.',
+    gamePuzzleTitle: 'Landscape Puzzle',
+    gamePuzzleDesc: 'Reconstruct trails and scenic viewpoints.',
+    gameMemoryTitle: 'Wild Memory',
+    gameMemoryDesc: 'Match pairs of native plants and birds.',
+    gameSafariTitle: 'Photo Safari',
+    gameSafariDesc: 'Fast spotting of animals hidden in the scrubland.',
+    gameRecycleTitle: 'Trail Guardian',
+    gameRecycleDesc: 'Sort trash into eco-containers to keep trails clean.',
+    gameStarsTitle: 'Star Observatory',
+    gameStarsDesc: 'Trace constellations in Capilla del Monte dark skies.',
+
+    // Mapa
+    mapTitle: 'Villa Cielo Trail Map',
+    mapTabTrails: 'Trails & Balconies',
+    mapTabLandmarks: 'Key Landmarks',
+    filterAll: 'All',
+    filterTrails: 'Trails',
+    filterFlora: 'Flora',
+    filterFauna: 'Fauna',
+    filterPoints: 'Viewpoints',
+    simulateGps: 'Simulate My GPS Location',
+    dayMap: 'Day Mode',
+    nightMap: 'Night Mode',
+
+    // Ajustes
+    settingsTitle: 'Settings',
+    settingsProfile: 'Active Profile',
+    settingsLanguage: 'Language',
+    settingsLanguageDesc: 'Application language',
+    settingsTheme: 'Display Theme',
+    settingsThemeDesc: 'Day (Light) or Night (Dark)',
+    themeLight: 'Day (Light)',
+    themeDark: 'Night (Dark)',
+    settingsSound: 'Sounds',
+    settingsSoundDesc: 'Soft audio effects',
+    settingsLargeText: 'Large Text',
+    settingsLargeTextDesc: 'Enhances contrast & sunlight reading',
+    settingsAccount: 'User Account',
+    btnLogout: 'Switch User',
+    btnSaveSettings: 'SAVE PREFERENCES',
+
+    // Toasts & Alertas
+    toastSettingsSaved: 'Settings updated successfully',
+    toastCodeSuccess: 'Station identified successfully!',
+    toastWelcome: 'Welcome to Villa Cielo Reserve!'
+  },
+
+  PT: {
+    // App Branding
+    appName: 'Reserva Natural Villa Cielo',
+    appSubtitle: 'Reserva Natural Municipal · Capilla del Monte',
+    tagline: 'Explore · Jogue · Aprenda',
+    capillaDelMonte: 'Capilla del Monte, Córdoba',
+
+    // Navegação
+    navHome: 'Início',
+    navTrophic: 'Teia Trófica',
+    navScan: 'Escanear',
+    navGames: 'Jogos',
+    navWiki: 'Wiki',
+    back: 'Voltar',
+
+    // Registro & Onboarding
+    welcomeTitle: 'Bem-vindo a Villa Cielo',
+    welcomeSubtitle: 'Seu guia interativo para explorar a mata e proteger a biodiversidade.',
+    registerHeader: 'Registro de Explorador',
+    registerSubtitle: 'Insira seus dados para adaptar os jogos e missões à sua idade.',
+    userNameLabel: 'Nome ou Apelido',
+    userNamePlaceholder: 'Ex: Mateus, Valentina, Carlos...',
+    userAgeLabel: 'Idade',
+    userAgePlaceholder: 'Ex: 10 ou 35',
+    emailLabel: 'E-mail',
+    emailPlaceholder: 'explorador@exemplo.com',
+    passwordLabel: 'Senha',
+    passwordPlaceholder: '••••••••',
+    btnRegister: 'INICIAR AVENTURA',
+    orContinueWith: 'ou entre rapidamente com',
+    btnGoogle: 'Google',
+    btnFacebook: 'Facebook',
+    ageHintKids: '👶 Menores de 13 anos jogarão no Modo Crianças.',
+    ageHintAdults: '🌿 A partir de 13 anos jogarão no Modo Adultos com dados científicos.',
+
+    // Inicio / Dashboard
+    greetingMorning: 'Bom dia',
+    greetingAfternoon: 'Boa tarde',
+    greetingEvening: 'Boa noite',
+    homeQuestion: 'O que vamos descobrir hoje?',
+    currentRankLabel: 'Classificação Ativa',
+    expAccumulated: 'EXP acumulada',
+    nextRankLabel: 'Próxima Classificação',
+    viewAllRanks: 'Ver os 6 Níveis',
+    unlockedCards: 'Cartas',
+    trophicBannerTitle: 'Conscientização da Mata',
+    trophicBannerBadge: 'Simulador de Incêndios',
+    trophicBannerDesc: 'Descubra o que acontece se uma espécie desaparecer ou houver fogo.',
+    quickMapTitle: 'Mapa Interativo das Trilhas',
+    quickMapDesc: 'Explore os Mirantes do Uritorco e encontre os marcos.',
+
+    // 6 Rangos & Utilidad de EXP
+    ranksModalTitle: 'Os 6 Níveis de Guarda-Parque',
+    ranksModalSubtitle: 'Cada nível de EXP desbloqueia utilidades práticas na reserva.',
+    rankCompleted: 'Concluído',
+    rankCurrent: 'Nível Atual',
+    rankLocked: 'Bloqueado',
+    maxRankReached: 'Nível máximo alcançado!',
+    rankPerkLabel: 'Utilidade desbloqueada:',
+
+    // Escáner QR
+    scanTitle: 'Scanner QR',
+    scanSubtitle: 'Estação Interativa · Villa Cielo',
+    scanInstructions: 'Aponte para o código QR ou digite o código manual.',
+    scanTabCamera: '📷 Usar Câmera',
+    scanTabManual: '⌨️ Código Manual',
+    scanManualPlaceholder: 'Digite o código (ex: VC-01, ZORRO, PEPERINA)',
+    btnValidateCode: 'Validar Código',
+    btnPauseCamera: 'Pausar Câmera',
+    btnStartCamera: 'Ativar Câmera',
+    quickCodesTitle: 'Códigos físicos dos marcos da reserva:',
+    codeNotFound: 'Código não encontrado. Tente um dos códigos sugeridos.',
+
+    // Juegos
+    gamesTitle: 'Jogos e Missões',
+    gamesSubtitle: 'Escolha seu desafio de acordo com sua idade e explore a reserva.',
+    tabKidsGames: '🧒 Só Crianças',
+    tabAllGames: '👨‍👩‍👧 Adultos e Crianças',
+    tabFieldMissions: '🧭 Missões de Campo',
+    badgeKidsOnly: 'Só Crianças',
+    badgeKidsAdults: 'Adultos e Crianças',
+    badgeField: 'Missão de Campo',
+    rewardLabel: 'Recompensa',
+
+    // Nombres de juegos
+    gameTriviaTitle: 'Trivia Serrana',
+    gameTriviaDesc: 'Perguntas cronometradas sobre fauna, flora e Uritorco.',
+    gameColorTitle: 'Colorir a Fauna',
+    gameColorDesc: 'Oficina de pintura de animais nativos de Córdoba.',
+    gamePuzzleTitle: 'Quebra-cabeça da Paisagem',
+    gamePuzzleDesc: 'Reconstrua trilhas e mirantes da serra.',
+    gameMemoryTitle: 'Memória Silvestre',
+    gameMemoryDesc: 'Encontre os pares de plantas e aves nativas.',
+    gameSafariTitle: 'Safari Fotográfico',
+    gameSafariDesc: 'Avistamento rápido de animais na vegetação.',
+    gameRecycleTitle: 'Guardião da Trilha',
+    gameRecycleDesc: 'Separe o lixo em lixeiras ecológicas.',
+    gameStarsTitle: 'Observatório de Estrelas',
+    gameStarsDesc: 'Ligue constelações no céu limpo de Capilla.',
+
+    // Mapa
+    mapTitle: 'Mapa de Trilhas Villa Cielo',
+    mapTabTrails: 'Trilhas e Mirantes',
+    mapTabLandmarks: 'Marcos Importantes',
+    filterAll: 'Todos',
+    filterTrails: 'Trilhas',
+    filterFlora: 'Flora',
+    filterFauna: 'Fauna',
+    filterPoints: 'Mirantes',
+    simulateGps: 'Simular minha localização GPS',
+    dayMap: 'Modo Dia',
+    nightMap: 'Modo Noite',
+
+    // Ajustes
+    settingsTitle: 'Configurações',
+    settingsProfile: 'Perfil Ativo',
+    settingsLanguage: 'Idioma',
+    settingsLanguageDesc: 'Idioma do aplicativo',
+    settingsTheme: 'Modo de Tela',
+    settingsThemeDesc: 'Claro (Dia) ou Escuro (Noite)',
+    themeLight: 'Dia (Claro)',
+    themeDark: 'Noite (Escuro)',
+    settingsSound: 'Sons',
+    settingsSoundDesc: 'Efeitos sonoros suaves',
+    settingsLargeText: 'Texto Grande',
+    settingsLargeTextDesc: 'Melhora o contraste e leitura sob o sol',
+    settingsAccount: 'Conta de Usuário',
+    btnLogout: 'Trocar de Usuário',
+    btnSaveSettings: 'SALVAR CONFIGURAÇÕES',
+
+    // Toasts & Alertas
+    toastSettingsSaved: 'Configurações salvas com sucesso',
+    toastCodeSuccess: 'Marco identificado com sucesso!',
+    toastWelcome: 'Bem-vindo à Reserva Villa Cielo!'
+  }
+};
+
+export const getTranslation = (lang = 'ES', key) => {
+  const selected = translations[lang] || translations.ES;
+  return selected[key] || translations.ES[key] || key;
+};

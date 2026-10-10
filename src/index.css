@@ -10,7 +10,7 @@
   --cream: #f7f3e8;
   --paper: #fffdf8;
   --ink: #18302a;
-  --muted: #6c7b75;
+  --muted: #62726c;
   --line: #dfe5df;
   --coral: #e76f51;
   --sun: #f4c95d;
@@ -19,6 +19,53 @@
   color: var(--ink);
   background: #dfe8e3;
   font-family: 'DM Sans', sans-serif;
+}
+
+/* Dark mode variables for reserve night trails */
+.dark {
+  --forest: #1a4234;
+  --forest-2: #245447;
+  --moss: #4e8574;
+  --mint: #15372b;
+  --cream: #0a1813;
+  --paper: #11261e;
+  --ink: #e8f2ec;
+  --muted: #95aea3;
+  --line: #1f4335;
+  --coral: #d96245;
+  --sun: #f5cb5c;
+  color: var(--ink);
+  background-color: #0a1813;
+}
+
+/* Large text accessibility mode (sunlight reading / elderly & visual accessibility) */
+.large-text {
+  font-size: 112% !important;
+}
+
+.large-text p,
+.large-text span,
+.large-text strong,
+.large-text small,
+.large-text label,
+.large-text input,
+.large-text button {
+  letter-spacing: 0.015em;
+  font-weight: 500;
+}
+
+.large-text button {
+  min-height: 44px;
+}
+
+.large-text h1 {
+  font-size: 1.85rem !important;
+}
+.large-text h2 {
+  font-size: 1.55rem !important;
+}
+.large-text h3 {
+  font-size: 1.3rem !important;
 }
 
 * {
@@ -42,11 +89,11 @@ html, body, #root {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(23, 59, 50, 0.15);
+  background: rgba(23, 59, 50, 0.2);
   border-radius: 99px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(23, 59, 50, 0.3);
+  background: rgba(23, 59, 50, 0.35);
 }
 
 /* Scan line animation */
@@ -98,6 +145,7 @@ html, body, #root {
 .puzzle-piece.p-6 { background-position: 100% 50%; }
 .puzzle-piece.p-7 { background-position: 0% 100%; }
 .puzzle-piece.p-8 { background-position: 50% 100%; }
+
 .puzzle-empty {
   aspect-ratio: 1;
   border-radius: 12px;

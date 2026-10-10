@@ -1,24 +1,58 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { SPECIES_LIST, RANKS, INITIAL_UNLOCKED_IDS } from '../data/speciesData';
 import { setSoundEnabled, playPop, playSuccess, playCelebration } from '../utils/audio';
+import { getTranslation } from '../utils/translations';
 import confetti from 'canvas-confetti';
 
 const AppContext = createContext(null);
 
 export const AppProvider = ({ children }) => {
-  // Navigation state
-  const [currentScreen, setCurrentScreen] = useState('home');
-  const [history, setHistory] = useState(['home']);
-  const [selectedSpecies, setSelectedSpecies] = useState(SPECIES_LIST[0]);
-  const [profile, setProfileState] = useState('Niños');
+  // Theme state: 'light' (Day trail) or 'dark' (Night trail)
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('villa_theme') || 'light';
+  });
+
+  // User registration / onboarding state
+  const [user, setUser] = useState(() => {
+    const saved = localStorage.getItem('villa_user');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return null;
+  });
+
+  const [isRegistered, setIsRegistered] = useState(() => {
+    return localStorage.getItem('villa_registered') === 'true';
+  });
+
+  // Navigation state: starts on 'register' if not registered, otherwise 'home'
+  const [currentScreen, setCurrentScreen] = useState(() => {
+    const registered = localStorage.getItem('villa_registered') === 'true';
+    return registered ? 'home' : 'register';
+  });
   
-  // App mode: 'app' (Phone shell) or 'overview' (Figma 12-screen wireframe board)
+  const [history, setHistory] = useState(() => {
+    const registered = localStorage.getItem('villa_registered') === 'true';
+    return registered ? ['home'] : ['register'];
+  });
+
+  const [selectedSpecies, setSelectedSpecies] = useState(SPECIES_LIST[0]);
+  
+  // Profile state ('Niños' or 'Adultos')
+  const [profile, setProfileState] = useState(() => {
+    const saved = localStorage.getItem('villa_profile');
+    return saved || 'Niños';
+  });
+  
+  // App mode: 'app' (Phone shell) or 'overview' (Figma wireframes board)
   const [viewMode, setViewMode] = useState('app');
 
   // Gamification & Progression State
   const [exp, setExp] = useState(() => {
     const saved = localStorage.getItem('villa_exp');
-    return saved ? parseInt(saved, 10) : 350; // starts at level 2 so user already has some progression
+    return saved ? parseInt(saved, 10) : 350; // starts with some initial progress
   });
 
   const [points, setPoints] = useState(() => {
@@ -33,7 +67,6 @@ export const AppProvider = ({ children }) => {
         return JSON.parse(saved);
       } catch (e) {}
     }
-    // Default unlocked based on starting level 2:
     return [
       ...INITIAL_UNLOCKED_IDS,
       'corzuela-parda',
@@ -48,21 +81,32 @@ export const AppProvider = ({ children }) => {
   // Level Up modal celebration
   const [levelUpModal, setLevelUpModal] = useState(null);
 
+  // 6 Ranks inspection modal
+  const [ranksModalOpen, setRanksModalOpen] = useState(false);
+
   // Settings
-  const [settings, setSettings] = useState({
-    language: 'ES',
-    sound: true,
-    music: true,
-    vibration: false,
-    hints: true,
-    difficulty: 'Normal',
-    largeText: false,
+  const [settings, setSettings] = useState(() => {
+    const saved = localStorage.getItem('villa_settings');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return {
+      language: 'ES',
+      sound: true,
+      music: true,
+      vibration: false,
+      hints: true,
+      difficulty: 'Normal',
+      largeText: false,
+    };
   });
 
   // Toasts
   const [toasts, setToasts] = useState([]);
 
-  // Calculate current rank & level from EXP
+  // Calculate current rank & level from EXP (max 6 ranks)
   const getCurrentRank = (currentExp = exp) => {
     for (let i = RANKS.length - 1; i >= 0; i--) {
       if (currentExp >= RANKS[i].minExp) {
@@ -73,6 +117,21 @@ export const AppProvider = ({ children }) => {
   };
 
   const currentRank = getCurrentRank(exp);
+
+  // Persist theme
+  useEffect(() => {
+    localStorage.setItem('villa_theme', theme);
+  }, [theme]);
+
+  // Persist settings
+  useEffect(() => {
+    localStorage.setItem('villa_settings', JSON.stringify(settings));
+  }, [settings]);
+
+  // Persist profile
+  useEffect(() => {
+    localStorage.setItem('villa_profile', profile);
+  }, [profile]);
 
   // Save progression to localStorage
   useEffect(() => {
@@ -92,6 +151,23 @@ export const AppProvider = ({ children }) => {
     setSoundEnabled(settings.sound);
   }, [settings.sound]);
 
+  // Translation helper
+  const t = (key) => {
+    return getTranslation(settings.language, key);
+  };
+
+  // Toggle Day / Night mode
+  const toggleTheme = () => {
+    playPop();
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(nextTheme);
+    addToast(
+      nextTheme === 'dark' ? 'Modo Noche Activado 🌙' : 'Modo Día Activado ☀️',
+      nextTheme === 'dark' ? 'Atenuación lumínica para senderos nocturnos' : 'Alto contraste para luz solar',
+      'info'
+    );
+  };
+
   const addToast = (title, message = '', type = 'info') => {
     const id = Date.now() + Math.random().toString();
     setToasts(prev => [...prev, { id, title, message, type }]);
@@ -100,16 +176,59 @@ export const AppProvider = ({ children }) => {
     }, 3800);
   };
 
+  // Subdued, elegant celebration (less dopamine/confetti spam, respectful to nature)
   const triggerCelebration = () => {
     playCelebration();
     try {
       confetti({
-        particleCount: 65,
-        spread: 60,
-        origin: { y: 0.65 },
-        colors: ['#173b32', '#68a691', '#f4c95d', '#e76f51', '#d9eee4']
+        particleCount: 30, // subtle and restrained
+        spread: 45,
+        origin: { y: 0.7 },
+        colors: ['#285444', '#78a690', '#d8aa40', '#d06042']
       });
     } catch (e) {}
+  };
+
+  // Register new user (from onboarding)
+  const registerUser = (userData) => {
+    playSuccess();
+    const newUser = {
+      name: userData.name || 'Explorador',
+      age: parseInt(userData.age, 10) || 12,
+      email: userData.email || 'explorador@villacielo.org',
+      method: userData.method || 'form',
+      registeredAt: new Date().toISOString()
+    };
+
+    // Auto classify profile by age
+    const determinedProfile = newUser.age < 13 ? 'Niños' : 'Adultos';
+    
+    setUser(newUser);
+    setIsRegistered(true);
+    setProfileState(determinedProfile);
+    
+    localStorage.setItem('villa_user', JSON.stringify(newUser));
+    localStorage.setItem('villa_registered', 'true');
+    localStorage.setItem('villa_profile', determinedProfile);
+
+    addToast(
+      `¡Bienvenido, ${newUser.name}!`,
+      `Perfil configurado para ${determinedProfile} (${newUser.age} años)`,
+      'success'
+    );
+
+    setCurrentScreen('home');
+    setHistory(['home']);
+  };
+
+  // Logout / Switch user
+  const logoutUser = () => {
+    playPop();
+    setIsRegistered(false);
+    localStorage.removeItem('villa_registered');
+    addToast('Sesión reiniciada', 'Podés registrar un nuevo explorador', 'info');
+    setCurrentScreen('register');
+    setHistory(['register']);
   };
 
   // Add points and EXP
@@ -163,7 +282,7 @@ export const AppProvider = ({ children }) => {
     return unlockedSpeciesIds.includes(speciesId);
   };
 
-  // Unlock species card explicitly (via QR scan, safari photo, trivia win, etc.)
+  // Unlock species card explicitly
   const unlockSpecies = (speciesId, method = 'qr') => {
     const species = SPECIES_LIST.find(s => s.id === speciesId);
     if (!species) return;
@@ -178,10 +297,18 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  // Scan QR Code in the reserve
-  const scanQRCode = (qrCodeString) => {
-    // Find matching species
-    const matched = SPECIES_LIST.find(s => s.qrCode === qrCodeString);
+  // Scan or Validate QR Code string or manual trail code
+  const scanQRCode = (codeString) => {
+    const normalized = (codeString || '').trim().toUpperCase();
+    
+    // Find matching species by qrCode or id
+    const matched = SPECIES_LIST.find(s => 
+      (s.qrCode && s.qrCode.toUpperCase() === normalized) ||
+      s.id.toUpperCase() === normalized ||
+      s.id.replace(/-/g, '').toUpperCase() === normalized.replace(/-/g, '') ||
+      s.name.toUpperCase().includes(normalized)
+    );
+
     if (matched) {
       unlockSpecies(matched.id, 'qr');
       setSelectedSpecies(matched);
@@ -218,7 +345,7 @@ export const AppProvider = ({ children }) => {
       setHistory(nextHistory);
       setCurrentScreen(prevScreen);
     } else {
-      setCurrentScreen('home');
+      setCurrentScreen(isRegistered ? 'home' : 'register');
     }
   };
 
@@ -245,6 +372,13 @@ export const AppProvider = ({ children }) => {
   return (
     <AppContext.Provider
       value={{
+        theme,
+        toggleTheme,
+        user,
+        isRegistered,
+        registerUser,
+        logoutUser,
+        t,
         currentScreen,
         history,
         selectedSpecies,
@@ -256,6 +390,9 @@ export const AppProvider = ({ children }) => {
         addExp,
         addPoints,
         currentRank,
+        ranks: RANKS,
+        ranksModalOpen,
+        setRanksModalOpen,
         unlockedSpeciesIds,
         isSpeciesUnlocked,
         unlockSpecies,
