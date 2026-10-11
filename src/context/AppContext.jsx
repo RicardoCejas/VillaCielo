@@ -41,6 +41,7 @@ export const AppProvider = ({ children }) => {
   const [selectedSpecies, setSelectedSpecies] = useState(SPECIES_LIST[0]);
   
   // Profile state ('Niños' or 'Adultos')
+  // 1-14 años = Niños, 15-99 años = Adultos
   const [profile, setProfileState] = useState(() => {
     const saved = localStorage.getItem('villa_profile');
     return saved || 'Niños';
@@ -49,15 +50,15 @@ export const AppProvider = ({ children }) => {
   // App mode: 'app' (Phone shell) or 'overview' (Figma wireframes board)
   const [viewMode, setViewMode] = useState('app');
 
-  // Gamification & Progression State
+  // Gamification & Progression State: Starts clean at 0 EXP and 0 points (Rango 1)
   const [exp, setExp] = useState(() => {
     const saved = localStorage.getItem('villa_exp');
-    return saved ? parseInt(saved, 10) : 350; // starts with some initial progress
+    return saved !== null ? parseInt(saved, 10) : 0;
   });
 
   const [points, setPoints] = useState(() => {
     const saved = localStorage.getItem('villa_points');
-    return saved ? parseInt(saved, 10) : 1240;
+    return saved !== null ? parseInt(saved, 10) : 0;
   });
 
   const [unlockedSpeciesIds, setUnlockedSpeciesIds] = useState(() => {
@@ -67,21 +68,29 @@ export const AppProvider = ({ children }) => {
         return JSON.parse(saved);
       } catch (e) {}
     }
-    return [
-      ...INITIAL_UNLOCKED_IDS,
-      'corzuela-parda',
-      'peperina',
-      'picaflor-comun'
-    ];
+    return INITIAL_UNLOCKED_IDS;
   });
 
-  // Modal to celebrate newly unlocked card
+  // Progressive Game Levels state
+  const [gameLevels, setGameLevels] = useState(() => {
+    const saved = localStorage.getItem('villa_game_levels');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return {
+      trivia: 1, // max unlocked level (1, 2, 3)
+      memory: 1, // max unlocked level (1, 2, 3)
+      puzzle: 1, // max unlocked level (1, 2, 3)
+      color: 1,  // max unlocked level (1, 2, 3)
+      stars: {}
+    };
+  });
+
+  // Modals
   const [unlockedCardModal, setUnlockedCardModal] = useState(null);
-
-  // Level Up modal celebration
   const [levelUpModal, setLevelUpModal] = useState(null);
-
-  // 6 Ranks inspection modal
   const [ranksModalOpen, setRanksModalOpen] = useState(false);
 
   // Settings
@@ -106,7 +115,7 @@ export const AppProvider = ({ children }) => {
   // Toasts
   const [toasts, setToasts] = useState([]);
 
-  // Calculate current rank & level from EXP (max 6 ranks)
+  // Calculate current rank & level from EXP (starts at rank 1, max 6 ranks)
   const getCurrentRank = (currentExp = exp) => {
     for (let i = RANKS.length - 1; i >= 0; i--) {
       if (currentExp >= RANKS[i].minExp) {
@@ -118,22 +127,19 @@ export const AppProvider = ({ children }) => {
 
   const currentRank = getCurrentRank(exp);
 
-  // Persist theme
+  // Persist all states to localStorage
   useEffect(() => {
     localStorage.setItem('villa_theme', theme);
   }, [theme]);
 
-  // Persist settings
   useEffect(() => {
     localStorage.setItem('villa_settings', JSON.stringify(settings));
   }, [settings]);
 
-  // Persist profile
   useEffect(() => {
     localStorage.setItem('villa_profile', profile);
   }, [profile]);
 
-  // Save progression to localStorage
   useEffect(() => {
     localStorage.setItem('villa_exp', exp.toString());
   }, [exp]);
@@ -146,7 +152,10 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem('villa_unlocked_ids', JSON.stringify(unlockedSpeciesIds));
   }, [unlockedSpeciesIds]);
 
-  // Sync audio enabled with settings
+  useEffect(() => {
+    localStorage.setItem('villa_game_levels', JSON.stringify(gameLevels));
+  }, [gameLevels]);
+
   useEffect(() => {
     setSoundEnabled(settings.sound);
   }, [settings.sound]);
@@ -176,12 +185,12 @@ export const AppProvider = ({ children }) => {
     }, 3800);
   };
 
-  // Subdued, elegant celebration (less dopamine/confetti spam, respectful to nature)
+  // Subdued, elegant celebration
   const triggerCelebration = () => {
     playCelebration();
     try {
       confetti({
-        particleCount: 30, // subtle and restrained
+        particleCount: 30,
         spread: 45,
         origin: { y: 0.7 },
         colors: ['#285444', '#78a690', '#d8aa40', '#d06042']
@@ -189,19 +198,20 @@ export const AppProvider = ({ children }) => {
     } catch (e) {}
   };
 
-  // Register new user (from onboarding)
+  // Register new user: 1-14 = Niños, 15-99 = Adultos
   const registerUser = (userData) => {
     playSuccess();
+    const ageNum = parseInt(userData.age, 10) || 12;
+    const determinedProfile = ageNum <= 14 ? 'Niños' : 'Adultos';
+
     const newUser = {
       name: userData.name || 'Explorador',
-      age: parseInt(userData.age, 10) || 12,
+      age: ageNum,
       email: userData.email || 'explorador@villacielo.org',
       method: userData.method || 'form',
+      avatar: userData.avatar || null,
       registeredAt: new Date().toISOString()
     };
-
-    // Auto classify profile by age
-    const determinedProfile = newUser.age < 13 ? 'Niños' : 'Adultos';
     
     setUser(newUser);
     setIsRegistered(true);
@@ -229,6 +239,55 @@ export const AppProvider = ({ children }) => {
     addToast('Sesión reiniciada', 'Podés registrar un nuevo explorador', 'info');
     setCurrentScreen('register');
     setHistory(['register']);
+  };
+
+  // Reset ALL progress to 0 EXP, 0 points, Rank 1
+  const resetAllProgress = () => {
+    playPop();
+    setExp(0);
+    setPoints(0);
+    setUnlockedSpeciesIds(INITIAL_UNLOCKED_IDS);
+    setGameLevels({
+      trivia: 1,
+      memory: 1,
+      puzzle: 1,
+      color: 1,
+      stars: {}
+    });
+
+    localStorage.setItem('villa_exp', '0');
+    localStorage.setItem('villa_points', '0');
+    localStorage.setItem('villa_unlocked_ids', JSON.stringify(INITIAL_UNLOCKED_IDS));
+    localStorage.setItem('villa_game_levels', JSON.stringify({
+      trivia: 1,
+      memory: 1,
+      puzzle: 1,
+      color: 1,
+      stars: {}
+    }));
+
+    addToast('Progreso Reiniciado', 'Has vuelto al Rango 1 con 0 EXP', 'info');
+  };
+
+  // Progressive game level completion
+  const completeGameLevel = (gameKey, levelCompleted, earnedExp = 100) => {
+    playSuccess();
+    triggerCelebration();
+    addExp(earnedExp, `¡Nivel ${levelCompleted} de ${gameKey} superado!`);
+
+    setGameLevels(prev => {
+      const currentMax = prev[gameKey] || 1;
+      const nextMax = Math.max(currentMax, levelCompleted + 1);
+      const updatedStars = {
+        ...(prev.stars || {}),
+        [`${gameKey}_${levelCompleted}`]: 3
+      };
+      return {
+        ...prev,
+        [gameKey]: nextMax,
+        stars: updatedStars
+      };
+    });
   };
 
   // Add points and EXP
@@ -378,6 +437,9 @@ export const AppProvider = ({ children }) => {
         isRegistered,
         registerUser,
         logoutUser,
+        resetAllProgress,
+        gameLevels,
+        completeGameLevel,
         t,
         currentScreen,
         history,

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { IMAGES } from '../../data/speciesData';
-import { Leaf, User, Mail, Lock, Sparkles, Shield, ArrowRight, Check } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Leaf, User, Mail, Lock, Shield, ArrowRight, X, CheckCircle2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { playPop, playClick } from '../../utils/audio';
 
 export const RegisterScreen = () => {
@@ -13,9 +13,14 @@ export const RegisterScreen = () => {
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
+  // Social modal state
+  const [socialModal, setSocialModal] = useState(null); // 'Google' | 'Facebook' | null
+  const [socialAge, setSocialAge] = useState('12');
+  const [socialName, setSocialName] = useState('');
+
   const numericAge = parseInt(age, 10);
-  const isKidsProfile = !isNaN(numericAge) && numericAge < 13;
-  const isAdultsProfile = !isNaN(numericAge) && numericAge >= 13;
+  const isKidsProfile = !isNaN(numericAge) && numericAge >= 1 && numericAge <= 14;
+  const isAdultsProfile = !isNaN(numericAge) && numericAge >= 15 && numericAge <= 99;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -23,8 +28,8 @@ export const RegisterScreen = () => {
       setErrorMsg('Por favor ingresá tu nombre o apodo.');
       return;
     }
-    if (!age || isNaN(numericAge) || numericAge <= 2 || numericAge > 110) {
-      setErrorMsg('Por favor ingresá una edad válida.');
+    if (!age || isNaN(numericAge) || numericAge < 1 || numericAge > 99) {
+      setErrorMsg('Por favor ingresá una edad válida entre 1 y 99 años.');
       return;
     }
 
@@ -37,24 +42,34 @@ export const RegisterScreen = () => {
     });
   };
 
-  const handleSocialRegister = (provider) => {
+  const handleOpenSocialModal = (provider) => {
     playClick();
-    const demoName = provider === 'Google' ? 'Explorador Google' : 'Explorador Facebook';
-    const demoAge = 25; // default adult
-    registerUser({
-      name: demoName,
-      age: demoAge,
-      email: `${provider.toLowerCase()}.user@ejemplo.com`,
-      method: provider
-    });
+    setSocialModal(provider);
+    setSocialName(provider === 'Google' ? 'Lucas Cejas' : 'Lucas Cejas (FB)');
+    setSocialAge('12'); // default
   };
+
+  const handleConfirmSocialRegister = () => {
+    playClick();
+    const finalAge = parseInt(socialAge, 10) || 12;
+    registerUser({
+      name: socialName || (socialModal === 'Google' ? 'Explorador Google' : 'Explorador Facebook'),
+      age: finalAge,
+      email: `${socialModal.toLowerCase()}.user@ejemplo.com`,
+      method: socialModal
+    });
+    setSocialModal(null);
+  };
+
+  const numericSocialAge = parseInt(socialAge, 10);
+  const isSocialKids = !isNaN(numericSocialAge) && numericSocialAge >= 1 && numericSocialAge <= 14;
 
   return (
     <section className={`relative w-full h-full flex flex-col justify-between overflow-hidden select-none ${
       theme === 'dark' ? 'bg-[#0a1813] text-[#e8f2ec]' : 'bg-[#f7f5ee] text-[#18302a]'
     }`}>
-      {/* Background Header Trail with Gradient Overlay */}
-      <div className="relative h-[28%] w-full overflow-hidden shrink-0">
+      {/* Background Header Trail */}
+      <div className="relative h-[27%] w-full overflow-hidden shrink-0">
         <img
           src={IMAGES.uritorco}
           alt="Cerro Uritorco y Villa Cielo"
@@ -87,10 +102,10 @@ export const RegisterScreen = () => {
         </div>
       </div>
 
-      {/* Main Registration Form Sheet */}
-      <div className="flex-1 flex flex-col justify-between px-5 pb-5 pt-1 overflow-y-auto">
+      {/* Main Registration Form */}
+      <div className="flex-1 flex flex-col justify-between px-5 pb-4 pt-1 overflow-y-auto">
         <div>
-          <div className="mb-3">
+          <div className="mb-2.5">
             <span className="text-[9px] font-bold tracking-[1.6px] uppercase text-forest-light block">
               Bienvenida & Registro
             </span>
@@ -98,17 +113,17 @@ export const RegisterScreen = () => {
               Creá tu perfil de Guardián
             </h1>
             <p className="text-xs text-muted mt-0.5 leading-snug">
-              Completá tus datos para que adaptemos los juegos, las misiones y las fichas a tu edad.
+              Tu edad define automáticamente si explorás en <strong>Perfil Niños (1-14)</strong> o <strong>Perfil Adultos (15-99)</strong>.
             </p>
           </div>
 
           {errorMsg && (
-            <div className="mb-3 p-2 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 text-xs font-semibold">
+            <div className="mb-2.5 p-2 rounded-xl bg-rose-500/10 border border-rose-500/30 text-rose-600 text-xs font-semibold">
               {errorMsg}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-2.5">
+          <form onSubmit={handleSubmit} className="space-y-2">
             {/* Input: Nombre */}
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-1">
@@ -133,31 +148,31 @@ export const RegisterScreen = () => {
               </div>
             </div>
 
-            {/* Input: Edad con Auto-detección de Perfil */}
+            {/* Input: Edad con Auto-detección: 1-14 = Niños, 15-99 = Adultos */}
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
-                  Edad (para adaptar los juegos) *
+                  Edad (1 a 99 años) *
                 </label>
                 {isKidsProfile && (
-                  <span className="text-[9px] font-bold text-amber-700 bg-amber-100 dark:bg-amber-950/60 dark:text-amber-300 px-2 py-0.5 rounded-full">
-                    👶 Modo Niños (&lt;13)
+                  <span className="text-[8.5px] font-bold text-amber-800 bg-amber-100 dark:bg-amber-950/70 dark:text-amber-300 px-2 py-0.5 rounded-full">
+                    🧒 Perfil Niños (1 a 14)
                   </span>
                 )}
                 {isAdultsProfile && (
-                  <span className="text-[9px] font-bold text-emerald-700 bg-emerald-100 dark:bg-emerald-950/60 dark:text-emerald-300 px-2 py-0.5 rounded-full">
-                    🌿 Modo Adultos (13+)
+                  <span className="text-[8.5px] font-bold text-emerald-800 bg-emerald-100 dark:bg-emerald-950/70 dark:text-emerald-300 px-2 py-0.5 rounded-full">
+                    🌿 Perfil Adultos (15 a 99)
                   </span>
                 )}
               </div>
               <input
                 type="number"
-                min="3"
-                max="105"
+                min="1"
+                max="99"
                 required
                 value={age}
                 onChange={(e) => setAge(e.target.value)}
-                placeholder="Ej: 8 para chicos, 35 para adultos"
+                placeholder="Ej: 8 para chicos, 32 para adultos"
                 className={`w-full px-3 py-2 text-xs rounded-xl border focus:outline-none focus:ring-2 transition ${
                   theme === 'dark'
                     ? 'bg-[#12261e] border-[#224637] text-white focus:ring-forest-light'
@@ -168,12 +183,12 @@ export const RegisterScreen = () => {
                 {isKidsProfile
                   ? '🎮 Recibirás desafíos visuales: Colorear, Puzzles simples y Trivia ilustrada.'
                   : isAdultsProfile
-                  ? '🔬 Recibirás desafíos profundos: Red trófica, botánica serrana y prevención de fuego.'
-                  : 'Ingresá tu edad para clasificar automáticamente tu categoría de juegos.'}
+                  ? '🔬 Recibirás desafíos profundos: Red trófica, botánica serrana y prevención de incendios.'
+                  : 'Ingresá tu edad: 1-14 niños, 15-99 adultos.'}
               </p>
             </div>
 
-            {/* Input: Correo (opcional o de control) */}
+            {/* Input: Correo */}
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-1">
                 Correo Electrónico (opcional)
@@ -222,7 +237,7 @@ export const RegisterScreen = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-full mt-3 h-11 rounded-xl bg-forest hover:bg-forest-light text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md shadow-forest/20 active:scale-95 transition"
+              className="w-full mt-2.5 h-10 rounded-xl bg-forest hover:bg-forest-light text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 transition"
             >
               <span>COMENZAR AVENTURA</span>
               <ArrowRight className="w-4 h-4" />
@@ -230,7 +245,7 @@ export const RegisterScreen = () => {
           </form>
 
           {/* Social login divider */}
-          <div className="relative my-3 text-center">
+          <div className="relative my-2.5 text-center">
             <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px bg-line" />
             <span className={`relative px-3 text-[10px] uppercase font-bold text-muted ${
               theme === 'dark' ? 'bg-[#0a1813]' : 'bg-[#f7f5ee]'
@@ -239,11 +254,11 @@ export const RegisterScreen = () => {
             </span>
           </div>
 
-          {/* Social login buttons */}
+          {/* Social login buttons (open interactive age selector modal) */}
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
-              onClick={() => handleSocialRegister('Google')}
+              onClick={() => handleOpenSocialModal('Google')}
               className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold shadow-2xs transition active:scale-95 ${
                 theme === 'dark'
                   ? 'bg-[#142c22] border-[#254d3d] text-white hover:bg-[#1a382c]'
@@ -261,7 +276,7 @@ export const RegisterScreen = () => {
 
             <button
               type="button"
-              onClick={() => handleSocialRegister('Facebook')}
+              onClick={() => handleOpenSocialModal('Facebook')}
               className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold shadow-2xs transition active:scale-95 ${
                 theme === 'dark'
                   ? 'bg-[#142c22] border-[#254d3d] text-white hover:bg-[#1a382c]'
@@ -277,13 +292,118 @@ export const RegisterScreen = () => {
         </div>
 
         {/* Footer conservation pledge */}
-        <div className="mt-4 pt-2 border-t border-line/60 text-center">
+        <div className="mt-3 pt-2 border-t border-line/60 text-center">
           <small className="text-[9px] text-muted flex items-center justify-center gap-1">
             <Shield className="w-3 h-3 text-forest" />
-            <span>Datos protegidos para uso pedagógico en la Reserva Villa Cielo</span>
+            <span>Reserva Natural Villa Cielo · Inicio limpio en Rango 1 (0 EXP)</span>
           </small>
         </div>
       </div>
+
+      {/* Interactive Social Login Age Selection Modal */}
+      <AnimatePresence>
+        {socialModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs select-none">
+            <motion.div
+              initial={{ scale: 0.92, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.92, opacity: 0 }}
+              className={`w-full max-w-xs p-5 rounded-3xl border shadow-2xl ${
+                theme === 'dark'
+                  ? 'bg-[#0f241d] border-[#224d3c] text-white'
+                  : 'bg-white border-line text-ink'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="w-8 h-8 rounded-xl bg-forest/20 grid place-items-center">
+                    {socialModal === 'Google' ? '🌐' : '📘'}
+                  </span>
+                  <div>
+                    <strong className="text-xs font-bold block leading-tight">
+                      Acceso con {socialModal}
+                    </strong>
+                    <span className="text-[9px] text-muted">
+                      Configurá tu edad de explorador
+                    </span>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSocialModal(null)}
+                  className="p-1 rounded-lg text-muted hover:text-ink"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Simulated user identity */}
+              <div className={`p-2.5 rounded-xl border mb-3 flex items-center gap-2.5 ${
+                theme === 'dark' ? 'bg-[#153428] border-[#275a45]' : 'bg-[#eef4f0] border-line'
+              }`}>
+                <div className="w-9 h-9 rounded-full bg-forest text-sun font-bold text-xs grid place-items-center">
+                  LC
+                </div>
+                <div>
+                  <strong className="text-xs font-bold block leading-none">
+                    {socialName}
+                  </strong>
+                  <span className="text-[9px] text-muted">
+                    {socialModal.toLowerCase()}.user@ejemplo.com
+                  </span>
+                </div>
+              </div>
+
+              {/* Age selection */}
+              <div className="mb-4">
+                <label className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-1">
+                  ¿Cuántos años tenés? (1 a 99)
+                </label>
+                <input
+                  type="number"
+                  min="1"
+                  max="99"
+                  value={socialAge}
+                  onChange={(e) => setSocialAge(e.target.value)}
+                  className={`w-full px-3 py-2 text-sm font-bold rounded-xl border focus:outline-none focus:ring-2 focus:ring-forest text-center ${
+                    theme === 'dark'
+                      ? 'bg-[#18392d] border-[#2b614c] text-white'
+                      : 'bg-cream border-line text-ink'
+                  }`}
+                />
+
+                <div className="mt-2 p-2 rounded-xl bg-black/5 dark:bg-white/5 border border-line/60 text-[10px] leading-tight">
+                  {isSocialKids ? (
+                    <span className="text-amber-700 dark:text-amber-300 font-bold block">
+                      🧒 Perfil Niños (1-14 años): Juegos visuales, puzzles y dibujo.
+                    </span>
+                  ) : (
+                    <span className="text-emerald-700 dark:text-emerald-300 font-bold block">
+                      🌿 Perfil Adultos (15-99 años): Datos analíticos, botánica y red trófica.
+                    </span>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => setSocialModal(null)}
+                  className="flex-1 py-2 rounded-xl border border-line text-xs font-bold text-muted hover:text-ink transition"
+                >
+                  Cancelar
+                </button>
+                <button
+                  type="button"
+                  onClick={handleConfirmSocialRegister}
+                  className="flex-1 py-2 rounded-xl bg-forest hover:bg-forest-light text-white text-xs font-bold shadow-md transition active:scale-95"
+                >
+                  Confirmar
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 };

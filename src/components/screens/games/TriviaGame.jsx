@@ -1,20 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useApp } from '../../../context/AppContext';
-import { KIDS_TRIVIA_QUESTIONS, ADULT_TRIVIA_QUESTIONS } from '../../../data/quizData';
+import { KIDS_TRIVIA_LEVELS, ADULT_TRIVIA_LEVELS } from '../../../data/quizData';
 import { TopBar } from '../../layout/TopBar';
-import { Leaf, Check, X, ChevronRight, RotateCcw, Trophy, Clock, Zap, User } from 'lucide-react';
+import { Check, X, ChevronRight, RotateCcw, Clock, Lock, Star, Sparkles } from 'lucide-react';
 import { playSuccess, playError, playPop } from '../../../utils/audio';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const TriviaGame = () => {
-  const { navigate, addPoints, triggerCelebration, unlockSpecies, profile, theme } = useApp();
+  const { 
+    navigate, 
+    completeGameLevel, 
+    gameLevels, 
+    unlockSpecies, 
+    profile, 
+    theme 
+  } = useApp();
   
-  // Choose question bank based on profile or toggle
   const [triviaMode, setTriviaMode] = useState(() => {
     return profile === 'Niños' ? 'kids' : 'adults';
   });
 
-  const questions = triviaMode === 'kids' ? KIDS_TRIVIA_QUESTIONS : ADULT_TRIVIA_QUESTIONS;
+  const levelSets = triviaMode === 'kids' ? KIDS_TRIVIA_LEVELS : ADULT_TRIVIA_LEVELS;
+  const maxUnlockedLevel = gameLevels?.trivia || 1;
+
+  const [currentLevelNum, setCurrentLevelNum] = useState(1);
+  const activeLevelData = levelSets.find(l => l.level === currentLevelNum) || levelSets[0];
+  const questions = activeLevelData.questions;
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
@@ -44,7 +55,7 @@ export const TriviaGame = () => {
     }
 
     return () => clearInterval(timerRef.current);
-  }, [currentIndex, selectedOption, quizFinished, triviaMode]);
+  }, [currentIndex, selectedOption, quizFinished, currentLevelNum, triviaMode]);
 
   const handleSelectOption = (idx) => {
     if (selectedOption !== null || quizFinished) return;
@@ -53,10 +64,9 @@ export const TriviaGame = () => {
 
     if (idx === currentQ.answer) {
       playSuccess();
-      const speedBonus = timeLeft * 5;
+      const speedBonus = timeLeft * 4;
       const earned = currentQ.points + speedBonus;
       setScore(s => s + earned);
-      addPoints(earned, '¡Respuesta correcta en Trivia!');
     } else {
       playError();
     }
@@ -69,15 +79,23 @@ export const TriviaGame = () => {
       setSelectedOption(null);
     } else {
       setQuizFinished(true);
-      triggerCelebration();
-      unlockSpecies('piquillin', 'trivia');
-      unlockSpecies('halconcito-colorado', 'trivia');
+      completeGameLevel('trivia', currentLevelNum, score > 0 ? score : 80);
+      unlockSpecies(currentLevelNum === 1 ? 'piquillin' : 'halconcito-colorado', 'trivia');
     }
   };
 
-  const handleRestart = (newMode = triviaMode) => {
+  const handleSelectLevel = (lvlNum) => {
+    if (lvlNum > maxUnlockedLevel) return;
     playPop();
-    setTriviaMode(newMode);
+    setCurrentLevelNum(lvlNum);
+    setCurrentIndex(0);
+    setSelectedOption(null);
+    setScore(0);
+    setQuizFinished(false);
+  };
+
+  const handleRestart = () => {
+    playPop();
     setCurrentIndex(0);
     setSelectedOption(null);
     setScore(0);
@@ -95,29 +113,63 @@ export const TriviaGame = () => {
         backLabel="Volver"
       />
 
-      {/* Mode Switcher: Niños vs Adultos */}
+      {/* Level Selection Bar (Progressive 1, 2, 3) */}
       <div className="px-4 pt-1 pb-1">
-        <div className="flex bg-black/10 dark:bg-white/10 p-0.5 rounded-xl text-[10px] font-bold">
-          <button
-            onClick={() => handleRestart('kids')}
-            className={`flex-1 py-1 rounded-lg transition flex items-center justify-center gap-1 ${
-              triviaMode === 'kids'
-                ? 'bg-forest text-white shadow-xs'
-                : 'text-muted hover:text-ink dark:hover:text-white'
-            }`}
-          >
-            <span>🧒 Modo Niños</span>
-          </button>
-          <button
-            onClick={() => handleRestart('adults')}
-            className={`flex-1 py-1 rounded-lg transition flex items-center justify-center gap-1 ${
-              triviaMode === 'adults'
-                ? 'bg-forest text-white shadow-xs'
-                : 'text-muted hover:text-ink dark:hover:text-white'
-            }`}
-          >
-            <span>🌿 Modo Adultos</span>
-          </button>
+        <div className="flex items-center justify-between gap-1 mb-1.5">
+          <span className="text-[9px] font-bold uppercase tracking-wider text-muted">
+            Progreso por Niveles:
+          </span>
+          <div className="flex bg-black/10 dark:bg-white/10 p-0.5 rounded-lg text-[9px] font-bold">
+            <button
+              onClick={() => {
+                setTriviaMode('kids');
+                setCurrentIndex(0);
+                setSelectedOption(null);
+                setQuizFinished(false);
+              }}
+              className={`px-2 py-0.5 rounded transition ${triviaMode === 'kids' ? 'bg-forest text-white' : 'text-muted'}`}
+            >
+              🧒 Niños
+            </button>
+            <button
+              onClick={() => {
+                setTriviaMode('adults');
+                setCurrentIndex(0);
+                setSelectedOption(null);
+                setQuizFinished(false);
+              }}
+              className={`px-2 py-0.5 rounded transition ${triviaMode === 'adults' ? 'bg-forest text-white' : 'text-muted'}`}
+            >
+              🌿 Adultos
+            </button>
+          </div>
+        </div>
+
+        {/* 3 Level Pills */}
+        <div className="grid grid-cols-3 gap-1.5">
+          {levelSets.map(lvl => {
+            const isUnlocked = lvl.level <= maxUnlockedLevel;
+            const isActive = lvl.level === currentLevelNum;
+
+            return (
+              <button
+                key={lvl.level}
+                disabled={!isUnlocked}
+                onClick={() => handleSelectLevel(lvl.level)}
+                className={`py-1.5 px-2 rounded-xl text-[10px] font-bold border transition flex items-center justify-center gap-1 ${
+                  isActive
+                    ? 'bg-forest text-white border-forest shadow-xs'
+                    : isUnlocked
+                    ? 'bg-black/5 dark:bg-white/5 border-line dark:border-[#204535] text-ink dark:text-white'
+                    : 'bg-black/5 dark:bg-white/5 border-line/40 text-muted/50 cursor-not-allowed'
+                }`}
+              >
+                {!isUnlocked && <Lock className="w-2.5 h-2.5" />}
+                <span>Nivel {lvl.level}</span>
+                {isUnlocked && lvl.level < maxUnlockedLevel && <Star className="w-2.5 h-2.5 text-sun fill-sun" />}
+              </button>
+            );
+          })}
         </div>
       </div>
 
@@ -126,52 +178,67 @@ export const TriviaGame = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-4"
+          className="flex-1 flex flex-col items-center justify-center p-6 text-center space-y-3 my-auto"
         >
-          <div className="w-16 h-16 rounded-3xl overflow-hidden shadow-lg mx-auto">
-            <img src="/icons/trivia.png" alt="Trivia natural" className="w-full h-full object-contain" />
+          <div className="w-14 h-14 rounded-2xl bg-forest text-sun grid place-items-center shadow-lg mx-auto">
+            <Star className="w-7 h-7 fill-sun" />
           </div>
           <div>
             <span className="text-forest-light text-[10px] font-bold uppercase tracking-wider block">
-              ¡Trivia Completada!
+              ¡Nivel {currentLevelNum} Superado!
             </span>
-            <h2 className="font-serif text-2xl font-bold mt-1">
-              {score} Puntos Obtenidos
+            <h2 className="font-serif text-2xl font-bold mt-0.5">
+              +{score} Puntos y EXP
             </h2>
             <p className="text-muted text-xs mt-1 max-w-xs mx-auto">
-              Demostraste tus conocimientos sobre el ecosistema serrano de Villa Cielo.
+              {currentLevelNum < 3
+                ? `¡Desbloqueaste el Nivel ${currentLevelNum + 1} de la Trivia Serrana!`
+                : '¡Has dominado todos los niveles de la Trivia de Villa Cielo!'}
             </p>
           </div>
 
-          <div className="flex gap-2 w-full max-w-xs">
+          <div className="flex gap-2 w-full max-w-xs pt-2">
             <button
-              onClick={() => handleRestart()}
-              className="flex-1 py-2.5 rounded-xl bg-cream dark:bg-[#153427] border border-line dark:border-[#275b47] text-xs font-bold flex items-center justify-center gap-1.5 active:scale-95 transition"
+              onClick={handleRestart}
+              className="flex-1 py-2.5 rounded-xl border border-line dark:border-[#275b47] text-xs font-bold flex items-center justify-center gap-1.5 active:scale-95 transition"
             >
               <RotateCcw className="w-3.5 h-3.5" />
-              <span>Jugar de Nuevo</span>
+              <span>Repetir</span>
             </button>
-            <button
-              onClick={() => navigate('games')}
-              className="flex-1 py-2.5 rounded-xl bg-forest text-white text-xs font-bold active:scale-95 transition shadow-md"
-            >
-              Ver Más Juegos
-            </button>
+            {currentLevelNum < 3 ? (
+              <button
+                onClick={() => handleSelectLevel(currentLevelNum + 1)}
+                className="flex-1 py-2.5 rounded-xl bg-forest text-white text-xs font-bold active:scale-95 transition shadow-md flex items-center justify-center gap-1"
+              >
+                <span>Nivel {currentLevelNum + 1}</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            ) : (
+              <button
+                onClick={() => navigate('games')}
+                className="flex-1 py-2.5 rounded-xl bg-forest text-white text-xs font-bold active:scale-95 transition shadow-md"
+              >
+                Menú Juegos
+              </button>
+            )}
           </div>
         </motion.div>
       ) : (
         /* Active Quiz Screen */
         <div className="flex-1 flex flex-col justify-between px-4 py-2 overflow-y-auto">
           {/* Status Header */}
-          <div className={`flex items-center justify-between p-2.5 rounded-2xl border text-xs ${
+          <div className={`flex items-center justify-between p-2 rounded-2xl border text-xs ${
             theme === 'dark' ? 'bg-[#11261e] border-[#1e4536]' : 'bg-cream border-line'
           }`}>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <span className="text-xs font-bold text-forest-light">
-                Pregunta {currentIndex + 1} de {questions.length}
+                {activeLevelData.title}
+              </span>
+              <span className="text-[10px] text-muted">
+                ({currentIndex + 1}/{questions.length})
               </span>
             </div>
-            <div className="flex items-center gap-1.5 font-bold text-forest">
+            <div className="flex items-center gap-1 font-bold text-forest">
               <Clock className="w-3.5 h-3.5 text-forest" />
               <span className={timeLeft <= 5 ? 'text-rose-600 animate-pulse font-extrabold' : ''}>
                 {timeLeft}s
@@ -240,7 +307,7 @@ export const TriviaGame = () => {
                 onClick={handleNext}
                 className="w-full py-2 rounded-xl bg-forest hover:bg-forest-light text-white font-bold text-xs flex items-center justify-center gap-1 shadow-md transition active:scale-95"
               >
-                <span>{currentIndex + 1 < questions.length ? 'Siguiente Pregunta' : 'Ver Resultado'}</span>
+                <span>{currentIndex + 1 < questions.length ? 'Siguiente Pregunta' : 'Completar Nivel'}</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </motion.div>

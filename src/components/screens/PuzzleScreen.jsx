@@ -2,15 +2,47 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { IMAGES } from '../../data/speciesData';
 import { TopBar } from '../layout/TopBar';
-import { RotateCcw, Trophy, CheckCircle2 } from 'lucide-react';
-import { playClick, playSuccess, playCelebration } from '../../utils/audio';
+import { RotateCcw, Trophy, CheckCircle2, Lock, Star, ChevronRight } from 'lucide-react';
+import { playClick, playSuccess } from '../../utils/audio';
 import { motion } from 'framer-motion';
 
 export const PuzzleScreen = () => {
-  const { navigate, addPoints, triggerCelebration, unlockSpecies } = useApp();
-  // Target solved state is [1, 2, 3, 4, 5, 6, 7, 8, 0]
-  // Solvable initial state
-  const [board, setBoard] = useState([1, 2, 3, 4, 5, 6, 7, 0, 8]);
+  const { 
+    navigate, 
+    completeGameLevel, 
+    gameLevels, 
+    unlockSpecies, 
+    theme 
+  } = useApp();
+
+  const maxUnlockedLevel = gameLevels?.puzzle || 1;
+  const [currentLevel, setCurrentLevel] = useState(1);
+
+  // Initial solvable boards per level
+  const levelConfigs = [
+    {
+      level: 1,
+      title: 'Nivel 1: Mirador del Tala (Iniciación)',
+      initialBoard: [1, 2, 3, 4, 5, 6, 7, 0, 8], // 1 step from [1,2,3,4,5,6,7,8,0]
+      image: IMAGES.trail
+    },
+    {
+      level: 2,
+      title: 'Nivel 2: Balcones del Uritorco (Intermedio)',
+      initialBoard: [1, 2, 3, 4, 0, 5, 7, 8, 6],
+      image: IMAGES.uritorco
+    },
+    {
+      level: 3,
+      title: 'Nivel 3: Cumbre de las Sierras (Desafío)',
+      initialBoard: [1, 0, 2, 4, 5, 3, 7, 8, 6],
+      image: IMAGES.trail
+    }
+  ];
+
+  const activeLevelConfig = levelConfigs.find(l => l.level === currentLevel) || levelConfigs[0];
+
+  const [board, setBoard] = useState(activeLevelConfig.initialBoard);
   const [moves, setMoves] = useState(0);
   const [isSolved, setIsSolved] = useState(false);
 
@@ -23,6 +55,15 @@ export const PuzzleScreen = () => {
     if (isSolved) return;
     const emptyIdx = board.indexOf(0);
 
+    // Can only move if adjacent (row distance + col distance === 1)
+    const emptyRow = Math.floor(emptyIdx / 3);
+    const emptyCol = emptyIdx % 3;
+    const clickedRow = Math.floor(clickedIdx / 3);
+    const clickedCol = clickedIdx % 3;
+    const isAdjacent = Math.abs(emptyRow - clickedRow) + Math.abs(emptyCol - clickedCol) === 1;
+
+    if (!isAdjacent) return;
+
     playClick();
     const newBoard = [...board];
     [newBoard[emptyIdx], newBoard[clickedIdx]] = [newBoard[clickedIdx], newBoard[emptyIdx]];
@@ -32,22 +73,31 @@ export const PuzzleScreen = () => {
 
     if (checkSolved(newBoard)) {
       setIsSolved(true);
-      triggerCelebration();
-      addPoints(150, '¡Puzzle del paisaje completado!');
+      completeGameLevel('puzzle', currentLevel, currentLevel * 75);
       unlockSpecies('tala-serrano', 'puzzle');
-      unlockSpecies('quebracho-blanco', 'puzzle');
     }
+  };
+
+  const handleSelectLevel = (lvlNum) => {
+    if (lvlNum > maxUnlockedLevel) return;
+    setCurrentLevel(lvlNum);
+    const cfg = levelConfigs.find(l => l.level === lvlNum) || levelConfigs[0];
+    setBoard(cfg.initialBoard);
+    setMoves(0);
+    setIsSolved(false);
   };
 
   const handleReset = () => {
     playClick();
-    setBoard([1, 2, 3, 4, 5, 6, 7, 0, 8]);
+    setBoard(activeLevelConfig.initialBoard);
     setMoves(0);
     setIsSolved(false);
   };
 
   return (
-    <section className="relative w-full h-full bg-paper flex flex-col justify-between overflow-hidden">
+    <section className={`relative w-full h-full flex flex-col justify-between overflow-hidden ${
+      theme === 'dark' ? 'bg-[#0a1813] text-[#e8f2ec]' : 'bg-paper text-ink'
+    }`}>
       {/* TopBar with styled back button */}
       <TopBar
         title="Puzzle del paisaje"
@@ -55,89 +105,127 @@ export const PuzzleScreen = () => {
         backLabel="Volver"
       />
 
-      <div className="flex-1 flex flex-col justify-between px-5 py-3 overflow-y-auto">
-        {/* Topline Info with Puzzle Icon */}
-        <div className="flex items-center justify-between text-xs bg-cream p-2 rounded-2xl border border-line">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl overflow-hidden shadow-2xs shrink-0">
-              <img src="/icons/puzzle.png" alt="Puzzle" className="w-full h-full object-contain" />
-            </div>
-            <div>
-              <strong className="text-forest font-bold block text-[11px] leading-tight">Sendero del Tala</strong>
-              <span className="text-muted text-[9px]">Nivel fácil · 3 × 3</span>
-            </div>
-          </div>
-          <strong className="text-forest font-bold text-xs bg-white px-2.5 py-1 rounded-xl shadow-2xs">{moves} movs</strong>
-        </div>
-
-        {/* Puzzle Board */}
-        <div className="relative aspect-square w-full max-w-[270px] mx-auto bg-mint/50 p-1.5 rounded-3xl border-4 border-white shadow-xl grid grid-cols-3 gap-1">
-          {board.map((tile, idx) => {
-            if (tile === 0) {
-              return (
-                <div
-                  key="empty"
-                  className="rounded-xl bg-repeat puzzle-empty"
-                />
-              );
-            }
-
-            return (
-              <motion.button
-                key={tile}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => handleTileClick(idx)}
-                className={`puzzle-piece p-${tile} shadow-sm border border-black/10`}
-                aria-label={`Mover pieza ${tile}`}
-              />
-            );
-          })}
-
-          {/* Solved Overlay */}
-          {isSolved && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="absolute inset-0 bg-forest/85 backdrop-blur-sm rounded-3xl flex flex-col items-center justify-center p-4 text-center text-white"
+      <div className="flex-1 flex flex-col justify-between px-4 py-2 overflow-y-auto">
+        {/* Progressive Level Selector */}
+        <div className="mb-2">
+          <div className="flex items-center justify-between text-xs mb-1">
+            <span className="text-[9px] font-bold uppercase tracking-wider text-muted">
+              Nivel Progresivo:
+            </span>
+            <button
+              onClick={handleReset}
+              className="p-1 rounded-lg border border-line dark:border-[#204535] text-muted hover:text-ink transition"
+              title="Reiniciar tablero"
             >
-              <div className="w-16 h-16 rounded-2xl overflow-hidden shadow-xl mb-2">
-                <img src="/icons/puzzle.png" alt="Puzzle completado" className="w-full h-full object-contain" />
-              </div>
-              <strong className="font-serif text-xl font-bold">
-                ¡Paisaje Reconstruido!
-              </strong>
-              <p className="text-xs text-mint mt-1">
-                Resuelto en {moves} movimientos.
-              </p>
-            </motion.div>
-          )}
-        </div>
+              <RotateCcw className="w-3 h-3" />
+            </button>
+          </div>
 
-        {/* Target Image Preview */}
-        <div className="bg-cream rounded-2xl p-2.5 flex items-center gap-3 border border-line">
-          <img
-            src={IMAGES.trail}
-            alt="Referencia del paisaje"
-            className="w-12 h-10 object-cover rounded-xl shadow-sm border border-white"
-          />
-          <div className="flex flex-col">
-            <small className="text-muted text-[8px] font-bold uppercase tracking-wider">
-              Imagen Objetivo
-            </small>
-            <strong className="text-xs font-bold text-forest">
-              Sendero del Tala
-            </strong>
+          <div className="grid grid-cols-3 gap-1.5">
+            {levelConfigs.map(lvl => {
+              const isUnlocked = lvl.level <= maxUnlockedLevel;
+              const isActive = lvl.level === currentLevel;
+
+              return (
+                <button
+                  key={lvl.level}
+                  disabled={!isUnlocked}
+                  onClick={() => handleSelectLevel(lvl.level)}
+                  className={`py-1.5 px-2 rounded-xl text-[10px] font-bold border transition flex items-center justify-center gap-1 ${
+                    isActive
+                      ? 'bg-forest text-white border-forest shadow-xs'
+                      : isUnlocked
+                      ? 'bg-black/5 dark:bg-white/5 border-line dark:border-[#204535]'
+                      : 'bg-black/5 dark:bg-white/5 border-line/40 text-muted/50 cursor-not-allowed'
+                  }`}
+                >
+                  {!isUnlocked && <Lock className="w-2.5 h-2.5" />}
+                  <span>Nivel {lvl.level}</span>
+                  {isUnlocked && lvl.level < maxUnlockedLevel && <Star className="w-2.5 h-2.5 text-sun fill-sun" />}
+                </button>
+              );
+            })}
           </div>
         </div>
 
-        {/* Action Button */}
-        <button
-          onClick={handleReset}
-          className="w-full h-11 rounded-2xl border border-forest text-forest hover:bg-forest hover:text-white font-bold text-xs flex items-center justify-center gap-2 transition active:scale-95 shadow-sm"
-        >
-          <RotateCcw className="w-4 h-4" />
-          <span>REINICIAR PUZZLE</span>
-        </button>
+        {/* Topline Info */}
+        <div className={`flex items-center justify-between p-2 rounded-2xl border text-[11px] mb-2 ${
+          theme === 'dark' ? 'bg-[#11261e] border-[#1f4535]' : 'bg-cream border-line'
+        }`}>
+          <span className="font-bold text-forest-light">{activeLevelConfig.title}</span>
+          <span className="text-muted">Movimientos: <strong className="text-forest">{moves}</strong></span>
+        </div>
+
+        {/* 3x3 Puzzle Canvas */}
+        <div className="relative aspect-square w-full max-w-[270px] mx-auto bg-stone-200 dark:bg-stone-900 rounded-2xl p-2 shadow-inner border border-line dark:border-[#1e4536] my-auto">
+          <div className="puzzle-grid w-full h-full">
+            {board.map((tile, idx) => {
+              if (tile === 0) {
+                return (
+                  <div
+                    key={`empty-${idx}`}
+                    className="puzzle-empty border-2 border-dashed border-forest/20 rounded-xl"
+                  />
+                );
+              }
+
+              return (
+                <motion.button
+                  key={`tile-${tile}`}
+                  whileTap={{ scale: 0.96 }}
+                  onClick={() => handleTileClick(idx)}
+                  className={`puzzle-piece p-${tile} relative rounded-xl shadow-xs overflow-hidden border border-white/40 flex items-center justify-center font-bold text-white text-xs drop-shadow`}
+                >
+                  <span className="absolute bottom-1 right-1 bg-black/60 px-1 py-0.2 rounded text-[8px]">
+                    {tile}
+                  </span>
+                </motion.button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Level Solved Banner */}
+        {isSolved && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-800 dark:text-emerald-300 mt-2 text-center"
+          >
+            <div className="flex items-center justify-center gap-1 text-sun mb-1">
+              <Star className="w-4 h-4 fill-sun" />
+              <Star className="w-4 h-4 fill-sun" />
+              <Star className="w-4 h-4 fill-sun" />
+            </div>
+            <strong className="text-xs font-bold block">
+              ¡Paisaje de Nivel {currentLevel} Completado en {moves} movimientos!
+            </strong>
+            <div className="flex gap-2 mt-2 max-w-xs mx-auto">
+              <button
+                onClick={handleReset}
+                className="flex-1 py-1.5 rounded-xl border border-emerald-500/40 text-[11px] font-bold"
+              >
+                Repetir
+              </button>
+              {currentLevel < 3 ? (
+                <button
+                  onClick={() => handleSelectLevel(currentLevel + 1)}
+                  className="flex-1 py-1.5 rounded-xl bg-forest text-white text-[11px] font-bold flex items-center justify-center gap-1 shadow-xs"
+                >
+                  <span>Nivel {currentLevel + 1}</span>
+                  <ChevronRight className="w-3 h-3" />
+                </button>
+              ) : (
+                <button
+                  onClick={() => navigate('games')}
+                  className="flex-1 py-1.5 rounded-xl bg-forest text-white text-[11px] font-bold shadow-xs"
+                >
+                  Más Juegos
+                </button>
+              )}
+            </div>
+          </motion.div>
+        )}
       </div>
     </section>
   );

@@ -9,14 +9,11 @@ import {
   Info, 
   Check, 
   Volume2, 
-  Music, 
-  Vibrate, 
   Lightbulb, 
-  ChevronRight,
   Sun,
   Moon,
   LogOut,
-  Sliders
+  RotateCcw
 } from 'lucide-react';
 import { playPop, playSuccess } from '../../utils/audio';
 
@@ -32,6 +29,7 @@ export const SettingsScreen = () => {
     toggleTheme,
     user,
     logoutUser,
+    resetAllProgress,
     t
   } = useApp();
 
@@ -44,13 +42,18 @@ export const SettingsScreen = () => {
   const languages = [
     ['Español', 'ES'],
     ['English', 'EN'],
-    ['Português', 'PT']
+    ['Português', 'PT'],
+    ['Deutsch', 'DE'],
+    ['Français', 'FR'],
+    ['Italiano', 'IT']
   ];
 
   const toggles = [
     { key: 'sound', label: t('settingsSound'), desc: t('settingsSoundDesc'), icon: Volume2 },
-    { key: 'hints', label: 'Pistas y Ayudas', desc: 'Sugerencias en los juegos', icon: Lightbulb }
+    { key: 'hints', label: 'Pistas y Ayudas', desc: 'Sugerencias en los desafíos', icon: Lightbulb }
   ];
+
+  const userAge = user?.age || (profile === 'Niños' ? 10 : 25);
 
   return (
     <section className={`relative w-full h-full flex flex-col justify-between overflow-hidden transition-colors ${
@@ -82,19 +85,15 @@ export const SettingsScreen = () => {
             <strong className="text-xs font-bold font-serif leading-none mt-0.5 text-white">
               {user?.name || 'Explorador'} ({profile})
             </strong>
-            {user?.age && (
-              <span className="text-[9px] text-[#bed8cc] mt-0.5">
-                {user.age} años · {user.age < 13 ? 'Categoría Infantil' : 'Categoría General'}
-              </span>
-            )}
+            <span className="text-[9px] text-[#bed8cc] mt-0.5">
+              {userAge} años · {userAge <= 14 ? 'Niños (1-14 años)' : 'Adultos (15-99 años)'}
+            </span>
           </div>
           <button
-            onClick={logoutUser}
-            className="flex items-center gap-1 text-[9px] font-bold bg-white/15 hover:bg-white/25 text-white px-2 py-1 rounded-xl transition"
-            title="Cambiar o registrar nuevo usuario"
+            onClick={() => navigate('profile')}
+            className="text-[9px] font-bold bg-white/15 hover:bg-white/25 text-white px-2 py-1 rounded-xl transition"
           >
-            <LogOut className="w-3 h-3" />
-            <span>{t('btnLogout')}</span>
+            Ver Perfil
           </button>
         </div>
 
@@ -145,7 +144,7 @@ export const SettingsScreen = () => {
           </div>
         </div>
 
-        {/* Idioma Group */}
+        {/* Idioma Group: 6 Idiomas */}
         <div className={`rounded-2xl p-3 border shadow-2xs space-y-2 ${
           theme === 'dark' ? 'bg-[#11261e] border-[#1e4536]' : 'bg-paper border-line'
         }`}>
@@ -157,7 +156,7 @@ export const SettingsScreen = () => {
               <strong className="text-xs font-bold block leading-tight">
                 {t('settingsLanguage')}
               </strong>
-              <small className="text-muted text-[9px]">{t('settingsLanguageDesc')}</small>
+              <small className="text-muted text-[9px]">Seleccioná tu idioma preferido</small>
             </div>
           </div>
 
@@ -166,7 +165,7 @@ export const SettingsScreen = () => {
               <button
                 key={code}
                 onClick={() => updateSetting('language', code)}
-                className={`py-2 px-2 rounded-xl text-center border transition text-xs font-bold ${
+                className={`py-2 px-1 rounded-xl text-center border transition text-[11px] font-bold ${
                   settings.language === code
                     ? 'border-forest bg-forest text-white shadow-xs'
                     : 'border-line dark:border-[#204535] bg-black/5 dark:bg-white/5 text-muted hover:text-ink dark:hover:text-white'
@@ -249,6 +248,23 @@ export const SettingsScreen = () => {
             })}
           </div>
         </div>
+
+        {/* Reiniciar progreso a cero */}
+        <button
+          onClick={() => {
+            if (window.confirm('¿Deseas reiniciar tu progreso a Rango 1 con 0 EXP?')) {
+              resetAllProgress();
+            }
+          }}
+          className={`w-full py-2.5 px-3 rounded-2xl border text-xs font-bold flex items-center justify-center gap-2 transition active:scale-95 ${
+            theme === 'dark'
+              ? 'bg-[#183025] border-[#254f3d] text-rose-300 hover:bg-[#1d3d2f]'
+              : 'bg-white border-line text-rose-700 hover:bg-rose-50'
+          }`}
+        >
+          <RotateCcw className="w-3.5 h-3.5 text-rose-500" />
+          <span>{t('btnResetProgress')}</span>
+        </button>
 
         {/* Guardar Cambios */}
         <button

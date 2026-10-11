@@ -12,13 +12,14 @@ import {
   Sparkles, 
   ChevronRight, 
   Award, 
-  Target
+  Target,
+  Star
 } from 'lucide-react';
 import { playPop } from '../../utils/audio';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export const GamesMenuScreen = () => {
-  const { navigate, points, exp, currentRank, goBack, profile, theme, t } = useApp();
+  const { navigate, points, exp, currentRank, goBack, profile, gameLevels, theme, t } = useApp();
 
   // Tab: 'kids', 'adults', 'field'
   const [categoryFilter, setCategoryFilter] = useState(() => {
@@ -29,7 +30,7 @@ export const GamesMenuScreen = () => {
     {
       screen: 'trivia',
       title: 'Trivia natural',
-      subtitle: 'Cuestionario interactivo sobre flora, fauna y cumbres',
+      subtitle: 'Cuestionario progresivo por niveles sobre el monte',
       mission: 'Misión: Responde preguntas y pon a prueba tu saber',
       reward: '+120 EXP',
       iconImg: '/icons/trivia.png',
@@ -41,31 +42,31 @@ export const GamesMenuScreen = () => {
     {
       screen: 'color',
       title: 'Coloreá la fauna',
-      subtitle: 'Taller de pintura y pelajes de especies serranas',
-      mission: 'Misión: Pinta el pelaje del Zorro Gris Pampeano',
+      subtitle: 'Taller progresivo de pintura de especies serranas',
+      mission: 'Misión: Pinta el pelaje del Zorro, Picaflor y Corzuela',
       reward: '+100 EXP',
       iconImg: '/icons/color.png',
       icon: Palette,
       audience: 'kids',
-      audienceBadge: '🧒 Solo Niños',
+      audienceBadge: '🧒 Solo Niños (1-14)',
       badgeColor: 'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300',
     },
     {
       screen: 'puzzle',
       title: 'Puzzle del paisaje',
-      subtitle: 'Reconstrucción táctil de miradores y senderos',
+      subtitle: 'Reconstrucción táctil de miradores con retos progresivos',
       mission: 'Misión: Reconstruye los Balcones del Uritorco',
       reward: '+150 EXP',
       iconImg: '/icons/puzzle.png',
       icon: Puzzle,
       audience: 'kids',
-      audienceBadge: '🧒 Solo Niños',
+      audienceBadge: '🧒 Solo Niños (1-14)',
       badgeColor: 'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300',
     },
     {
       screen: 'memory',
       title: 'Memoria silvestre',
-      subtitle: 'Encuentra las parejas de flora y fauna nativa',
+      subtitle: 'Encuentra parejas con niveles ascendentes de dificultad',
       mission: 'Misión: Empareja especies nativas de Villa Cielo',
       reward: '+180 EXP',
       iconImg: '/icons/memory.png',
@@ -110,10 +111,6 @@ export const GamesMenuScreen = () => {
     }
   ];
 
-  // Filtering by category:
-  // 'kids': Trivia, Colorear, Puzzle, Memoria
-  // 'adults': Trivia, Memoria
-  // 'field': Safari, Recycling, Stargazing
   const filteredGames = allGames.filter(game => {
     if (categoryFilter === 'kids') {
       return game.audience === 'kids' || game.audience === 'both';
@@ -133,7 +130,7 @@ export const GamesMenuScreen = () => {
     }`}>
       {/* TopBar with back to Home */}
       <TopBar
-        title="Juegos y Misiones"
+        title="Juegos Progresivos"
         onBack={goBack}
         backLabel="Volver"
         onSettings={() => navigate('settings')}
@@ -147,14 +144,14 @@ export const GamesMenuScreen = () => {
               Desafíos de Villa Cielo
             </span>
             <span className="text-[10px] font-bold text-forest bg-sun/30 px-2 py-0.5 rounded-full">
-              Rango {currentRank.level} · {currentRank.icon}
+              Rango {currentRank.level} de 6 · {currentRank.icon}
             </span>
           </div>
           <h2 className="font-serif text-2xl font-bold tracking-tight mt-0.5 leading-tight">
             Elegí tu desafío
           </h2>
           <p className="text-muted text-xs mt-0.5">
-            División de juegos adaptada por edad para aprender y sumar EXP.
+            Superá etapas progresivas (Niveles 1, 2 y 3) para acumular estrellas y EXP.
           </p>
         </div>
 
@@ -165,13 +162,13 @@ export const GamesMenuScreen = () => {
               playPop();
               setCategoryFilter('kids');
             }}
-            className={`flex-1 py-1.5 px-1.5 rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1 ${
+            className={`flex-1 py-1.5 px-1 rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1 ${
               categoryFilter === 'kids'
                 ? 'bg-forest text-white shadow-xs'
                 : 'text-muted hover:text-ink dark:hover:text-white'
             }`}
           >
-            <span>🧒 Para Chicos</span>
+            <span>🧒 Niños (1-14)</span>
           </button>
 
           <button
@@ -179,13 +176,13 @@ export const GamesMenuScreen = () => {
               playPop();
               setCategoryFilter('adults');
             }}
-            className={`flex-1 py-1.5 px-1.5 rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1 ${
+            className={`flex-1 py-1.5 px-1 rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1 ${
               categoryFilter === 'adults'
                 ? 'bg-forest text-white shadow-xs'
                 : 'text-muted hover:text-ink dark:hover:text-white'
             }`}
           >
-            <span>🌿 Para Adultos</span>
+            <span>🌿 Adultos (15-99)</span>
           </button>
 
           <button
@@ -193,7 +190,7 @@ export const GamesMenuScreen = () => {
               playPop();
               setCategoryFilter('field');
             }}
-            className={`flex-1 py-1.5 px-1.5 rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1 ${
+            className={`flex-1 py-1.5 px-1 rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1 ${
               categoryFilter === 'field'
                 ? 'bg-forest text-white shadow-xs'
                 : 'text-muted hover:text-ink dark:hover:text-white'
@@ -208,6 +205,8 @@ export const GamesMenuScreen = () => {
           <AnimatePresence mode="wait">
             {filteredGames.map((game, index) => {
               const Icon = game.icon;
+              const currentLvl = gameLevels?.[game.screen] || 1;
+
               return (
                 <motion.button
                   key={game.screen}
@@ -256,7 +255,10 @@ export const GamesMenuScreen = () => {
                     </div>
 
                     <div className="flex items-center justify-between text-[9px] text-forest font-bold mt-1">
-                      <span className="text-muted font-normal line-clamp-1">{game.mission}</span>
+                      <span className="text-muted font-semibold flex items-center gap-1">
+                        <Star className="w-2.5 h-2.5 text-sun fill-sun" />
+                        <span>Nivel {currentLvl} de 3</span>
+                      </span>
                       <span className="bg-forest/10 dark:bg-white/10 px-1.5 py-0.2 rounded shrink-0 ml-1">
                         {game.reward}
                       </span>
@@ -274,7 +276,7 @@ export const GamesMenuScreen = () => {
         <div className={`p-2.5 rounded-2xl border text-[10px] leading-tight text-muted ${
           theme === 'dark' ? 'bg-[#0a1813]/60 border-[#1a382a]' : 'bg-[#eef3f0] border-line'
         }`}>
-          💡 <strong>Criterio pedagógico:</strong> Los juegos de colorear y puzzles están optimizados para el desarrollo motriz y visual infantil; las trivias y dinámicas de memoria integran bancos adaptados tanto para chicos como adultos.
+          ⭐ <strong>Sistema Progresivo:</strong> Cada juego cuenta con 3 niveles que se desbloquean a medida que los vas superando.
         </div>
       </div>
 
