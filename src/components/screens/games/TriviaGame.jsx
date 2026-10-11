@@ -101,9 +101,12 @@ export const TriviaGame = () => {
     setQuizFinished(false);
   };
 
+  const initialTimeLimit = currentQ.timeLimit || 15;
+  const timeProgressPercent = Math.max(0, Math.min(100, (timeLeft / initialTimeLimit) * 100));
+
   return (
     <section className={`relative w-full h-full flex flex-col justify-between overflow-hidden ${
-      theme === 'dark' ? 'bg-[#0a1813] text-[#e8f2ec]' : 'bg-paper text-ink'
+      theme === 'dark' ? 'bg-[#0a1813] text-[#e8f2ec]' : 'bg-[#f7f5f0] text-ink'
     }`}>
       {/* TopBar with visible styled '← Volver' */}
       <TopBar
@@ -115,10 +118,10 @@ export const TriviaGame = () => {
       {/* Level Selection Bar (Progressive 1, 2, 3) */}
       <div className="px-4 pt-1 pb-1">
         <div className="flex items-center justify-between gap-1 mb-1.5">
-          <span className="text-[9px] font-bold uppercase tracking-wider text-muted">
+          <span className="text-[10px] font-bold uppercase tracking-wider text-muted dark:text-[#a0c0b0]">
             Progreso por Niveles:
           </span>
-          <div className="flex bg-black/10 dark:bg-white/10 p-0.5 rounded-lg text-[9px] font-bold">
+          <div className="flex bg-black/10 dark:bg-white/10 p-0.5 rounded-lg text-[10px] font-bold">
             <button
               onClick={() => {
                 setTriviaMode('kids');
@@ -126,7 +129,7 @@ export const TriviaGame = () => {
                 setSelectedOption(null);
                 setQuizFinished(false);
               }}
-              className={`px-2 py-0.5 rounded transition ${triviaMode === 'kids' ? 'bg-forest text-white' : 'text-muted'}`}
+              className={`px-2.5 py-0.5 rounded transition ${triviaMode === 'kids' ? 'bg-forest text-white shadow-xs' : 'text-muted dark:text-white/70'}`}
             >
               🧒 Niños
             </button>
@@ -137,7 +140,7 @@ export const TriviaGame = () => {
                 setSelectedOption(null);
                 setQuizFinished(false);
               }}
-              className={`px-2 py-0.5 rounded transition ${triviaMode === 'adults' ? 'bg-forest text-white' : 'text-muted'}`}
+              className={`px-2.5 py-0.5 rounded transition ${triviaMode === 'adults' ? 'bg-forest text-white shadow-xs' : 'text-muted dark:text-white/70'}`}
             >
               🌿 Adultos
             </button>
@@ -155,11 +158,11 @@ export const TriviaGame = () => {
                 key={lvl.level}
                 disabled={!isUnlocked}
                 onClick={() => handleSelectLevel(lvl.level)}
-                className={`py-1.5 px-2 rounded-xl text-[10px] font-bold border transition flex items-center justify-center gap-1 ${
+                className={`py-1.5 px-2 rounded-xl text-[10.5px] font-bold border transition flex items-center justify-center gap-1 ${
                   isActive
                     ? 'bg-forest text-white border-forest shadow-xs'
                     : isUnlocked
-                    ? 'bg-black/5 dark:bg-white/5 border-line dark:border-[#204535] text-ink dark:text-white'
+                    ? 'bg-white dark:bg-[#132c22] border-line dark:border-[#224e3c] text-ink dark:text-white shadow-2xs'
                     : 'bg-black/5 dark:bg-white/5 border-line/40 text-muted/50 cursor-not-allowed'
                 }`}
               >
@@ -183,13 +186,13 @@ export const TriviaGame = () => {
             <Star className="w-7 h-7 fill-sun" />
           </div>
           <div>
-            <span className="text-forest-light text-[10px] font-bold uppercase tracking-wider block">
+            <span className="text-forest-light dark:text-mint text-[11px] font-bold uppercase tracking-wider block">
               ¡Nivel {currentLevelNum} Superado!
             </span>
-            <h2 className="font-serif text-2xl font-bold mt-0.5">
+            <h2 className="font-serif text-2xl font-bold mt-0.5 text-ink dark:text-white">
               +{score} Puntos y EXP
             </h2>
-            <p className="text-muted text-xs mt-1 max-w-xs mx-auto">
+            <p className="text-muted dark:text-[#a0c0b0] text-xs mt-1 max-w-xs mx-auto">
               {currentLevelNum < 3
                 ? `¡Desbloqueaste el Nivel ${currentLevelNum + 1} de la Trivia Serrana!`
                 : '¡Has dominado todos los niveles de la Trivia de Villa Cielo!'}
@@ -199,7 +202,7 @@ export const TriviaGame = () => {
           <div className="flex gap-2 w-full max-w-xs pt-2">
             <button
               onClick={handleRestart}
-              className="flex-1 py-2.5 rounded-xl border border-line dark:border-[#275b47] text-xs font-bold flex items-center justify-center gap-1.5 active:scale-95 transition"
+              className="flex-1 py-2.5 rounded-xl border border-line dark:border-[#275b47] bg-white dark:bg-[#132c22] text-xs font-bold flex items-center justify-center gap-1.5 active:scale-95 transition shadow-2xs"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Repetir</span>
@@ -224,52 +227,72 @@ export const TriviaGame = () => {
         </motion.div>
       ) : (
         /* Active Quiz Screen */
-        <div className="flex-1 flex flex-col justify-between px-4 py-2 overflow-y-auto">
-          {/* Status Header */}
-          <div className={`flex items-center justify-between p-2 rounded-2xl border text-xs ${
-            theme === 'dark' ? 'bg-[#11261e] border-[#1e4536]' : 'bg-cream border-line'
+        <div className="flex-1 flex flex-col px-4 py-2 overflow-y-auto">
+          {/* Header Card with Time Progress Bar */}
+          <div className={`p-3 rounded-2xl border shadow-2xs ${
+            theme === 'dark' ? 'bg-[#11261e] border-[#1e4536]' : 'bg-white border-[#d8dfd5]'
           }`}>
-            <div className="flex items-center gap-1.5">
-              <span className="text-xs font-bold text-forest-light">
-                {activeLevelData.title}
-              </span>
-              <span className="text-[10px] text-muted">
-                ({currentIndex + 1}/{questions.length})
-              </span>
+            <div className="flex items-center justify-between text-xs mb-2">
+              <div className="flex items-center gap-1.5">
+                <span className="text-xs font-bold text-forest dark:text-mint">
+                  {activeLevelData.title}
+                </span>
+                <span className="text-[11px] font-semibold text-muted dark:text-white/60">
+                  ({currentIndex + 1}/{questions.length})
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 font-bold">
+                <Clock className={`w-3.5 h-3.5 ${timeLeft <= 5 ? 'text-rose-600' : 'text-forest dark:text-mint'}`} />
+                <span className={`text-xs tabular-nums ${timeLeft <= 5 ? 'text-rose-600 font-extrabold animate-pulse' : 'text-forest dark:text-mint'}`}>
+                  {timeLeft}s
+                </span>
+              </div>
             </div>
-            <div className="flex items-center gap-1 font-bold text-forest">
-              <Clock className="w-3.5 h-3.5 text-forest" />
-              <span className={timeLeft <= 5 ? 'text-rose-600 animate-pulse font-extrabold' : ''}>
-                {timeLeft}s
-              </span>
+
+            {/* Continuous countdown timer line */}
+            <div className="w-full h-1.5 bg-black/10 dark:bg-white/10 rounded-full overflow-hidden">
+              <motion.div
+                className={`h-full rounded-full transition-all duration-300 ${
+                  timeLeft <= 5
+                    ? 'bg-rose-500 shadow-[0_0_8px_#f43f5e]'
+                    : timeLeft <= 9
+                    ? 'bg-amber-500'
+                    : 'bg-emerald-600 dark:bg-emerald-400'
+                }`}
+                animate={{ width: `${timeProgressPercent}%` }}
+                transition={{ ease: 'linear', duration: 0.3 }}
+              />
             </div>
           </div>
 
-          {/* Question Text */}
-          <div className="my-auto py-3">
-            <h3 className="font-serif text-base sm:text-lg font-bold leading-snug">
+          {/* Centered Question Box */}
+          <div className="flex-1 flex flex-col justify-center items-center text-center px-2 py-4">
+            <span className="text-[10px] font-extrabold uppercase tracking-widest text-forest-light dark:text-mint mb-2">
+              Pregunta {currentIndex + 1} de {questions.length}
+            </span>
+            <h3 className="font-serif text-lg sm:text-xl font-bold leading-snug text-ink dark:text-white max-w-sm">
               {currentQ.q}
             </h3>
           </div>
 
-          {/* Options */}
-          <div className="space-y-2 mb-2">
+          {/* Options with High Contrast & Clear Readability */}
+          <div className="space-y-2.5 mb-2 w-full max-w-md mx-auto">
             {currentQ.options.map((opt, idx) => {
               const isSelected = selectedOption === idx;
               const isCorrect = idx === currentQ.answer;
               const hasAnswered = selectedOption !== null;
 
               let btnStyle = theme === 'dark'
-                ? 'bg-[#122b22] border-[#204a39] text-[#e8f2ec] hover:bg-[#183a2e]'
-                : 'bg-white border-line text-ink hover:bg-cream';
+                ? 'bg-[#132c22] border-[#224e3c] text-white hover:bg-[#1a3a2e]'
+                : 'bg-white border-[#d3dbcf] text-[#1a2e26] hover:bg-[#f0f4ed] hover:border-forest/40';
 
               if (hasAnswered) {
                 if (isCorrect) {
-                  btnStyle = 'bg-emerald-600 text-white border-emerald-600 font-bold';
+                  btnStyle = 'bg-emerald-700 text-white border-emerald-600 font-bold shadow-sm';
                 } else if (isSelected) {
-                  btnStyle = 'bg-rose-600 text-white border-rose-600 font-bold';
+                  btnStyle = 'bg-rose-700 text-white border-rose-600 font-bold shadow-sm';
                 } else {
-                  btnStyle = 'opacity-40 border-transparent';
+                  btnStyle = 'opacity-35 border-transparent bg-black/5 dark:bg-white/5 text-muted dark:text-white/40';
                 }
               }
 
@@ -278,11 +301,11 @@ export const TriviaGame = () => {
                   key={idx}
                   disabled={hasAnswered}
                   onClick={() => handleSelectOption(idx)}
-                  className={`w-full text-left p-3 rounded-2xl border text-xs font-medium transition active:scale-[0.99] flex items-center justify-between shadow-2xs ${btnStyle}`}
+                  className={`w-full text-left px-3.5 py-3 rounded-2xl border text-[13px] font-semibold transition active:scale-[0.99] flex items-center justify-between shadow-2xs ${btnStyle}`}
                 >
                   <span className="pr-2 leading-snug">{opt}</span>
-                  {hasAnswered && isCorrect && <Check className="w-4 h-4 shrink-0 stroke-[3]" />}
-                  {hasAnswered && isSelected && !isCorrect && <X className="w-4 h-4 shrink-0 stroke-[3]" />}
+                  {hasAnswered && isCorrect && <Check className="w-4 h-4 shrink-0 stroke-[3] text-white" />}
+                  {hasAnswered && isSelected && !isCorrect && <X className="w-4 h-4 shrink-0 stroke-[3] text-white" />}
                 </button>
               );
             })}
@@ -293,18 +316,18 @@ export const TriviaGame = () => {
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`p-3 rounded-2xl border text-xs mb-1 ${
+              className={`p-3.5 rounded-2xl border text-xs mb-1 w-full max-w-md mx-auto shadow-sm ${
                 selectedOption === currentQ.answer
-                  ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-800 dark:text-emerald-300'
-                  : 'bg-amber-500/10 border-amber-500/30 text-amber-800 dark:text-amber-300'
+                  ? 'bg-emerald-50 dark:bg-emerald-950/40 border-emerald-300 dark:border-emerald-700/60 text-emerald-950 dark:text-emerald-200'
+                  : 'bg-amber-50 dark:bg-amber-950/40 border-amber-300 dark:border-amber-700/60 text-amber-950 dark:text-amber-200'
               }`}
             >
-              <p className="text-[11px] leading-snug mb-2 font-medium">
+              <p className="text-[12px] leading-relaxed mb-2.5 font-medium">
                 {currentQ.explanation}
               </p>
               <button
                 onClick={handleNext}
-                className="w-full py-2 rounded-xl bg-forest hover:bg-forest-light text-white font-bold text-xs flex items-center justify-center gap-1 shadow-md transition active:scale-95"
+                className="w-full py-2.5 rounded-xl bg-forest hover:bg-forest-light text-white font-bold text-xs flex items-center justify-center gap-1 shadow-md transition active:scale-95"
               >
                 <span>{currentIndex + 1 < questions.length ? 'Siguiente Pregunta' : 'Completar Nivel'}</span>
                 <ChevronRight className="w-3.5 h-3.5" />

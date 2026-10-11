@@ -278,15 +278,15 @@ export const AppProvider = ({ children }) => {
           rank: newRank
         });
 
-        const newlyUnlocked = SPECIES_LIST.filter(
-          item => item.unlockLevel <= newRank.level && !unlockedSpeciesIds.includes(item.id)
+        // Desbloquear como recompensa de rango solo 1 carta insignia del nuevo nivel alcanzado
+        const candidateToUnlock = SPECIES_LIST.find(
+          item => item.unlockLevel === newRank.level && !unlockedSpeciesIds.includes(item.id)
         );
 
-        if (newlyUnlocked.length > 0) {
-          const idsToAdd = newlyUnlocked.map(item => item.id);
-          setUnlockedSpeciesIds(prev => [...new Set([...prev, ...idsToAdd])]);
+        if (candidateToUnlock) {
+          setUnlockedSpeciesIds(prev => [...new Set([...prev, candidateToUnlock.id])]);
           addToast(
-            `${newlyUnlocked.length} nuevas cartas desbloqueadas`,
+            `Nueva carta desbloqueada: ${candidateToUnlock.name}`,
             `Alcanzaste el rango ${newRank.title}`,
             'success'
           );
