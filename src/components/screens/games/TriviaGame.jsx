@@ -118,7 +118,7 @@ export const TriviaGame = () => {
       {/* Level Selection Bar (Progressive 1, 2, 3) */}
       <div className="px-4 pt-1 pb-1">
         <div className="flex items-center justify-between gap-1 mb-1.5">
-          <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#1e3d32] dark:text-[#9fe2c7]">
+          <span className="text-[10px] font-extrabold uppercase tracking-wider text-black dark:text-white">
             Progreso por Niveles:
           </span>
           <div className="flex bg-black/10 dark:bg-white/10 p-0.5 rounded-lg text-[10px] font-bold">
@@ -129,7 +129,7 @@ export const TriviaGame = () => {
                 setSelectedOption(null);
                 setQuizFinished(false);
               }}
-              className={`px-2.5 py-0.5 rounded transition ${triviaMode === 'kids' ? 'bg-[#173b32] text-white shadow-xs' : 'text-[#476055] dark:text-white/80'}`}
+              className={`px-2.5 py-0.5 rounded transition ${triviaMode === 'kids' ? 'bg-[#173b32] text-white shadow-xs' : 'text-black/75 dark:text-white/80'}`}
             >
               🧒 Niños
             </button>
@@ -140,7 +140,7 @@ export const TriviaGame = () => {
                 setSelectedOption(null);
                 setQuizFinished(false);
               }}
-              className={`px-2.5 py-0.5 rounded transition ${triviaMode === 'adults' ? 'bg-[#173b32] text-white shadow-xs' : 'text-[#476055] dark:text-white/80'}`}
+              className={`px-2.5 py-0.5 rounded transition ${triviaMode === 'adults' ? 'bg-[#173b32] text-white shadow-xs' : 'text-black/75 dark:text-white/80'}`}
             >
               🌿 Adultos
             </button>
@@ -162,8 +162,8 @@ export const TriviaGame = () => {
                   isActive
                     ? 'bg-[#173b32] text-white border-[#173b32] shadow-xs'
                     : isUnlocked
-                    ? 'bg-white dark:bg-[#132c22] border-[#c5d4cb] dark:border-[#224e3c] text-[#142620] dark:text-white shadow-2xs hover:bg-[#eef5f1]'
-                    : 'bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-muted/60 cursor-not-allowed'
+                    ? 'bg-white dark:bg-[#132c22] border-[#b0c2b7] dark:border-[#224e3c] text-black dark:text-white shadow-2xs hover:bg-[#eef5f1]'
+                    : 'bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-gray-500 dark:text-gray-400 cursor-not-allowed'
                 }`}
               >
                 {!isUnlocked && <Lock className="w-2.5 h-2.5" />}
@@ -186,13 +186,13 @@ export const TriviaGame = () => {
             <Star className="w-7 h-7 fill-sun" />
           </div>
           <div>
-            <span className="text-[#245447] dark:text-mint text-[11px] font-bold uppercase tracking-wider block">
+            <span className="text-black dark:text-mint text-[11px] font-bold uppercase tracking-wider block">
               ¡Nivel {currentLevelNum} Superado!
             </span>
-            <h2 className="font-serif text-2xl font-bold mt-0.5 text-ink dark:text-white">
+            <h2 className="font-serif text-2xl font-bold mt-0.5 text-black dark:text-white">
               +{score} Puntos y EXP
             </h2>
-            <p className="text-muted dark:text-[#a0c0b0] text-xs mt-1 max-w-xs mx-auto">
+            <p className="text-gray-700 dark:text-gray-300 text-xs mt-1 max-w-xs mx-auto font-medium">
               {currentLevelNum < 3
                 ? `¡Desbloqueaste el Nivel ${currentLevelNum + 1} de la Trivia Serrana!`
                 : '¡Has dominado todos los niveles de la Trivia de Villa Cielo!'}
@@ -202,7 +202,7 @@ export const TriviaGame = () => {
           <div className="flex gap-2 w-full max-w-xs pt-2">
             <button
               onClick={handleRestart}
-              className="flex-1 py-2.5 rounded-xl border border-line dark:border-[#275b47] bg-white dark:bg-[#132c22] text-xs font-bold flex items-center justify-center gap-1.5 active:scale-95 transition shadow-2xs text-[#142620] dark:text-white"
+              className="flex-1 py-2.5 rounded-xl border border-gray-300 dark:border-[#275b47] bg-white dark:bg-[#132c22] text-xs font-bold flex items-center justify-center gap-1.5 active:scale-95 transition shadow-2xs text-black dark:text-white"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               <span>Repetir</span>
@@ -229,19 +229,19 @@ export const TriviaGame = () => {
         /* Active Quiz Screen */
         <div className="flex-1 flex flex-col px-4 py-2 overflow-y-auto">
           {/* Header Card with Time Progress Bar */}
-          <div className="p-3 rounded-2xl border shadow-sm bg-white dark:bg-[#11261e] border-[#c7d5cd] dark:border-[#1e4536]">
+          <div className="p-3 rounded-2xl border shadow-sm bg-white dark:bg-[#11261e] border-[#b0c2b7] dark:border-[#1e4536]">
             <div className="flex items-center justify-between text-xs mb-2">
               <div className="flex items-center gap-1.5">
-                <span className="text-xs font-bold text-[#142620] dark:text-[#9fe2c7]">
+                <span className="text-xs font-bold text-black dark:text-white">
                   {activeLevelData.title}
                 </span>
-                <span className="text-[11px] font-semibold text-[#50665c] dark:text-white/70">
+                <span className="text-[11px] font-bold text-black/70 dark:text-white/80">
                   ({currentIndex + 1}/{questions.length})
                 </span>
               </div>
               <div className="flex items-center gap-1.5 font-bold">
-                <Clock className={`w-3.5 h-3.5 ${timeLeft <= 5 ? 'text-rose-600' : 'text-[#142620] dark:text-[#9fe2c7]'}`} />
-                <span className={`text-xs tabular-nums ${timeLeft <= 5 ? 'text-rose-600 font-extrabold animate-pulse' : 'text-[#142620] dark:text-[#9fe2c7]'}`}>
+                <Clock className={`w-3.5 h-3.5 ${timeLeft <= 5 ? 'text-rose-600' : 'text-black dark:text-white'}`} />
+                <span className={`text-xs tabular-nums font-bold ${timeLeft <= 5 ? 'text-rose-600 font-extrabold animate-pulse' : 'text-black dark:text-white'}`}>
                   {timeLeft}s
                 </span>
               </div>
@@ -290,33 +290,33 @@ export const TriviaGame = () => {
               </motion.div>
             )}
 
-            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#245447] dark:text-[#68a691] mb-1">
+            <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#111111] dark:text-[#ffffff] mb-1.5 opacity-90">
               Pregunta {currentIndex + 1} de {questions.length}
             </span>
 
-            <h3 className="font-serif text-[17px] sm:text-xl font-bold leading-snug text-[#142620] dark:text-[#f2f7f4] max-w-sm px-1">
+            <h3 className="font-serif text-[18px] sm:text-2xl font-bold leading-snug text-black dark:text-white max-w-sm px-1 drop-shadow-none">
               {currentQ.q}
             </h3>
           </div>
 
           {/* Options with High Contrast & Clear Readability */}
-          <div className="space-y-2 mb-2 w-full max-w-md mx-auto">
+          <div className="space-y-2.5 mb-2 w-full max-w-md mx-auto">
             {currentQ.options.map((opt, idx) => {
               const isSelected = selectedOption === idx;
               const isCorrect = idx === currentQ.answer;
               const hasAnswered = selectedOption !== null;
 
               let btnStyle = theme === 'dark'
-                ? 'bg-[#132c22] border-[#224e3c] text-white hover:bg-[#1a3a2e]'
-                : 'bg-white border-[#d3dbcf] text-[#1a2e26] hover:bg-[#f0f4ed] hover:border-forest/40';
+                ? 'bg-[#152a22] border-[#295644] text-white hover:bg-[#1e3c31]'
+                : 'bg-white border-[#b8c7bf] text-black hover:bg-[#edf5f0] shadow-sm';
 
               if (hasAnswered) {
                 if (isCorrect) {
-                  btnStyle = 'bg-emerald-700 text-white border-emerald-600 font-bold shadow-sm';
+                  btnStyle = 'bg-emerald-700 text-white border-emerald-600 font-bold shadow-md';
                 } else if (isSelected) {
-                  btnStyle = 'bg-rose-700 text-white border-rose-600 font-bold shadow-sm';
+                  btnStyle = 'bg-rose-700 text-white border-rose-600 font-bold shadow-md';
                 } else {
-                  btnStyle = 'opacity-35 border-transparent bg-black/5 dark:bg-white/5 text-muted dark:text-white/40';
+                  btnStyle = 'opacity-40 border-transparent bg-black/5 dark:bg-white/5 text-gray-500 dark:text-gray-400';
                 }
               }
 
@@ -325,9 +325,9 @@ export const TriviaGame = () => {
                   key={idx}
                   disabled={hasAnswered}
                   onClick={() => handleSelectOption(idx)}
-                  className={`w-full text-left px-3.5 py-3 rounded-2xl border text-[13px] font-semibold transition active:scale-[0.99] flex items-center justify-between shadow-2xs ${btnStyle}`}
+                  className={`w-full text-left px-4 py-3 rounded-2xl border text-[14px] font-bold transition active:scale-[0.99] flex items-center justify-between shadow-xs ${btnStyle}`}
                 >
-                  <span className="pr-2 leading-snug">{opt}</span>
+                  <span className="pr-2 leading-snug text-inherit">{opt}</span>
                   {hasAnswered && isCorrect && <Check className="w-4 h-4 shrink-0 stroke-[3] text-white" />}
                   {hasAnswered && isSelected && !isCorrect && <X className="w-4 h-4 shrink-0 stroke-[3] text-white" />}
                 </button>
