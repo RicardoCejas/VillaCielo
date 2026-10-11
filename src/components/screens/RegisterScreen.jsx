@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { IMAGES } from '../../data/speciesData';
-import { Leaf, User, Mail, Lock, Shield, ArrowRight, X, CheckCircle2 } from 'lucide-react';
+import { Leaf, User, Mail, Lock, Shield, ArrowRight, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { playPop, playClick } from '../../utils/audio';
+import { playClick } from '../../utils/audio';
 
 export const RegisterScreen = () => {
-  const { registerUser, theme, t } = useApp();
+  const { registerUser, theme } = useApp();
   const [name, setName] = useState('');
   const [age, setAge] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
 
-  // Social modal state
-  const [socialModal, setSocialModal] = useState(null); // 'Google' | 'Facebook' | null
+  const [socialModal, setSocialModal] = useState(null);
   const [socialAge, setSocialAge] = useState('12');
   const [socialName, setSocialName] = useState('');
 
@@ -46,7 +45,7 @@ export const RegisterScreen = () => {
     playClick();
     setSocialModal(provider);
     setSocialName(provider === 'Google' ? 'Lucas Cejas' : 'Lucas Cejas (FB)');
-    setSocialAge('12'); // default
+    setSocialAge('12');
   };
 
   const handleConfirmSocialRegister = () => {
@@ -68,7 +67,6 @@ export const RegisterScreen = () => {
     <section className={`relative w-full h-full flex flex-col justify-between overflow-hidden select-none ${
       theme === 'dark' ? 'bg-[#0a1813] text-[#e8f2ec]' : 'bg-[#f7f5ee] text-[#18302a]'
     }`}>
-      {/* Background Header Trail */}
       <div className="relative h-[27%] w-full overflow-hidden shrink-0">
         <img
           src={IMAGES.uritorco}
@@ -81,7 +79,6 @@ export const RegisterScreen = () => {
             : 'from-[#173b32]/40 via-[#f7f5ee]/80 to-[#f7f5ee]'
         }`} />
 
-        {/* Brand badge over header */}
         <div className="absolute top-4 left-5 right-5 flex items-center justify-between z-10">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-xl bg-forest text-sun grid place-items-center shadow-md border border-white/20">
@@ -102,7 +99,6 @@ export const RegisterScreen = () => {
         </div>
       </div>
 
-      {/* Main Registration Form */}
       <div className="flex-1 flex flex-col justify-between px-5 pb-4 pt-1 overflow-y-auto">
         <div>
           <div className="mb-2.5">
@@ -124,7 +120,6 @@ export const RegisterScreen = () => {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-2">
-            {/* Input: Nombre */}
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-1">
                 Nombre o Apodo *
@@ -148,7 +143,6 @@ export const RegisterScreen = () => {
               </div>
             </div>
 
-            {/* Input: Edad con Auto-detección: 1-14 = Niños, 15-99 = Adultos */}
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
@@ -156,12 +150,12 @@ export const RegisterScreen = () => {
                 </label>
                 {isKidsProfile && (
                   <span className="text-[8.5px] font-bold text-amber-800 bg-amber-100 dark:bg-amber-950/70 dark:text-amber-300 px-2 py-0.5 rounded-full">
-                    🧒 Perfil Niños (1 a 14)
+                    Perfil Niños (1 a 14)
                   </span>
                 )}
                 {isAdultsProfile && (
                   <span className="text-[8.5px] font-bold text-emerald-800 bg-emerald-100 dark:bg-emerald-950/70 dark:text-emerald-300 px-2 py-0.5 rounded-full">
-                    🌿 Perfil Adultos (15 a 99)
+                    Perfil Adultos (15 a 99)
                   </span>
                 )}
               </div>
@@ -181,14 +175,13 @@ export const RegisterScreen = () => {
               />
               <p className="text-[9px] text-muted mt-1 leading-tight">
                 {isKidsProfile
-                  ? '🎮 Recibirás desafíos visuales: Colorear, Puzzles simples y Trivia ilustrada.'
+                  ? 'Recibirás desafíos visuales: Colorear, Puzzles simples y Trivia ilustrada.'
                   : isAdultsProfile
-                  ? '🔬 Recibirás desafíos profundos: Red trófica, botánica serrana y prevención de incendios.'
+                  ? 'Recibirás desafíos analíticos: Red trófica, botánica serrana y prevención de incendios.'
                   : 'Ingresá tu edad: 1-14 niños, 15-99 adultos.'}
               </p>
             </div>
 
-            {/* Input: Correo */}
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-1">
                 Correo Electrónico (opcional)
@@ -211,7 +204,6 @@ export const RegisterScreen = () => {
               </div>
             </div>
 
-            {/* Input: Contraseña */}
             <div>
               <label className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-1">
                 Contraseña
@@ -234,7 +226,6 @@ export const RegisterScreen = () => {
               </div>
             </div>
 
-            {/* Submit Button */}
             <button
               type="submit"
               className="w-full mt-2.5 h-10 rounded-xl bg-forest hover:bg-forest-light text-white font-bold text-xs flex items-center justify-center gap-2 shadow-md active:scale-95 transition"
@@ -244,7 +235,6 @@ export const RegisterScreen = () => {
             </button>
           </form>
 
-          {/* Social login divider */}
           <div className="relative my-2.5 text-center">
             <span className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-px bg-line" />
             <span className={`relative px-3 text-[10px] uppercase font-bold text-muted ${
@@ -254,7 +244,6 @@ export const RegisterScreen = () => {
             </span>
           </div>
 
-          {/* Social login buttons (open interactive age selector modal) */}
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
@@ -291,7 +280,6 @@ export const RegisterScreen = () => {
           </div>
         </div>
 
-        {/* Footer conservation pledge */}
         <div className="mt-3 pt-2 border-t border-line/60 text-center">
           <small className="text-[9px] text-muted flex items-center justify-center gap-1">
             <Shield className="w-3 h-3 text-forest" />
@@ -300,7 +288,6 @@ export const RegisterScreen = () => {
         </div>
       </div>
 
-      {/* Interactive Social Login Age Selection Modal */}
       <AnimatePresence>
         {socialModal && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs select-none">
@@ -336,7 +323,6 @@ export const RegisterScreen = () => {
                 </button>
               </div>
 
-              {/* Simulated user identity */}
               <div className={`p-2.5 rounded-xl border mb-3 flex items-center gap-2.5 ${
                 theme === 'dark' ? 'bg-[#153428] border-[#275a45]' : 'bg-[#eef4f0] border-line'
               }`}>
@@ -353,7 +339,6 @@ export const RegisterScreen = () => {
                 </div>
               </div>
 
-              {/* Age selection */}
               <div className="mb-4">
                 <label className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-1">
                   ¿Cuántos años tenés? (1 a 99)
@@ -374,11 +359,11 @@ export const RegisterScreen = () => {
                 <div className="mt-2 p-2 rounded-xl bg-black/5 dark:bg-white/5 border border-line/60 text-[10px] leading-tight">
                   {isSocialKids ? (
                     <span className="text-amber-700 dark:text-amber-300 font-bold block">
-                      🧒 Perfil Niños (1-14 años): Juegos visuales, puzzles y dibujo.
+                      Perfil Niños (1-14 años): Juegos visuales, puzzles y dibujo.
                     </span>
                   ) : (
                     <span className="text-emerald-700 dark:text-emerald-300 font-bold block">
-                      🌿 Perfil Adultos (15-99 años): Datos analíticos, botánica y red trófica.
+                      Perfil Adultos (15-99 años): Datos analíticos, botánica y red trófica.
                     </span>
                   )}
                 </div>

@@ -35,22 +35,12 @@ import { motion, AnimatePresence } from 'framer-motion';
 export const TrophicWebScreen = () => {
   const { navigate, goBack, addPoints, triggerCelebration } = useApp();
 
-  // Active view: 'web' (Pirámide y conexiones) or 'scenarios' (Crisis y simulador de incendios)
   const [activeTab, setActiveTab] = useState('web');
-
-  // Sub-modo de visualización en la pestaña web: 'circles' (Grafo Dinámico) vs 'list' (Tarjetas por niveles)
   const [viewMode, setViewMode] = useState('circles');
-
-  // Species currently missing/disabled (for sandbox & scenarios)
   const [disabledSpeciesIds, setDisabledSpeciesIds] = useState([]);
-  
-  // Selected species for detail inspection
   const [selectedSpeciesId, setSelectedSpeciesId] = useState(null);
-
-  // Active crisis scenario
   const [activeCrisisId, setActiveCrisisId] = useState(null);
 
-  // Calculate current ecosystem health (0% to 100%)
   const totalSpecies = TROPHIC_SPECIES.length;
   const activeCount = totalSpecies - disabledSpeciesIds.length;
   const ecosystemHealth = Math.round((activeCount / totalSpecies) * 100);
@@ -58,7 +48,6 @@ export const TrophicWebScreen = () => {
   const selectedSpecies = TROPHIC_SPECIES.find(s => s.id === selectedSpeciesId);
   const activeCrisis = CRISIS_SCENARIOS.find(c => c.id === activeCrisisId);
 
-  // Toggle individual species in sandbox
   const handleToggleSpecies = (id, e) => {
     if (e) e.stopPropagation();
     setActiveCrisisId(null);
@@ -80,7 +69,6 @@ export const TrophicWebScreen = () => {
     });
   };
 
-  // Launch a crisis scenario (e.g. Incendios forestales)
   const handleSelectScenario = (scenario) => {
     playError();
     setActiveCrisisId(scenario.id);
@@ -88,7 +76,6 @@ export const TrophicWebScreen = () => {
     setSelectedSpeciesId(null);
   };
 
-  // Restore everything to healthy state
   const handleRestoreEcosystem = () => {
     playSuccess();
     triggerCelebration();
@@ -97,15 +84,14 @@ export const TrophicWebScreen = () => {
     addPoints(100, '¡Red Trófica de Villa Cielo restaurada!');
   };
 
-  // Generar lista de enlaces tróficos dirigidos (de Presa/Alimento -> a Depredador/Consumidor)
   const connections = [];
   TROPHIC_SPECIES.forEach(predator => {
     predator.eats.forEach(preyId => {
       const prey = TROPHIC_SPECIES.find(s => s.id === preyId);
       if (prey) {
         connections.push({
-          from: prey,       // Presa / Alimento
-          to: predator,     // Depredador
+          from: prey,
+          to: predator,
           id: `${prey.id}->${predator.id}`
         });
       }
@@ -358,7 +344,6 @@ export const TrophicWebScreen = () => {
                       const isSelectedPrey = selectedSpeciesId === conn.to.id && selectedSpecies?.eats?.includes(conn.from.id);
                       const isSelectedPredator = selectedSpeciesId === conn.from.id && selectedSpecies?.eatenBy?.includes(conn.to.id);
 
-                      // Curve mid-point calculation
                       const dx = conn.to.x - conn.from.x;
                       const dy = conn.to.y - conn.from.y;
                       const cx = (conn.from.x + conn.to.x) / 2 + (dx === 0 ? 8 : -dy * 0.12);
@@ -366,7 +351,6 @@ export const TrophicWebScreen = () => {
 
                       const pathD = `M ${conn.from.x} ${conn.from.y} Q ${cx} ${cy} ${conn.to.x} ${conn.to.y}`;
 
-                      // 🚨 SI FALTA LA PRESA/ALIMENTO: Mostrar flecha de impacto de hambre hacia el depredador
                       if (fromDisabled && !toDisabled) {
                         return (
                           <g key={conn.id}>
@@ -384,7 +368,6 @@ export const TrophicWebScreen = () => {
                         );
                       }
 
-                      // 🚨 SI FALTA EL DEPREDADOR: Mostrar flecha de impacto de sobrepoblación hacia las presas
                       if (toDisabled && !fromDisabled) {
                         return (
                           <g key={conn.id}>
@@ -447,7 +430,6 @@ export const TrophicWebScreen = () => {
                         );
                       }
 
-                      // Default background line when no active filter or unrelated
                       const opacity = selectedSpeciesId ? 0.08 : 0.25;
                       return (
                         <path
@@ -470,11 +452,9 @@ export const TrophicWebScreen = () => {
                     const isPreyOfSelected = selectedSpecies?.eats?.includes(sp.id);
                     const isPredatorOfSelected = selectedSpecies?.eatenBy?.includes(sp.id);
 
-                    // Check if this active species is affected by a missing food or predator
                     const hasMissingFood = sp.eats.some(eId => disabledSpeciesIds.includes(eId));
                     const hasMissingPredator = sp.eatenBy.some(pId => disabledSpeciesIds.includes(pId));
 
-                    // Border style based on trophic level
                     let ringBorder = 'border-teal-400/80 shadow-[0_0_8px_#2dd4bf55]';
                     if (sp.level === 'apex') ringBorder = 'border-rose-500 shadow-[0_0_10px_#f43f5e77]';
                     if (sp.level === 'carnivores') ringBorder = 'border-amber-400 shadow-[0_0_10px_#f59e0b77]';

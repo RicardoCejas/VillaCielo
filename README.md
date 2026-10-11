@@ -1,91 +1,59 @@
-# 🌿 Villa Cielo Abierto — Reserva Natural Municipal
-### Capilla del Monte · Sierras de Córdoba, Argentina 🇦🇷
+# Villa Cielo Abierto
 
-> Prototipo interactivo y educativo de aplicación móvil para la conservación, educación ambiental y exploración interactiva de la **Reserva Natural Municipal Villa Cielo** y los **Balcones del Cerro Uritorco**.
+Aplicación web progresiva e interactiva orientada a la interpretación ambiental, registro de biodiversidad y simulación de redes tróficas en la Reserva Natural Municipal Villa Cielo y los Balcones del Cerro Uritorco (Capilla del Monte, Córdoba).
 
----
+## Características
 
-## 📱 Descripción del Proyecto
+- **Registro y perfiles adaptativos:** Segmentación automática según edad (1 a 14 años: perfil infantil con dinámicas visuales y lúdicas; 15 a 99 años: perfil adulto con enfoque analítico y botánico). Soporta autenticación por credenciales o acceso simulado con Google y Facebook.
+- **Simulador de red trófica y crisis ambiental:** Modelado interactivo de cadenas alimentarias del bosque serrano. Permite simular el impacto de la pérdida de especies clave y contingencias de incendios forestales.
+- **Guía de campo y wiki nativa:** Fichas de 40 especies autóctonas verificadas de Punilla (20 de flora y 20 de fauna) con taxonomía, rol ecológico, estado de conservación y datos culturales.
+- **Juegos y misiones progresivas:**
+  - *Trivia serrana:* Desafíos cronometrados en 3 niveles de dificultad con bancos de preguntas diferenciados por edad.
+  - *Memoria silvestre:* Tableros emparejando especies autóctonas con dificultad incremental (3, 4 y 6 pares).
+  - *Puzzle del paisaje:* Reconstrucción espacial de senderos y miradores.
+  - *Taller de ilustración:* Coloreado de fauna autóctona (Zorro Gris, Picaflor, Corzuela).
+  - *Misiones de campo:* Safari fotográfico veloz, clasificación de residuos y trazado de constelaciones nocturnas.
+- **Cartografía interactiva:** Mapa vectorial del macizo del Uritorco con senderos (Sendero Bajo, Balcones, Sendero Nocturno), zoom, alternancia día/noche y simulación de localización GPS en sendero.
+- **Validación QR y código manual:** Desbloqueo de cartas biológicas mediante cámara o ingreso de códigos alfanuméricos físicos de postes de senderos.
+- **Sistema de progresión:** Progresión acotada a 6 rangos de guardaparque donde cada nivel desbloquea utilidades reales en la aplicación.
+- **Internacionalización (i18n):** Soporte en tiempo real para Español (ES), English (EN), Português (PT), Deutsch (DE), Français (FR) e Italiano (IT).
+- **Accesibilidad y visualización exterior:** Modo nocturno con bajo brillo para astroturismo y modo diurno con opción de tipografía ampliada para lectura bajo sol directo.
 
-**Villa Cielo Abierto** transforma la experiencia de recorrer los senderos serranos en una aventura interactiva de aprendizaje y concientización ambiental. Diseñada bajo un enfoque de **App Shell responsive** (optimizada para dispositivos móviles y táctiles), permite a turistas, familias y escuelas:
+## Stack Tecnológico
 
-1. **🗺️ Mapa Interactivo de Senderos y Miradores:** Exploración geográfica de los Balcones del Uritorco, Sendero del Bosque Serrano, Postas QR y zonas de observación astronómica.
-2. **📖 Álbum & Wiki de 40 Especies Autóctonas:** Fichas biológicas y culturales verificadas (20 de fauna y 20 de flora nativa de las Sierras de Córdoba) con fotografías botánicas y zoológicas reales, nombres científicos, hábitos, estado de conservación y leyendas locales.
-3. **🎮 4 Desafíos Lúdicos con Misiones Integradas:**
-   - **Trivia natural:** Cuestionario con temporizador sobre biodiversidad e historia de la reserva.
-   - **Puzzle del paisaje:** Reconstrucción táctil de los miradores y senderos de Villa Cielo.
-   - **Coloreá la fauna:** Taller creativo de ilustración para pintar especies emblemáticas como el Zorro Gris.
-   - **Memoria silvestre:** Juego de cartas emparejando especies autóctonas con su icono identificatorio.
-   - **+ 3 Misiones de Campo:** Safari Fotográfico veloz, Guardián del Sendero (reciclaje ecológico) y Observatorio de Estrellas (constelaciones del cielo de Capilla del Monte).
-4. **🕸️ Red Trófica & Simulador de Equilibrio Ecológico:**
-   - Visualización de la pirámide de vida por niveles tróficos.
-   - Simulador de perturbaciones reales y **concientización sobre incendios forestales serranos** (pérdida de la esponja hídrica del monte, aludes de ceniza hacia el Río Calabalumba y teléfonos de emergencias de bomberos voluntarios).
-5. **📷 Escáner de Códigos QR:** Simulación de lectura de postas físicas ubicadas en la reserva para registrar hallazgos y desbloquear cartas en el álbum.
-6. **🛡️ Progresión y Gamificación:** Puntos de experiencia (EXP), rangos de guardaparque virtual y desbloqueo progresivo de contenido.
+- **Frontend:** React 19, Vite
+- **Estilos:** Tailwind CSS
+- **Animaciones y transiciones:** Framer Motion
+- **Iconografía:** Lucide React
+- **Audio:** Web Audio API (generación acústica sin dependencias externas)
 
----
+## Instalación y Ejecución
 
-## 🛠️ Stack Tecnológico
+```bash
+# Clonar el repositorio
+git clone https://github.com/RicardoCejas/VillaCielo.git
+cd VillaCielo
 
-- **React 19**
-- **Vite** (Build tool y servidor de desarrollo)
-- **Tailwind CSS** (Diseño fluido, paleta de colores orgánica inspirada en el monte serrano)
-- **Framer Motion** (Animaciones fluidas, transiciones de pantalla y microinteracciones)
-- **Lucide React** (Iconografía moderna)
-- **Web Audio API** (Efectos de sonido táctiles para clicks, pop, celebraciones y aciertos)
-- **Canvas Confetti** (Efectos visuales de recompensa y subida de nivel)
+# Instalar dependencias
+npm install
 
----
+# Iniciar servidor de desarrollo
+npm run dev
 
-## 🚀 Instalación y Puesta en Marcha
-
-1. Clonar el repositorio:
-   ```bash
-   git clone https://github.com/RicardoCejas/VillaCielo.git
-   cd VillaCielo
-   ```
-
-2. Instalar dependencias:
-   ```bash
-   npm install
-   ```
-
-3. Iniciar el servidor de desarrollo local:
-   ```bash
-   npm run dev
-   ```
-   Abrir en el navegador en `http://localhost:3000/` o `http://localhost:5173/`.
-
-4. Compilar para producción:
-   ```bash
-   npm run build
-   ```
-
----
-
-## 📂 Estructura del Proyecto
-
-```
-villa/
-├── public/
-│   ├── icons/          # Iconos PNG de los minijuegos (Trivia, Puzzle, Color, Memoria)
-│   └── images/         # Fotografías biológicas reales de fauna y flora serrana
-├── src/
-│   ├── components/
-│   │   ├── layout/     # TopBar, BottomNav, DeviceShell
-│   │   ├── screens/    # Pantallas principales (Home, Wiki, Red Trófica, Scanner, Detalle)
-│   │   │   └── games/  # Componentes de minijuegos y misiones interactivas
-│   │   └── ui/         # Modales de nivel, cartas desbloqueadas y toasts
-│   ├── context/        # AppContext (Estado global, EXP, progreso y persistencia)
-│   ├── data/           # speciesData.js, mapData.js, quizData.js, trophicData.js
-│   └── utils/          # audio.js (Web Audio API sound effects)
-├── index.html
-├── package.json
-├── tailwind.config.js
-└── vite.config.js
+# Generar compilación de producción
+npm run build
 ```
 
----
+## Estructura del Código
 
-## 🌿 Compromiso con la Conservación
-Este proyecto busca concientizar a los visitantes de Capilla del Monte sobre la fragilidad del bosque serrano y la importancia crítica de la prevención de incendios forestales.
+```text
+src/
+├── components/
+│   ├── layout/       # App shell móvil, barra superior y barra de navegación inferior
+│   ├── screens/      # Vistas principales (Home, Wiki, Mapa, Scanner, Red Trófica, Registro)
+│   │   └── games/    # Implementaciones de minijuegos y misiones de campo
+│   └── ui/           # Modales de nivel, desbloqueo de cartas, rangos y alertas
+├── context/          # AppContext (gestión de estado global, persistencia en localStorage)
+├── data/             # Datasets de biodiversidad, coordenadas de mapa, trivias y red trófica
+└── utils/            # Motor de audio sintetizado y tablas de traducción i18n
+```

@@ -10,7 +10,7 @@ export const ScannerScreen = () => {
   const { navigate, scanQRCode, goBack, unlockedSpeciesIds, theme, t } = useApp();
   const videoRef = useRef(null);
   const streamRef = useRef(null);
-  const [activeTab, setActiveTab] = useState('camera'); // 'camera' or 'manual'
+  const [activeTab, setActiveTab] = useState('camera');
   const [manualCode, setManualCode] = useState('');
   const [manualError, setManualError] = useState('');
   const [cameraActive, setCameraActive] = useState(false);
@@ -18,10 +18,7 @@ export const ScannerScreen = () => {
   const [isScanning, setIsScanning] = useState(false);
   const [selectedQRTarget, setSelectedQRTarget] = useState('QR_CORZUELA');
 
-  // Species that have QR codes for simulation
   const qrOptions = SPECIES_LIST.filter(s => s.qrCode);
-
-  // Suggested physical trail post codes
   const trailPostChips = [
     { code: 'VC-ZORRO', name: 'Zorro Gris (Posta 1)' },
     { code: 'VC-CORZUELA', name: 'Corzuela Parda (Posta 2)' },

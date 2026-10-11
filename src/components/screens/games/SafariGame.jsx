@@ -40,7 +40,6 @@ export const SafariGame = () => {
   const timerRef = useRef(null);
   const animalTimerRef = useRef(null);
 
-  // Spawn an animal in a random spot
   const spawnAnimal = () => {
     const randomAnimal = safariAnimals[Math.floor(Math.random() * safariAnimals.length)];
     const randomSpotIdx = Math.floor(Math.random() * spots.length);
@@ -53,11 +52,9 @@ export const SafariGame = () => {
       appearedAt: Date.now()
     });
 
-    // Stay visible between 1.3s and 2.1s
     const stayDuration = Math.random() * 800 + 1300;
     animalTimerRef.current = setTimeout(() => {
       setActiveAnimal(null);
-      // Spawn next animal after a brief pause
       const pauseDuration = Math.random() * 400 + 400;
       setTimeout(() => {
         if (gameState === 'playing') {
@@ -77,7 +74,6 @@ export const SafariGame = () => {
     setGameState('playing');
   };
 
-  // Main countdown timer
   useEffect(() => {
     if (gameState === 'playing') {
       spawnAnimal();
@@ -102,7 +98,6 @@ export const SafariGame = () => {
     };
   }, [gameState]);
 
-  // Click on the animal to snap photo!
   const handleSnap = (e, item) => {
     e.stopPropagation();
     if (!item) return;
@@ -117,7 +112,6 @@ export const SafariGame = () => {
     setCombo(c => c + 1);
     setLastShotText(`¡Foto nítida! +${earned} pts`);
 
-    // Unlock species in album if not yet collected
     unlockSpecies(item.animal.id, 'safari');
 
     setCapturedPhotos(prev => [
@@ -130,11 +124,9 @@ export const SafariGame = () => {
       }
     ]);
 
-    // Clear animal immediately
     clearTimeout(animalTimerRef.current);
     setActiveAnimal(null);
 
-    // Spawn next after small interval
     setTimeout(() => {
       if (gameState === 'playing') {
         spawnAnimal();

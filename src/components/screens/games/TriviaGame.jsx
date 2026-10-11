@@ -36,7 +36,6 @@ export const TriviaGame = () => {
 
   const currentQ = questions[currentIndex] || questions[0];
 
-  // Timer logic
   useEffect(() => {
     if (selectedOption === null && !quizFinished) {
       const initialTime = currentQ.timeLimit || 15;
@@ -46,7 +45,7 @@ export const TriviaGame = () => {
           if (prev <= 1) {
             clearInterval(timerRef.current);
             playError();
-            setSelectedOption(-1); // timed out
+            setSelectedOption(-1);
             return 0;
           }
           return prev - 1;

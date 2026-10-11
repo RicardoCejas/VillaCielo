@@ -29,7 +29,7 @@ export const WikiScreen = () => {
     goBack
   } = useApp();
 
-  const [activeFilter, setActiveFilter] = useState('Todas'); // 'Todas', 'Fauna', 'Flora', 'Desbloqueadas', 'Bloqueadas'
+  const [activeFilter, setActiveFilter] = useState('Todas');
   const [searchQuery, setSearchQuery] = useState('');
   const [lockedItemModal, setLockedItemModal] = useState(null);
 
@@ -37,17 +37,14 @@ export const WikiScreen = () => {
   const unlockedCount = unlockedSpeciesIds.length;
   const progressPercent = Math.round((unlockedCount / totalCount) * 100);
 
-  // Filter species
   const filteredSpecies = SPECIES_LIST.filter(item => {
     const isUnlocked = isSpeciesUnlocked(item.id);
 
-    // Tab filter
     if (activeFilter === 'Fauna' && item.category !== 'Fauna') return false;
     if (activeFilter === 'Flora' && item.category !== 'Flora') return false;
     if (activeFilter === 'Desbloqueadas' && !isUnlocked) return false;
     if (activeFilter === 'Bloqueadas' && isUnlocked) return false;
 
-    // Search query
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
       const matchName = item.name.toLowerCase().includes(q);
