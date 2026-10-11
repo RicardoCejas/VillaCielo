@@ -265,18 +265,44 @@ export const TriviaGame = () => {
             </div>
           </div>
 
-          {/* Centered Question Box */}
-          <div className="flex-1 flex flex-col justify-center items-center text-center px-2 py-4">
-            <span className="text-[10px] font-extrabold uppercase tracking-widest text-forest-light dark:text-mint mb-2">
+          {/* Centered Question Box with Species Photo Card */}
+          <div className="flex-1 flex flex-col justify-center items-center text-center px-1 py-2 my-auto">
+            {/* Species / Topic Photo Card */}
+            {currentQ.image && (
+              <motion.div
+                key={currentQ.id}
+                initial={{ opacity: 0, scale: 0.92, y: 6 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.25 }}
+                className="relative w-full max-w-[260px] h-32 sm:h-36 rounded-2xl overflow-hidden border-2 border-forest/20 dark:border-mint/30 shadow-md mb-2.5 bg-black/5"
+              >
+                <img
+                  src={currentQ.image}
+                  alt="Especie de Villa Cielo"
+                  className="w-full h-full object-cover object-center"
+                  loading="eager"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
+                
+                {currentQ.tag && (
+                  <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded-lg bg-black/65 backdrop-blur-md text-[9.5px] font-bold text-white tracking-wider border border-white/20">
+                    🌿 {currentQ.tag}
+                  </span>
+                )}
+              </motion.div>
+            )}
+
+            <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#245447] dark:text-[#68a691] mb-1">
               Pregunta {currentIndex + 1} de {questions.length}
             </span>
-            <h3 className="font-serif text-lg sm:text-xl font-bold leading-snug text-ink dark:text-white max-w-sm">
+
+            <h3 className="font-serif text-[17px] sm:text-xl font-bold leading-snug text-[#142620] dark:text-[#f2f7f4] max-w-sm px-1">
               {currentQ.q}
             </h3>
           </div>
 
           {/* Options with High Contrast & Clear Readability */}
-          <div className="space-y-2.5 mb-2 w-full max-w-md mx-auto">
+          <div className="space-y-2 mb-2 w-full max-w-md mx-auto">
             {currentQ.options.map((opt, idx) => {
               const isSelected = selectedOption === idx;
               const isCorrect = idx === currentQ.answer;

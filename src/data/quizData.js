@@ -1,4 +1,4 @@
-// Banco de preguntas progresivo por niveles para Niños y Adultos en Villa Cielo
+import { IMAGES } from './speciesData';
 
 export const KIDS_TRIVIA_LEVELS = [
   {
@@ -12,6 +12,8 @@ export const KIDS_TRIVIA_LEVELS = [
         options: ['El Hornero', 'El Cóndor', 'El Zorro'],
         answer: 0,
         explanation: '¡El Hornero es el ave nacional y construye su nido con barro, pasto y ramitas!',
+        image: IMAGES.hornero,
+        tag: 'Ave Autóctona',
         points: 50,
         timeLimit: 20
       },
@@ -21,6 +23,8 @@ export const KIDS_TRIVIA_LEVELS = [
         options: ['Grisácea con punta negra', 'Blanca como la nieve', 'Verde brillante'],
         answer: 0,
         explanation: 'Tiene pelaje gris ceniciento con manchas rojizas en las patas y punta de cola negra.',
+        image: IMAGES.zorro,
+        tag: 'Fauna Serrana',
         points: 50,
         timeLimit: 20
       },
@@ -30,6 +34,8 @@ export const KIDS_TRIVIA_LEVELS = [
         options: ['El Picaflor Común', 'El Búho', 'El Cuervo'],
         answer: 0,
         explanation: '¡El picaflor bate sus alas a toda velocidad para alimentarse del néctar!',
+        image: IMAGES.picaflor,
+        tag: 'Polinizador',
         points: 50,
         timeLimit: 20
       }
@@ -46,6 +52,8 @@ export const KIDS_TRIVIA_LEVELS = [
         options: ['La Peperina', 'El Ombú', 'La Lechuga'],
         answer: 0,
         explanation: 'La Peperina serrana es aromática y muy querida. ¡Hay que protegerla y no arrancarla de raíz!',
+        image: IMAGES.peperina,
+        tag: 'Flora Nativa Aromática',
         points: 60,
         timeLimit: 18
       },
@@ -55,6 +63,8 @@ export const KIDS_TRIVIA_LEVELS = [
         options: ['El Espinillo', 'El Ceibo', 'La Palmera'],
         answer: 0,
         explanation: 'El Espinillo florece al final del invierno llenando el monte de pompones amarillos llamados aromas.',
+        image: IMAGES.espinillo,
+        tag: 'Árbol Autóctono',
         points: 60,
         timeLimit: 18
       },
@@ -64,6 +74,8 @@ export const KIDS_TRIVIA_LEVELS = [
         options: ['Caminando por los senderos sin tirar basura', 'Gritando y corriendo', 'Arrancando ramas'],
         answer: 0,
         explanation: 'Respetar el silencio y llevarse los residuos ayuda a mantener seguros a los animales.',
+        image: IMAGES.trail,
+        tag: 'Cuidado de la Reserva',
         points: 60,
         timeLimit: 18
       }
@@ -80,6 +92,8 @@ export const KIDS_TRIVIA_LEVELS = [
         options: ['La Corzuela Parda', 'El Ciervo de los Pantanos', 'La Jirafa'],
         answer: 0,
         explanation: 'La Corzuela Parda es el ciervo autóctono serrano de Villa Cielo.',
+        image: IMAGES.corzuela,
+        tag: 'Cérvido Autóctono',
         points: 70,
         timeLimit: 15
       },
@@ -89,6 +103,8 @@ export const KIDS_TRIVIA_LEVELS = [
         options: ['Avisar urgente a los bomberos y guardaparques', 'Echarle ramas secas', 'Ignorarlo'],
         answer: 0,
         explanation: '¡El fuego es el mayor peligro en Córdoba! Siempre hay que avisar a los bomberos (100 o 911).',
+        image: IMAGES.uritorco,
+        tag: 'Prevención de Incendios',
         points: 70,
         timeLimit: 15
       },
@@ -98,6 +114,8 @@ export const KIDS_TRIVIA_LEVELS = [
         options: ['Río Calabalumba', 'Río Amazonas', 'Río Nilo'],
         answer: 0,
         explanation: 'El Río Calabalumba nace en las vertientes protegidas de nuestras sierras.',
+        image: IMAGES.trail,
+        tag: 'Cuenca Hídrica',
         points: 70,
         timeLimit: 15
       }
@@ -117,6 +135,8 @@ export const ADULT_TRIVIA_LEVELS = [
         options: ['Corzuela Parda (Mazama gouazoubira)', 'Ciervo Colorado exótico', 'Guanaco serrano'],
         answer: 0,
         explanation: 'La Corzuela Parda es el ciervo autóctono de las sierras cordobesas, vulnerable a los desmontes y perros asilvestrados.',
+        image: IMAGES.corzuela,
+        tag: 'Biodiversidad Serrana',
         points: 80,
         timeLimit: 15
       },
@@ -126,6 +146,8 @@ export const ADULT_TRIVIA_LEVELS = [
         options: ['1.949 msnm', '1.250 msnm', '2.800 msnm'],
         answer: 0,
         explanation: 'Con 1.949 metros sobre el nivel del mar, es la cumbre más alta de las Sierras Chicas.',
+        image: IMAGES.uritorco,
+        tag: 'Geografía de Punilla',
         points: 80,
         timeLimit: 15
       },
@@ -135,6 +157,8 @@ export const ADULT_TRIVIA_LEVELS = [
         options: ['Espinillo (Vachellia caven)', 'Pino elliottii', 'Siempreverde invasor'],
         answer: 0,
         explanation: 'El Espinillo es pionero en la sucesión ecológica, fijando nitrógeno y reteniendo el suelo pedregoso.',
+        image: IMAGES.espinillo,
+        tag: 'Flora Nativa Restauradora',
         points: 80,
         timeLimit: 15
       }
@@ -151,6 +175,8 @@ export const ADULT_TRIVIA_LEVELS = [
         options: ['Sanitarista y reciclador de nutrientes', 'Polinizador de espinillos', 'Dispersor primario de semillas'],
         answer: 0,
         explanation: 'Al ser carroñero estricto, neutraliza patógenos mortales como el ántrax y evita brotes epidémicos.',
+        image: IMAGES.jote,
+        tag: 'Depredador / Carroñero',
         points: 90,
         timeLimit: 15
       },
@@ -160,6 +186,8 @@ export const ADULT_TRIVIA_LEVELS = [
         options: ['Remueven la cubierta protectora que evita la escorrentía torrencial', 'Aumentan la humedad del suelo', 'Generan sombra excesiva'],
         answer: 0,
         explanation: 'Al perder el tapiz herbáceo, las lluvias estivales lavan la delgada capa de humus serrano.',
+        image: IMAGES.peperina,
+        tag: 'Conservación de Suelos',
         points: 90,
         timeLimit: 15
       },
@@ -169,6 +197,8 @@ export const ADULT_TRIVIA_LEVELS = [
         options: ['Puma (Puma concolor)', 'León africano', 'Lince europeo'],
         answer: 0,
         explanation: 'El puma regula las poblaciones de herbívoros y mesodepredadores, manteniendo el equilibrio del bosque.',
+        image: IMAGES.puma,
+        tag: 'Superdepredador Autóctono',
         points: 90,
         timeLimit: 15
       }
@@ -185,6 +215,8 @@ export const ADULT_TRIVIA_LEVELS = [
         options: ['Viento norte seco, baja humedad y acumulación de pastizal seco (regla 30-30-30)', 'Caída de nieve tardía', 'Niebla persistente'],
         answer: 0,
         explanation: 'La regla del 30 (temperatura >30°C, humedad <30%, viento >30 km/h) crea condiciones extremas para el fuego.',
+        image: IMAGES.uritorco,
+        tag: 'Alerta de Incendios',
         points: 100,
         timeLimit: 15
       },
@@ -194,6 +226,8 @@ export const ADULT_TRIVIA_LEVELS = [
         options: ['Impermeabiliza el suelo con cenizas y provoca crecidas violentas con arrastre de sedimentos', 'Purifica las napas freáticas', 'Mejora la retención de agua'],
         answer: 0,
         explanation: 'El suelo calcinado repele el agua, provocando aluviones que colmatan diques y arroyos.',
+        image: IMAGES.trail,
+        tag: 'Impacto Hidrológico',
         points: 100,
         timeLimit: 15
       },
@@ -203,6 +237,8 @@ export const ADULT_TRIVIA_LEVELS = [
         options: ['Ley 9.814 de Ordenamiento Territorial de Bosques Nativos', 'Ley de Minería 1.000', 'Decreto Municipal 42'],
         answer: 0,
         explanation: 'La Ley 9.814 establece zonas rojas de máxima conservación donde el cambio de uso de suelo está estrictamente prohibido.',
+        image: IMAGES.quebracho || IMAGES.molle,
+        tag: 'Legislación Ambiental',
         points: 100,
         timeLimit: 15
       }
