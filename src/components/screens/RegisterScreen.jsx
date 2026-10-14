@@ -109,7 +109,7 @@ export const RegisterScreen = () => {
               Creá tu perfil de Guardián
             </h1>
             <p className="text-xs text-muted mt-0.5 leading-snug">
-              Tu edad define automáticamente si explorás en <strong>Perfil Niños (6-14)</strong> o <strong>Perfil Adultos (15-99)</strong>.
+              Tu edad define automáticamente si explorás en <strong>Perfil Niños (6 a 14 años)</strong> o <strong>Perfil Adultos (15+ años)</strong>.
             </p>
           </div>
 
@@ -146,16 +146,16 @@ export const RegisterScreen = () => {
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
-                  Edad (6 a 99 años) *
+                  Edad *
                 </label>
                 {isKidsProfile && (
                   <span className="text-[8.5px] font-bold text-amber-800 bg-amber-100 dark:bg-amber-950/70 dark:text-amber-300 px-2 py-0.5 rounded-full">
-                    Perfil Niños (6 a 14)
+                    🧒 Perfil Niños (6 a 14 años)
                   </span>
                 )}
                 {isAdultsProfile && (
                   <span className="text-[8.5px] font-bold text-emerald-800 bg-emerald-100 dark:bg-emerald-950/70 dark:text-emerald-300 px-2 py-0.5 rounded-full">
-                    Perfil Adultos (15 a 99)
+                    🌿 Perfil Adultos (15+ años)
                   </span>
                 )}
               </div>
@@ -178,7 +178,7 @@ export const RegisterScreen = () => {
                   ? 'Recibirás desafíos visuales: Colorear, Puzzles simples y Trivia ilustrada.'
                   : isAdultsProfile
                   ? 'Recibirás desafíos analíticos: Red trófica, botánica serrana y prevención de incendios.'
-                  : 'Ingresá tu edad: 6-14 niños, 15-99 adultos.'}
+                  : 'Ingresá tu edad: 6 a 14 años para Perfil Niños, 15 o más para Perfil Adultos.'}
               </p>
             </div>
 
@@ -341,7 +341,7 @@ export const RegisterScreen = () => {
 
               <div className="mb-4">
                 <label className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-1">
-                  ¿Cuántos años tenés? (6 a 99)
+                  ¿Cuántos años tenés?
                 </label>
                 <input
                   type="number"
@@ -359,11 +359,11 @@ export const RegisterScreen = () => {
                 <div className="mt-2 p-2 rounded-xl bg-black/5 dark:bg-white/5 border border-line/60 text-[10px] leading-tight">
                   {isSocialKids ? (
                     <span className="text-amber-700 dark:text-amber-300 font-bold block">
-                      Perfil Niños (6-14 años): Juegos visuales, puzzles y dibujo.
+                      🧒 Perfil Niños (6 a 14 años): Juegos visuales, puzzles y dibujo.
                     </span>
                   ) : (
                     <span className="text-emerald-700 dark:text-emerald-300 font-bold block">
-                      Perfil Adultos (15-99 años): Datos analíticos, botánica y red trófica.
+                      🌿 Perfil Adultos (15+ años): Datos analíticos, botánica y red trófica.
                     </span>
                   )}
                 </div>

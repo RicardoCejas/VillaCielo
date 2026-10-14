@@ -64,11 +64,11 @@ export const HomeScreen = () => {
               </span>
               {userAge && (
                 <span className={`text-[8px] font-bold px-1.5 py-0.2 rounded-full border ${
-                  userAge < 13
+                  userAge <= 14
                     ? 'bg-amber-100 text-amber-800 border-amber-300 dark:bg-amber-950/70 dark:text-amber-300'
                     : 'bg-emerald-100 text-emerald-800 border-emerald-300 dark:bg-emerald-950/70 dark:text-emerald-300'
                 }`}>
-                  {userAge < 13 ? '🧒 Niños' : '🌿 Adultos'} ({userAge} años)
+                  {userAge <= 14 ? '🧒 Niños (6-14)' : '🌿 Adultos (15+)'} ({userAge} años)
                 </span>
               )}
             </div>

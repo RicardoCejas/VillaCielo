@@ -74,7 +74,7 @@ export const ProfileScreen = () => {
                   ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300'
                   : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/70 dark:text-emerald-300'
               }`}>
-                {profile === 'Niños' ? '🧒 Niños (6-14)' : '🌿 Adultos (15-99)'}
+                {profile === 'Niños' ? '🧒 Niños (6 a 14 años)' : '🌿 Adultos (15+ años)'}
               </span>
             </div>
             <p className="text-[10px] text-muted truncate">
@@ -95,7 +95,7 @@ export const ProfileScreen = () => {
               Adaptabilidad de Interfaz
             </span>
             <span className="text-[9px] text-muted">
-              Criterio: 6-14 niños / 15-99 adultos
+              Criterio: 6-14 niños / 15+ adultos
             </span>
           </div>
 
@@ -126,7 +126,7 @@ export const ProfileScreen = () => {
               <span className="text-base">🌿</span>
               <div>
                 <strong className="text-xs font-bold block leading-tight">Modo Adultos</strong>
-                <span className="text-[8px] opacity-80">15 a 99 años</span>
+                <span className="text-[8px] opacity-80">15+ años</span>
               </div>
             </button>
           </div>
