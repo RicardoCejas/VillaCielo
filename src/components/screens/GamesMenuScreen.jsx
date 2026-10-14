@@ -187,7 +187,7 @@ export const GamesMenuScreen = () => {
                   : 'text-muted hover:text-ink dark:hover:text-white'
               }`}
             >
-              <span>🌿 Adultos (15-99)</span>
+              <span>🌿 Adultos (15+)</span>
             </button>
           )}
 
