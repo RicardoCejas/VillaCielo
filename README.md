@@ -1,4 +1,4 @@
-# Villa Cielo Abierto
+# Villa Cielo Abierto.
 
 Aplicación web progresiva e interactiva orientada a la interpretación ambiental, registro de biodiversidad y simulación de redes tróficas en la Reserva Natural Municipal Villa Cielo y los Balcones del Cerro Uritorco (Capilla del Monte, Córdoba).
 
