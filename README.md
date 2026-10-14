@@ -4,7 +4,7 @@ Aplicación web progresiva e interactiva orientada a la interpretación ambienta
 
 ## Características
 
-- **Registro y perfiles adaptativos:** Segmentación automática según edad (1 a 14 años: perfil infantil con dinámicas visuales y lúdicas; 15 a 99 años: perfil adulto con enfoque analítico y botánico). Soporta autenticación por credenciales o acceso simulado con Google y Facebook.
+- **Registro y perfiles adaptativos:** Segmentación automática según edad (6 a 14 años: perfil infantil con dinámicas visuales y lúdicas; 15 a 99 años: perfil adulto con enfoque analítico y botánico). Soporta autenticación por credenciales o acceso simulado con Google y Facebook.
 - **Simulador de red trófica y crisis ambiental:** Modelado interactivo de cadenas alimentarias del bosque serrano. Permite simular el impacto de la pérdida de especies clave y contingencias de incendios forestales.
 - **Guía de campo y wiki nativa:** Fichas de 40 especies autóctonas verificadas de Punilla (20 de flora y 20 de fauna) con taxonomía, rol ecológico, estado de conservación y datos culturales.
 - **Juegos y misiones progresivas:**

@@ -86,7 +86,7 @@ export const SettingsScreen = () => {
               {user?.name || 'Explorador'} ({profile})
             </strong>
             <span className="text-[9px] text-[#bed8cc] mt-0.5">
-              {userAge} años · {userAge <= 14 ? 'Niños (1-14 años)' : 'Adultos (15-99 años)'}
+              {userAge} años · {userAge <= 14 ? 'Niños (6-14 años)' : 'Adultos (15-99 años)'}
             </span>
           </div>
           <button
