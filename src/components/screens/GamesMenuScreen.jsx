@@ -48,7 +48,7 @@ export const GamesMenuScreen = () => {
       iconImg: '/icons/color.png',
       icon: Palette,
       audience: 'kids',
-      audienceBadge: '🧒 Solo Niños (1-14)',
+      audienceBadge: '🧒 Solo Niños (6-14)',
       badgeColor: 'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300',
     },
     {
@@ -60,7 +60,7 @@ export const GamesMenuScreen = () => {
       iconImg: '/icons/puzzle.png',
       icon: Puzzle,
       audience: 'kids',
-      audienceBadge: '🧒 Solo Niños (1-14)',
+      audienceBadge: '🧒 Solo Niños (6-14)',
       badgeColor: 'bg-amber-100 text-amber-800 dark:bg-amber-950/70 dark:text-amber-300',
     },
     {
@@ -112,6 +112,10 @@ export const GamesMenuScreen = () => {
   ];
 
   const filteredGames = allGames.filter(game => {
+    // Si el usuario tiene perfil Adultos, no tiene acceso a juegos exclusivos de niños
+    if (profile === 'Adultos' && game.audience === 'kids') {
+      return false;
+    }
     if (categoryFilter === 'kids') {
       return game.audience === 'kids' || game.audience === 'both';
     }
@@ -155,35 +159,37 @@ export const GamesMenuScreen = () => {
           </p>
         </div>
 
-        {/* 3 Categories Filter Tabs */}
+        {/* Categories Filter Tabs adaptadas al perfil */}
         <div className="flex bg-black/10 dark:bg-white/10 p-1 rounded-2xl gap-1">
-          <button
-            onClick={() => {
-              playPop();
-              setCategoryFilter('kids');
-            }}
-            className={`flex-1 py-1.5 px-1 rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1 ${
-              categoryFilter === 'kids'
-                ? 'bg-forest text-white shadow-xs'
-                : 'text-muted hover:text-ink dark:hover:text-white'
-            }`}
-          >
-            <span>🧒 Niños (1-14)</span>
-          </button>
-
-          <button
-            onClick={() => {
-              playPop();
-              setCategoryFilter('adults');
-            }}
-            className={`flex-1 py-1.5 px-1 rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1 ${
-              categoryFilter === 'adults'
-                ? 'bg-forest text-white shadow-xs'
-                : 'text-muted hover:text-ink dark:hover:text-white'
-            }`}
-          >
-            <span>🌿 Adultos (15-99)</span>
-          </button>
+          {profile === 'Niños' ? (
+            <button
+              onClick={() => {
+                playPop();
+                setCategoryFilter('kids');
+              }}
+              className={`flex-1 py-1.5 px-1 rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1 ${
+                categoryFilter === 'kids'
+                  ? 'bg-forest text-white shadow-xs'
+                  : 'text-muted hover:text-ink dark:hover:text-white'
+              }`}
+            >
+              <span>🧒 Niños (6-14)</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                playPop();
+                setCategoryFilter('adults');
+              }}
+              className={`flex-1 py-1.5 px-1 rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1 ${
+                categoryFilter === 'adults'
+                  ? 'bg-forest text-white shadow-xs'
+                  : 'text-muted hover:text-ink dark:hover:text-white'
+              }`}
+            >
+              <span>🌿 Adultos (15-99)</span>
+            </button>
+          )}
 
           <button
             onClick={() => {

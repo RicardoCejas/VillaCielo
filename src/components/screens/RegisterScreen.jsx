@@ -18,7 +18,7 @@ export const RegisterScreen = () => {
   const [socialName, setSocialName] = useState('');
 
   const numericAge = parseInt(age, 10);
-  const isKidsProfile = !isNaN(numericAge) && numericAge >= 1 && numericAge <= 14;
+  const isKidsProfile = !isNaN(numericAge) && numericAge >= 6 && numericAge <= 14;
   const isAdultsProfile = !isNaN(numericAge) && numericAge >= 15 && numericAge <= 99;
 
   const handleSubmit = (e) => {
@@ -27,8 +27,8 @@ export const RegisterScreen = () => {
       setErrorMsg('Por favor ingresá tu nombre o apodo.');
       return;
     }
-    if (!age || isNaN(numericAge) || numericAge < 1 || numericAge > 99) {
-      setErrorMsg('Por favor ingresá una edad válida entre 1 y 99 años.');
+    if (!age || isNaN(numericAge) || numericAge < 6 || numericAge > 99) {
+      setErrorMsg('Por favor ingresá una edad válida entre 6 y 99 años.');
       return;
     }
 
@@ -61,7 +61,7 @@ export const RegisterScreen = () => {
   };
 
   const numericSocialAge = parseInt(socialAge, 10);
-  const isSocialKids = !isNaN(numericSocialAge) && numericSocialAge >= 1 && numericSocialAge <= 14;
+  const isSocialKids = !isNaN(numericSocialAge) && numericSocialAge >= 6 && numericSocialAge <= 14;
 
   return (
     <section className={`relative w-full h-full flex flex-col justify-between overflow-hidden select-none ${
@@ -109,7 +109,7 @@ export const RegisterScreen = () => {
               Creá tu perfil de Guardián
             </h1>
             <p className="text-xs text-muted mt-0.5 leading-snug">
-              Tu edad define automáticamente si explorás en <strong>Perfil Niños (1-14)</strong> o <strong>Perfil Adultos (15-99)</strong>.
+              Tu edad define automáticamente si explorás en <strong>Perfil Niños (6-14)</strong> o <strong>Perfil Adultos (15-99)</strong>.
             </p>
           </div>
 
@@ -146,11 +146,11 @@ export const RegisterScreen = () => {
             <div>
               <div className="flex items-center justify-between mb-1">
                 <label className="text-[10px] font-bold uppercase tracking-wider text-muted">
-                  Edad (1 a 99 años) *
+                  Edad (6 a 99 años) *
                 </label>
                 {isKidsProfile && (
                   <span className="text-[8.5px] font-bold text-amber-800 bg-amber-100 dark:bg-amber-950/70 dark:text-amber-300 px-2 py-0.5 rounded-full">
-                    Perfil Niños (1 a 14)
+                    Perfil Niños (6 a 14)
                   </span>
                 )}
                 {isAdultsProfile && (
@@ -161,7 +161,7 @@ export const RegisterScreen = () => {
               </div>
               <input
                 type="number"
-                min="1"
+                min="6"
                 max="99"
                 required
                 value={age}
@@ -178,7 +178,7 @@ export const RegisterScreen = () => {
                   ? 'Recibirás desafíos visuales: Colorear, Puzzles simples y Trivia ilustrada.'
                   : isAdultsProfile
                   ? 'Recibirás desafíos analíticos: Red trófica, botánica serrana y prevención de incendios.'
-                  : 'Ingresá tu edad: 1-14 niños, 15-99 adultos.'}
+                  : 'Ingresá tu edad: 6-14 niños, 15-99 adultos.'}
               </p>
             </div>
 
@@ -341,11 +341,11 @@ export const RegisterScreen = () => {
 
               <div className="mb-4">
                 <label className="block text-[10px] font-bold uppercase tracking-wider text-muted mb-1">
-                  ¿Cuántos años tenés? (1 a 99)
+                  ¿Cuántos años tenés? (6 a 99)
                 </label>
                 <input
                   type="number"
-                  min="1"
+                  min="6"
                   max="99"
                   value={socialAge}
                   onChange={(e) => setSocialAge(e.target.value)}
@@ -359,7 +359,7 @@ export const RegisterScreen = () => {
                 <div className="mt-2 p-2 rounded-xl bg-black/5 dark:bg-white/5 border border-line/60 text-[10px] leading-tight">
                   {isSocialKids ? (
                     <span className="text-amber-700 dark:text-amber-300 font-bold block">
-                      Perfil Niños (1-14 años): Juegos visuales, puzzles y dibujo.
+                      Perfil Niños (6-14 años): Juegos visuales, puzzles y dibujo.
                     </span>
                   ) : (
                     <span className="text-emerald-700 dark:text-emerald-300 font-bold block">

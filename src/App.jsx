@@ -26,7 +26,7 @@ import { WireframeOverview } from './components/screens/WireframeOverview';
 import { AnimatePresence, motion } from 'framer-motion';
 
 export const App = () => {
-  const { currentScreen, viewMode } = useApp();
+  const { currentScreen, viewMode, profile } = useApp();
 
   if (viewMode === 'overview') {
     return (
@@ -71,9 +71,9 @@ export const App = () => {
       case 'trivia':
         return <TriviaGame />;
       case 'puzzle':
-        return <PuzzleScreen />;
+        return profile === 'Adultos' ? <GamesMenuScreen /> : <PuzzleScreen />;
       case 'color':
-        return <ColoringScreen />;
+        return profile === 'Adultos' ? <GamesMenuScreen /> : <ColoringScreen />;
       case 'memory':
         return <MemoryScreen />;
       case 'settings':
