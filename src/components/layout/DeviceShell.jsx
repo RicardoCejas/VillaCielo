@@ -240,8 +240,8 @@ export const DeviceShell = ({ children }) => {
           isFullScreenPhone
             ? 'w-full h-full max-w-none max-h-none border-0 rounded-none p-0'
             : theme === 'dark'
-            ? 'w-full max-w-[420px] h-[100dvh] max-h-[850px] bg-[#07130e] border-[8px] border-[#07130e] rounded-[50px] p-[26px_8px_16px] shadow-2xl ring-1 ring-[#1b3d30]'
-            : 'w-full max-w-[420px] h-[100dvh] max-h-[850px] bg-[#12241f] border-[8px] border-[#12241f] rounded-[50px] p-[26px_8px_16px] shadow-phone'
+            ? 'w-full max-w-[448px] h-[98dvh] max-h-[890px] bg-[#07130e] border-[8px] border-[#07130e] rounded-[48px] p-[24px_8px_14px] shadow-2xl ring-1 ring-[#1b3d30]'
+            : 'w-full max-w-[448px] h-[98dvh] max-h-[890px] bg-[#12241f] border-[8px] border-[#12241f] rounded-[48px] p-[24px_8px_14px] shadow-phone'
         }`}
       >
         {/* Status Bar */}
