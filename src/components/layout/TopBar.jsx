@@ -1,6 +1,6 @@
 import React from 'react';
 import { useApp } from '../../context/AppContext';
-import { ArrowLeft, Settings, Volume2, VolumeX, Leaf, Sun, Moon } from 'lucide-react';
+import { ArrowLeft, Settings, Volume2, VolumeX, Leaf, Sun, Moon, Type } from 'lucide-react';
 import { playClick } from '../../utils/audio';
 
 export const TopBar = ({
@@ -11,7 +11,7 @@ export const TopBar = ({
   showSoundToggle = true,
   backLabel
 }) => {
-  const { settings, toggleSound, theme, toggleTheme, t } = useApp();
+  const { settings, toggleSound, toggleLargeText, theme, toggleTheme, t } = useApp();
   const label = backLabel || t('back');
 
   const isDarkUi = light || theme === 'dark';
@@ -67,8 +67,25 @@ export const TopBar = ({
         )}
       </div>
 
-      {/* Right Actions: Theme, Sound & Settings */}
+      {/* Right Actions: Theme, Sound, Large Text & Settings */}
       <div className="flex items-center justify-end gap-1.5 min-w-[78px]">
+        {/* Quick Large Text Accessibility Toggle */}
+        <button
+          onClick={toggleLargeText}
+          className={`h-7 px-1.5 rounded-xl flex items-center justify-center gap-0.5 text-xs font-bold transition-all shadow-xs ${
+            settings.largeText
+              ? 'bg-forest text-sun border border-sun shadow-sm'
+              : isDarkUi
+              ? 'bg-[#153427] text-white hover:bg-[#1b4333] border border-[#275d46]'
+              : 'bg-white text-forest hover:bg-cream-light border border-line'
+          }`}
+          title={settings.largeText ? 'Restablecer letra normal' : 'Agrandar letra (Modo Accesibilidad)'}
+          aria-label="Agrandar letra"
+        >
+          <Type className="w-3.5 h-3.5 stroke-[2.4]" />
+          <span className="text-[10px] font-black">{settings.largeText ? 'A+' : 'A'}</span>
+        </button>
+
         {/* Quick Theme Toggle (Day / Night in reserve) */}
         <button
           onClick={toggleTheme}

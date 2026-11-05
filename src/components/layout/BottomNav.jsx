@@ -31,7 +31,7 @@ export const BottomNav = ({ active }) => {
           <button
             key={item.screen}
             onClick={() => navigate(item.screen)}
-            className={`flex flex-col items-center justify-center gap-0.5 text-[9px] font-semibold transition-colors ${
+            className={`flex flex-col items-center justify-center gap-1 text-[11px] font-semibold transition-colors ${
               isActive
                 ? theme === 'dark'
                   ? 'text-white font-bold'
@@ -40,7 +40,7 @@ export const BottomNav = ({ active }) => {
             }`}
           >
             <div
-              className={`relative grid place-items-center w-10 h-7 rounded-xl transition-all ${
+              className={`relative grid place-items-center w-11 h-7 rounded-xl transition-all ${
                 isActive
                   ? theme === 'dark'
                     ? 'bg-[#1b4334] text-white shadow-md'
@@ -59,7 +59,7 @@ export const BottomNav = ({ active }) => {
                 />
               )}
             </div>
-            <span className="truncate max-w-[54px]">{item.label}</span>
+            <span className="truncate max-w-[62px] leading-tight">{item.label}</span>
           </button>
         );
       })}

@@ -144,30 +144,30 @@ export const GamesMenuScreen = () => {
         {/* Header Heading */}
         <div className="pt-0.5">
           <div className="flex items-center justify-between">
-            <span className="text-forest-light text-[9px] font-bold tracking-[1.6px] uppercase block">
+            <span className="text-forest-light text-xs font-bold tracking-[1.4px] uppercase block">
               Desafíos de Villa Cielo
             </span>
-            <span className="text-[10px] font-bold text-forest bg-sun/30 px-2 py-0.5 rounded-full">
+            <span className="text-xs font-bold text-forest bg-sun/30 px-2 py-0.5 rounded-full">
               Rango {currentRank.level} de 6 · {currentRank.icon}
             </span>
           </div>
           <h2 className="font-serif text-2xl font-bold tracking-tight mt-0.5 leading-tight">
             Elegí tu desafío
           </h2>
-          <p className="text-muted text-xs mt-0.5">
+          <p className="text-muted text-sm mt-0.5 leading-snug">
             Superá etapas progresivas (Niveles 1, 2 y 3) para acumular estrellas y EXP.
           </p>
         </div>
 
         {/* Categories Filter Tabs adaptadas al perfil */}
-        <div className="flex bg-black/10 dark:bg-white/10 p-1 rounded-2xl gap-1">
+        <div className="flex bg-black/10 dark:bg-white/10 p-1.5 rounded-2xl gap-1.5">
           {profile === 'Niños' ? (
             <button
               onClick={() => {
                 playPop();
                 setCategoryFilter('kids');
               }}
-              className={`flex-1 py-1.5 px-1 rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1 ${
+              className={`flex-1 py-2 px-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${
                 categoryFilter === 'kids'
                   ? 'bg-forest text-white shadow-xs'
                   : 'text-muted hover:text-ink dark:hover:text-white'
@@ -181,7 +181,7 @@ export const GamesMenuScreen = () => {
                 playPop();
                 setCategoryFilter('adults');
               }}
-              className={`flex-1 py-1.5 px-1 rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1 ${
+              className={`flex-1 py-2 px-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${
                 categoryFilter === 'adults'
                   ? 'bg-forest text-white shadow-xs'
                   : 'text-muted hover:text-ink dark:hover:text-white'
@@ -196,7 +196,7 @@ export const GamesMenuScreen = () => {
               playPop();
               setCategoryFilter('field');
             }}
-            className={`flex-1 py-1.5 px-1 rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1 ${
+            className={`flex-1 py-2 px-1.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1 ${
               categoryFilter === 'field'
                 ? 'bg-forest text-white shadow-xs'
                 : 'text-muted hover:text-ink dark:hover:text-white'
@@ -207,7 +207,7 @@ export const GamesMenuScreen = () => {
         </div>
 
         {/* Games Grid/List */}
-        <div className="grid gap-2">
+        <div className="grid gap-2.5">
           <AnimatePresence mode="wait">
             {filteredGames.map((game, index) => {
               const Icon = game.icon;
@@ -225,7 +225,7 @@ export const GamesMenuScreen = () => {
                     playPop();
                     navigate(game.screen);
                   }}
-                  className={`w-full text-left p-2.5 rounded-2xl border grid grid-cols-[44px_1fr_18px] items-center gap-2.5 shadow-2xs hover:shadow-sm transition-all ${
+                  className={`w-full text-left p-3 rounded-2xl border grid grid-cols-[46px_1fr_18px] items-center gap-3 shadow-2xs hover:shadow-sm transition-all ${
                     theme === 'dark'
                       ? 'bg-[#11261e] border-[#1e4536] hover:bg-[#163327]'
                       : 'bg-white border-line hover:border-moss/40'
@@ -233,7 +233,7 @@ export const GamesMenuScreen = () => {
                 >
                   {/* Game Icon */}
                   {game.iconImg ? (
-                    <div className="w-11 h-11 rounded-xl overflow-hidden grid place-items-center shadow-2xs shrink-0 bg-cream dark:bg-[#193a2c]">
+                    <div className="w-12 h-12 rounded-xl overflow-hidden grid place-items-center shadow-2xs shrink-0 bg-cream dark:bg-[#193a2c]">
                       <img
                         src={game.iconImg}
                         alt={game.title}
@@ -241,31 +241,31 @@ export const GamesMenuScreen = () => {
                       />
                     </div>
                   ) : (
-                    <span className="w-11 h-11 rounded-xl bg-forest text-sun grid place-items-center shadow-2xs shrink-0">
-                      <Icon className="w-5 h-5 stroke-[2.2]" />
+                    <span className="w-12 h-12 rounded-xl bg-forest text-sun grid place-items-center shadow-2xs shrink-0">
+                      <Icon className="w-6 h-6 stroke-[2.2]" />
                     </span>
                   )}
 
                   <div className="flex flex-col pr-1">
-                    <div className="flex items-center gap-1.5 mb-0.5">
-                      <strong className="font-serif text-sm font-bold text-forest leading-tight">
+                    <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
+                      <strong className="font-serif text-base font-bold text-forest leading-tight">
                         {game.title}
                       </strong>
-                      <span className={`text-[7.5px] font-bold px-1.5 py-0.2 rounded-full ${game.badgeColor}`}>
+                      <span className={`text-[11px] font-bold px-1.5 py-0.5 rounded-full ${game.badgeColor}`}>
                         {game.audienceBadge}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-1 text-[10px] text-muted font-medium">
+                    <div className="flex items-center gap-1 text-xs text-muted font-medium">
                       <span className="line-clamp-1">{game.subtitle}</span>
                     </div>
 
-                    <div className="flex items-center justify-between text-[9px] text-forest font-bold mt-1">
+                    <div className="flex items-center justify-between text-xs text-forest font-bold mt-1.5">
                       <span className="text-muted font-semibold flex items-center gap-1">
-                        <Star className="w-2.5 h-2.5 text-sun fill-sun" />
+                        <Star className="w-3 h-3 text-sun fill-sun" />
                         <span>Nivel {currentLvl} de 3</span>
                       </span>
-                      <span className="bg-forest/10 dark:bg-white/10 px-1.5 py-0.2 rounded shrink-0 ml-1">
+                      <span className="bg-forest/10 dark:bg-white/10 px-2 py-0.5 rounded shrink-0 ml-1 font-bold">
                         {game.reward}
                       </span>
                     </div>
@@ -279,10 +279,10 @@ export const GamesMenuScreen = () => {
         </div>
 
         {/* Informative Note */}
-        <div className={`p-2.5 rounded-2xl border text-[10px] leading-tight text-muted ${
+        <div className={`p-3 rounded-2xl border text-xs leading-relaxed text-muted ${
           theme === 'dark' ? 'bg-[#0a1813]/60 border-[#1a382a]' : 'bg-[#eef3f0] border-line'
         }`}>
-          ⭐ <strong>Sistema Progresivo:</strong> Cada juego cuenta con 3 niveles que se desbloquean a medida que los vas superando.
+          ⭐ <strong className="text-forest dark:text-sun font-bold">Sistema Progresivo:</strong> Cada juego cuenta con 3 niveles que se desbloquean a medida que los vas superando.
         </div>
       </div>
 

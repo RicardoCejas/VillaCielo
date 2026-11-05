@@ -91,6 +91,10 @@ export const AppProvider = ({ children }) => {
     };
   });
 
+  useEffect(() => {
+    localStorage.setItem('villa_settings', JSON.stringify(settings));
+  }, [settings]);
+
   const [toasts, setToasts] = useState([]);
 
   const getCurrentRank = (currentExp = exp) => {
@@ -382,6 +386,17 @@ export const AppProvider = ({ children }) => {
     addToast(next ? 'Sonido activado' : 'Sonido silenciado', '', 'info');
   };
 
+  const toggleLargeText = () => {
+    const next = !settings.largeText;
+    playPop();
+    setSettings(prev => ({ ...prev, largeText: next }));
+    addToast(
+      next ? 'Texto Grande Activado' : 'Texto Estándar Activado',
+      next ? 'Tamaño de letra aumentado para lectura cómoda al sol' : 'Tamaño normal restablecido',
+      'info'
+    );
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -421,6 +436,7 @@ export const AppProvider = ({ children }) => {
         setSettings,
         updateSetting,
         toggleSound,
+        toggleLargeText,
         navigate,
         goBack,
         toasts,

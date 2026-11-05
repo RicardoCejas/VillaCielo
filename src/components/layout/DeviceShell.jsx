@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '../../context/AppContext';
-import { Leaf, Volume2, VolumeX, Moon, Sun, LayoutGrid } from 'lucide-react';
+import { Leaf, Volume2, VolumeX, Moon, Sun, LayoutGrid, Type } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { playPop } from '../../utils/audio';
 
@@ -10,6 +10,7 @@ export const DeviceShell = ({ children }) => {
     setViewMode, 
     settings, 
     toggleSound, 
+    toggleLargeText,
     currentScreen, 
     navigate, 
     points,
@@ -133,6 +134,24 @@ export const DeviceShell = ({ children }) => {
           </button>
 
           <div className="flex items-center gap-2">
+            {/* Large Text Accessibility Toggle */}
+            <button
+              onClick={toggleLargeText}
+              className={`w-10 h-10 rounded-xl grid place-items-center transition active:scale-95 border ${
+                settings.largeText
+                  ? 'bg-forest text-sun border-sun shadow-md ring-1 ring-sun'
+                  : theme === 'dark'
+                  ? 'bg-[#163327] text-white border-[#254f3d]'
+                  : 'bg-white text-forest border-line'
+              }`}
+              title={settings.largeText ? 'Restablecer letra normal' : 'Agrandar letra (Modo Accesibilidad)'}
+            >
+              <span className="text-xs font-black flex items-center gap-0.5">
+                <Type className="w-3.5 h-3.5" />
+                <span>{settings.largeText ? 'A+' : 'A'}</span>
+              </span>
+            </button>
+
             {/* Dark / Light Mode Toggle */}
             <button
               onClick={toggleTheme}
@@ -187,6 +206,21 @@ export const DeviceShell = ({ children }) => {
           title="Alternar día/noche"
         >
           {theme === 'dark' ? <Sun className="w-3.5 h-3.5 text-sun" /> : <Moon className="w-3.5 h-3.5 text-forest" />}
+        </button>
+
+        <span className="w-px h-4 bg-line opacity-50" />
+
+        <button
+          onClick={toggleLargeText}
+          className={`px-1.5 py-0.5 rounded-lg text-[11px] font-black flex items-center gap-0.5 transition ${
+            settings.largeText
+              ? 'bg-forest text-sun border border-sun/60'
+              : 'hover:bg-black/10 text-muted'
+          }`}
+          title="Agrandar letra"
+        >
+          <Type className="w-3 h-3 stroke-[2.4]" />
+          <span>{settings.largeText ? 'A+' : 'A'}</span>
         </button>
 
         <span className="w-px h-4 bg-line opacity-50" />

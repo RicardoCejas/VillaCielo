@@ -38,9 +38,91 @@
   background-color: #0a1813;
 }
 
-/* Large text accessibility mode (sunlight reading / elderly & visual accessibility) */
+/* ============================================================
+   RESPONSIVE MOBILE TYPOGRAPHY & READABILITY OVERHAUL
+   Eliminates microscopic illegible text on mobile screens
+   ============================================================ */
+
+/* Base mobile font size adjustments for natural outdoor legibility */
+html {
+  font-size: 16px;
+}
+
+/* Ensure no label or tag drops below comfortable mobile reading threshold */
+[class*="text-\[7"],
+[class*="text-\[8"],
+[class*="text-\[9"] {
+  font-size: 11.5px !important;
+  line-height: 1.35 !important;
+}
+
+[class*="text-\[10"] {
+  font-size: 12.5px !important;
+  line-height: 1.4 !important;
+}
+
+[class*="text-\[11"] {
+  font-size: 13px !important;
+  line-height: 1.4 !important;
+}
+
+/* Base helper classes */
+.text-xs {
+  font-size: 13px !important;
+  line-height: 1.45 !important;
+}
+
+.text-sm {
+  font-size: 14.5px !important;
+  line-height: 1.45 !important;
+}
+
+/* ============================================================
+   LARGE TEXT ACCESSIBILITY MODE (Sunlight reading & Elderly)
+   Significantly scales up all typography when toggled
+   ============================================================ */
 .large-text {
-  font-size: 112% !important;
+  font-size: 120% !important;
+}
+
+.large-text [class*="text-\[7"],
+.large-text [class*="text-\[8"],
+.large-text [class*="text-\[9"] {
+  font-size: 13.5px !important;
+  line-height: 1.45 !important;
+  font-weight: 600 !important;
+}
+
+.large-text [class*="text-\[10"],
+.large-text [class*="text-\[11"],
+.large-text [class*="text-\[12"],
+.large-text .text-xs {
+  font-size: 14.5px !important;
+  line-height: 1.45 !important;
+  font-weight: 500 !important;
+}
+
+.large-text .text-sm {
+  font-size: 16px !important;
+  line-height: 1.5 !important;
+}
+
+.large-text .text-base {
+  font-size: 17.5px !important;
+  line-height: 1.5 !important;
+}
+
+.large-text .text-lg {
+  font-size: 1.3rem !important;
+}
+
+.large-text .text-xl {
+  font-size: 1.45rem !important;
+}
+
+.large-text .text-2xl {
+  font-size: 1.75rem !important;
+  line-height: 1.25 !important;
 }
 
 .large-text p,
@@ -51,21 +133,10 @@
 .large-text input,
 .large-text button {
   letter-spacing: 0.015em;
-  font-weight: 500;
 }
 
 .large-text button {
   min-height: 44px;
-}
-
-.large-text h1 {
-  font-size: 1.85rem !important;
-}
-.large-text h2 {
-  font-size: 1.55rem !important;
-}
-.large-text h3 {
-  font-size: 1.3rem !important;
 }
 
 * {
