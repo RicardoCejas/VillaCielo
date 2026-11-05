@@ -566,20 +566,25 @@ export const TrophicWebScreen = () => {
                   })}
                 </div>
 
-                {/* 🌿 CUADRO INFORMATIVO: SOLO APARECE AL TOCAR UN ANIMAL O SU CRUCECITA ✕ */}
+                {/* 🌿 VENTANA EMERGENTE (MODAL POPUP): DETALLE Y QUÉ PASA SI DESAPARECE */}
                 <AnimatePresence>
                   {selectedSpecies && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 15 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: 15 }}
-                      className="bg-[#0e241b] rounded-3xl p-4 sm:p-5 border-2 border-[#1f4a36] shadow-xl space-y-3.5 transition-all"
+                    <div
+                      className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-xs"
+                      onClick={() => setSelectedSpeciesId(null)}
                     >
-                      <div className="space-y-3">
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9, y: 15 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.9, y: 15 }}
+                        transition={{ type: "spring", damping: 25, stiffness: 350 }}
+                        onClick={(e) => e.stopPropagation()}
+                        className="relative w-full max-w-[380px] max-h-[85vh] overflow-y-auto bg-[#0a1c15] border-2 border-[#204e38] rounded-3xl p-4 sm:p-5 shadow-2xl space-y-3"
+                      >
                         {/* Header de la Especie Seleccionada */}
                         <div className="flex items-start justify-between border-b border-white/10 pb-3">
                           <div className="flex items-center gap-3">
-                            <div className="w-12 h-12 min-w-[48px] min-h-[48px] rounded-2xl overflow-hidden border-2 border-sun shadow-md shrink-0 bg-black">
+                            <div className="w-13 h-13 min-w-[52px] min-h-[52px] rounded-2xl overflow-hidden border-2 border-sun shadow-md shrink-0 bg-black">
                               <img
                                 src={selectedSpecies.image}
                                 alt={selectedSpecies.name}
@@ -605,7 +610,7 @@ export const TrophicWebScreen = () => {
                                   </span>
                                 )}
                               </div>
-                              <h3 className="font-serif text-base sm:text-lg font-bold text-white mt-1 leading-tight">
+                              <h3 className="font-serif text-lg font-bold text-white mt-1 leading-tight">
                                 {selectedSpecies.name}
                               </h3>
                               <span className="text-xs text-mint/80 italic font-mono block">
@@ -616,8 +621,8 @@ export const TrophicWebScreen = () => {
 
                           <button
                             onClick={() => setSelectedSpeciesId(null)}
-                            className="w-7 h-7 rounded-xl bg-white/10 hover:bg-white/20 text-white/70 hover:text-white grid place-items-center text-xs font-bold transition"
-                            title="Cerrar detalle"
+                            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white grid place-items-center text-sm font-bold transition shrink-0 ml-1"
+                            title="Cerrar ventana"
                           >
                             ✕
                           </button>
@@ -629,7 +634,7 @@ export const TrophicWebScreen = () => {
                             <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 animate-bounce" />
                             <span>¿Qué pasa si desaparece de Villa Cielo?</span>
                           </div>
-                          <p className="text-xs sm:text-sm text-rose-100 font-medium leading-relaxed">
+                          <p className="text-sm text-rose-100 font-medium leading-relaxed">
                             {selectedSpecies.collapseEffect}
                           </p>
                         </div>
@@ -640,13 +645,13 @@ export const TrophicWebScreen = () => {
                             <Sparkles className="w-3.5 h-3.5 text-sun shrink-0" />
                             <span>Servicio Ecosistémico en el Monte:</span>
                           </div>
-                          <p className="text-xs sm:text-sm text-white/90 leading-relaxed font-normal">
+                          <p className="text-sm text-white/90 leading-relaxed font-normal">
                             {selectedSpecies.ecologicalService}
                           </p>
                         </div>
 
                         {/* 🍽️ CADENA ALIMENTARIA: QUÉ COME Y QUIÉN SE LA COME */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <div className="grid grid-cols-2 gap-2 text-xs">
                           <div className="bg-black/30 border border-emerald-500/30 rounded-xl p-2.5 space-y-1">
                             <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
                               <ArrowDown className="w-3 h-3" />
@@ -690,7 +695,7 @@ export const TrophicWebScreen = () => {
                           </div>
                         </div>
 
-                        {/* BOTÓN DE ACCIÓN FUNCIONAL (Elemento Interactivo de la Unidad 4) */}
+                        {/* BOTÓN DE ACCIÓN FUNCIONAL */}
                         <div className="pt-1">
                           <button
                             onClick={(e) => handleToggleSpecies(selectedSpecies.id, e)}
@@ -713,8 +718,8 @@ export const TrophicWebScreen = () => {
                             )}
                           </button>
                         </div>
-                      </div>
-                    </motion.div>
+                      </motion.div>
+                    </div>
                   )}
                 </AnimatePresence>
 
