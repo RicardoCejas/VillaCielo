@@ -537,10 +537,10 @@ export const TrophicWebScreen = () => {
                         </div>
 
                         {/* Species Name Tag & Quick Toggle Button Below Circle */}
-                        <div className="flex items-center gap-0.5 mt-1 z-30">
-                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full backdrop-blur border whitespace-nowrap shadow-md ${
+                        <div className="flex items-center gap-1 mt-1 z-30">
+                          <span className={`text-[11.5px] sm:text-xs font-black px-2 py-0.5 rounded-full backdrop-blur border whitespace-nowrap shadow-md tracking-tight ${
                             isSelected
-                              ? 'bg-sun text-forest border-sun ring-1 ring-sun font-black scale-105'
+                              ? 'bg-sun text-forest border-sun ring-2 ring-sun/80 scale-105'
                               : isDisabled
                               ? 'bg-rose-950 text-rose-200 border-rose-600 line-through'
                               : 'bg-black/90 text-white border-white/30'
@@ -552,7 +552,7 @@ export const TrophicWebScreen = () => {
                           <button
                             onClick={(e) => handleToggleSpecies(sp.id, e)}
                             title={isDisabled ? 'Restaurar especie' : 'Simular falta de esta especie'}
-                            className={`w-4 h-4 rounded-full text-[9px] font-black shadow-md flex items-center justify-center transition active:scale-90 ${
+                            className={`w-5 h-5 rounded-full text-[10.5px] font-black shadow-md flex items-center justify-center transition active:scale-90 ${
                               isDisabled
                                 ? 'bg-emerald-500 text-black hover:bg-emerald-400'
                                 : 'bg-rose-600 hover:bg-rose-500 text-white'

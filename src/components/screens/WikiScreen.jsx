@@ -213,14 +213,14 @@ export const WikiScreen = () => {
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                           loading="lazy"
                         />
-                        <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-forest/85 backdrop-blur-md text-white text-[8px] font-bold">
+                        <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-forest/85 backdrop-blur-md text-white text-[10px] font-bold">
                           {species.category}
                         </span>
                         <span className="absolute top-2 right-2 w-5 h-5 rounded-full bg-emerald-600 text-white grid place-items-center shadow-xs">
                           <CheckCircle2 className="w-3.5 h-3.5" />
                         </span>
                         {species.rarity && (
-                          <span className="absolute bottom-2 left-2 px-1.5 py-0.5 rounded bg-sun/95 text-forest text-[7.5px] font-bold truncate max-w-[125px] shadow-xs">
+                          <span className="absolute bottom-2 left-2 px-2 py-0.5 rounded bg-sun/95 text-forest text-[9.5px] font-bold truncate max-w-[125px] shadow-xs">
                             {species.rarity}
                           </span>
                         )}
@@ -231,10 +231,10 @@ export const WikiScreen = () => {
                         <div className="w-10 h-10 rounded-2xl bg-white/10 border border-white/20 grid place-items-center mb-1 text-sun shadow-inner">
                           <Lock className="w-5 h-5" />
                         </div>
-                        <span className="text-[8px] font-bold text-sun uppercase tracking-wider">
+                        <span className="text-[10px] font-bold text-sun uppercase tracking-wider">
                           Carta Oculta
                         </span>
-                        <span className="text-[7.5px] text-white/60 mt-0.5 truncate max-w-[130px]">
+                        <span className="text-[9.5px] text-white/70 mt-0.5 truncate max-w-[130px]">
                           Nivel {species.unlockLevel} · {species.category}
                         </span>
                       </div>
@@ -245,26 +245,26 @@ export const WikiScreen = () => {
                   <div className="p-3 flex-1 flex flex-col justify-between">
                     {isUnlocked ? (
                       <div>
-                        <strong className="font-serif text-[13px] font-bold text-ink leading-tight block line-clamp-1">
+                        <strong className="font-serif text-[15px] font-bold text-ink leading-snug block line-clamp-1">
                           {species.name}
                         </strong>
-                        <small className="text-muted text-[9.5px] italic block mt-0.5 line-clamp-1">
+                        <small className="text-muted text-[11px] italic block mt-0.5 line-clamp-1">
                           {species.scientific}
                         </small>
                       </div>
                     ) : (
                       <div>
-                        <strong className="font-serif text-[13px] font-bold text-white/90 leading-tight block truncate">
+                        <strong className="font-serif text-[14px] font-bold text-white/90 leading-snug block truncate">
                           🔒 {species.name}
                         </strong>
-                        <span className="text-[8.5px] text-sun/80 block mt-1 line-clamp-2 leading-tight">
+                        <span className="text-[10.5px] text-sun/80 block mt-1 line-clamp-2 leading-tight">
                           {species.unlockHint}
                         </span>
                       </div>
                     )}
 
                     <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-line/40">
-                      <span className={`text-[9px] font-bold ${
+                      <span className={`text-[11px] font-bold ${
                         isUnlocked ? 'text-forest' : 'text-sun'
                       }`}>
                         {isUnlocked ? 'Ver ficha' : 'Cómo desbloquear'}
