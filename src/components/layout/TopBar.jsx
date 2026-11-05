@@ -53,12 +53,12 @@ export const TopBar = ({
 
       {/* Center Title: broad width, centered, never cut */}
       <div className="flex-1 min-w-0 px-2 flex flex-col items-center justify-center text-center">
-        <strong className="font-serif text-[13px] sm:text-sm font-bold tracking-tight truncate max-w-full leading-snug">
+        <strong className="font-serif text-[15px] sm:text-base font-bold tracking-tight truncate max-w-full leading-snug">
           {title}
         </strong>
         {!onBack && (
           <span
-            className={`text-[8px] font-bold tracking-[1.4px] uppercase mt-0.5 ${
+            className={`text-[9px] font-bold tracking-[1.4px] uppercase mt-0.5 ${
               isDarkUi ? 'text-[#8ba79b]' : 'text-muted'
             }`}
           >

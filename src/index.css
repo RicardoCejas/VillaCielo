@@ -40,10 +40,33 @@
 
 /* ============================================================
    RESPONSIVE MOBILE TYPOGRAPHY & READABILITY
+   Balanced medium typography - readable, clear, never clipped
    ============================================================ */
 
 html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
   font-size: 15px;
+  line-height: 1.5;
+}
+
+/* Minimum comfortable reading size for tiny badges and labels */
+.text-xs {
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.text-sm {
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.text-base {
+  font-size: 15.5px;
+  line-height: 1.5;
 }
 
 /* ============================================================
@@ -51,7 +74,7 @@ html {
    Scales typography gracefully without overflowing buttons
    ============================================================ */
 .large-text {
-  font-size: 108%;
+  font-size: 110%;
 }
 
 .large-text p,
@@ -61,7 +84,7 @@ html {
 .large-text label,
 .large-text input,
 .large-text button {
-  letter-spacing: 0.015em;
+  letter-spacing: 0.012em;
 }
 
 * {

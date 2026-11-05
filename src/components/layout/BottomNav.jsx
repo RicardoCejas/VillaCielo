@@ -59,7 +59,7 @@ export const BottomNav = ({ active }) => {
                 />
               )}
             </div>
-            <span className="truncate max-w-[62px] leading-tight">{item.label}</span>
+            <span className="text-[10px] sm:text-[11px] font-semibold leading-tight whitespace-nowrap tracking-tight">{item.label}</span>
           </button>
         );
       })}
