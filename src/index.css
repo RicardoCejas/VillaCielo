@@ -154,6 +154,29 @@ html, body, #root {
   display: block !important;
 }
 
+/* Strict sizing for animal thumbnail inside the detail modal */
+.trophic-modal-thumb {
+  width: 54px !important;
+  height: 54px !important;
+  min-width: 54px !important;
+  min-height: 54px !important;
+  max-width: 54px !important;
+  max-height: 54px !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+}
+
+.trophic-modal-thumb img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  display: block !important;
+}
+
 /* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 4px;

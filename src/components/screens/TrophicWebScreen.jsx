@@ -584,7 +584,7 @@ export const TrophicWebScreen = () => {
                         {/* Header de la Especie Seleccionada */}
                         <div className="flex items-start justify-between border-b border-white/10 pb-3">
                           <div className="flex items-center gap-3">
-                            <div className="w-13 h-13 min-w-[52px] min-h-[52px] rounded-2xl overflow-hidden border-2 border-sun shadow-md shrink-0 bg-black">
+                            <div className="trophic-modal-thumb border-2 border-sun shadow-md bg-black">
                               <img
                                 src={selectedSpecies.image}
                                 alt={selectedSpecies.name}
