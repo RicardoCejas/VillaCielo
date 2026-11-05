@@ -151,6 +151,40 @@ html, body, #root {
   padding: 0;
 }
 
+/* Strict sizing for trophic nodes in mobile canvas */
+.trophic-node-avatar {
+  width: 48px !important;
+  height: 48px !important;
+  min-width: 48px !important;
+  min-height: 48px !important;
+  max-width: 48px !important;
+  max-height: 48px !important;
+  border-radius: 9999px !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+  position: relative !important;
+}
+
+.trophic-node-avatar.apex {
+  width: 52px !important;
+  height: 52px !important;
+  min-width: 52px !important;
+  min-height: 52px !important;
+  max-width: 52px !important;
+  max-height: 52px !important;
+}
+
+.trophic-node-avatar img {
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: cover !important;
+  object-position: center !important;
+  border-radius: 9999px !important;
+  display: block !important;
+}
+
 /* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 4px;

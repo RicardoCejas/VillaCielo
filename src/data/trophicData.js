@@ -40,6 +40,7 @@ export const TROPHIC_SPECIES = [
   {
     id: 'puma',
     name: 'Puma Serrano',
+    shortName: 'Puma',
     scientific: 'Puma concolor',
     level: 'apex',
     x: 18,
@@ -55,6 +56,7 @@ export const TROPHIC_SPECIES = [
   {
     id: 'condor',
     name: 'Cóndor Andino',
+    shortName: 'Cóndor',
     scientific: 'Vultur gryphus',
     level: 'apex',
     x: 50,
@@ -70,6 +72,7 @@ export const TROPHIC_SPECIES = [
   {
     id: 'jote',
     name: 'Jote Cabeza Negra',
+    shortName: 'Jote',
     scientific: 'Coragyps atratus',
     level: 'apex',
     x: 82,
@@ -87,6 +90,7 @@ export const TROPHIC_SPECIES = [
   {
     id: 'zorro',
     name: 'Zorro Gris Pampeano',
+    shortName: 'Zorro',
     scientific: 'Lycalopex gymnocercus',
     level: 'carnivores',
     x: 20,
@@ -102,6 +106,7 @@ export const TROPHIC_SPECIES = [
   {
     id: 'halconcito',
     name: 'Halconcito Colorado',
+    shortName: 'Halcón',
     scientific: 'Falco sparverius',
     level: 'carnivores',
     x: 50,
@@ -117,6 +122,7 @@ export const TROPHIC_SPECIES = [
   {
     id: 'lagarto',
     name: 'Lagarto Overo',
+    shortName: 'Lagarto',
     scientific: 'Salvator merianae',
     level: 'carnivores',
     x: 80,
@@ -134,6 +140,7 @@ export const TROPHIC_SPECIES = [
   {
     id: 'corzuela',
     name: 'Corzuela Parda',
+    shortName: 'Corzuela',
     scientific: 'Mazama gouazoubira',
     level: 'herbivores',
     x: 18,
@@ -149,6 +156,7 @@ export const TROPHIC_SPECIES = [
   {
     id: 'cuis',
     name: 'Cuis Serrano',
+    shortName: 'Cuis',
     scientific: 'Microcavia australis',
     level: 'herbivores',
     x: 50,
@@ -164,6 +172,7 @@ export const TROPHIC_SPECIES = [
   {
     id: 'picaflor',
     name: 'Picaflor Común',
+    shortName: 'Picaflor',
     scientific: 'Chlorostilbon lucidus',
     level: 'herbivores',
     x: 82,
@@ -181,6 +190,7 @@ export const TROPHIC_SPECIES = [
   {
     id: 'peperina',
     name: 'Peperina Serrana',
+    shortName: 'Peperina',
     scientific: 'Minthostachys mollis',
     level: 'producers',
     x: 14,
@@ -196,6 +206,7 @@ export const TROPHIC_SPECIES = [
   {
     id: 'espinillo',
     name: 'Espinillo (Caven)',
+    shortName: 'Espinillo',
     scientific: 'Vachellia caven',
     level: 'producers',
     x: 38,
@@ -211,6 +222,7 @@ export const TROPHIC_SPECIES = [
   {
     id: 'piquillin',
     name: 'Piquillín',
+    shortName: 'Piquillín',
     scientific: 'Condalia microphylla',
     level: 'producers',
     x: 62,
@@ -226,6 +238,7 @@ export const TROPHIC_SPECIES = [
   {
     id: 'pajaBrava',
     name: 'Paja Brava (Pastizal de Altura)',
+    shortName: 'Pastizal',
     scientific: 'Festuca hieronymi',
     level: 'producers',
     x: 86,

@@ -474,10 +474,7 @@ export const TrophicWebScreen = () => {
                       ringBorder = 'ring-4 ring-rose-400 border-rose-400 shadow-[0_0_16px_#f43f5e] z-20';
                     }
 
-                    // Hierarchy sizing: Balanced medium size that fits comfortably on mobile screens without overflowing
-                    const sizeClasses = sp.level === 'apex' 
-                      ? 'w-13 h-13 sm:w-15 sm:h-15' 
-                      : 'w-12 h-12 sm:w-14 sm:h-14';
+
 
                     return (
                       <div
@@ -494,69 +491,69 @@ export const TrophicWebScreen = () => {
                       >
                         {/* Feedback Badge overlay */}
                         {isDisabled && (
-                          <span className="absolute -top-3.5 bg-rose-600 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded-full shadow-lg z-30 whitespace-nowrap border border-rose-300">
+                          <span className="absolute -top-3.5 bg-rose-600 text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shadow-lg z-30 whitespace-nowrap border border-rose-300">
                             ❌ Extinta
                           </span>
                         )}
                         {!isDisabled && hasMissingFood && (
-                          <span className="absolute -top-3.5 bg-rose-600 text-white text-[8px] font-extrabold px-1.5 py-0.5 rounded-full shadow-lg z-30 whitespace-nowrap animate-bounce border border-rose-300">
+                          <span className="absolute -top-3.5 bg-rose-600 text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shadow-lg z-30 whitespace-nowrap animate-bounce border border-rose-300">
                             ⚠️ Sin Alimento
                           </span>
                         )}
                         {!isDisabled && !hasMissingFood && hasMissingPredator && (
-                          <span className="absolute -top-3.5 bg-amber-500 text-black text-[8px] font-extrabold px-1.5 py-0.5 rounded-full shadow-lg z-30 whitespace-nowrap animate-pulse border border-amber-200">
+                          <span className="absolute -top-3.5 bg-amber-500 text-black text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shadow-lg z-30 whitespace-nowrap animate-pulse border border-amber-200">
                             ⚠️ Sobrepoblación
                           </span>
                         )}
                         {!isDisabled && isPreyOfSelected && !hasMissingFood && (
-                          <span className="absolute -top-3.5 bg-emerald-500 text-black text-[7.5px] font-extrabold px-1.5 py-0.2 rounded-full shadow z-30 whitespace-nowrap border border-emerald-300">
+                          <span className="absolute -top-3.5 bg-emerald-500 text-black text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow z-30 whitespace-nowrap border border-emerald-300">
                             🟢 Alimento
                           </span>
                         )}
                         {!isDisabled && isPredatorOfSelected && !hasMissingFood && (
-                          <span className="absolute -top-3.5 bg-rose-500 text-white text-[7.5px] font-extrabold px-1.5 py-0.2 rounded-full shadow z-30 whitespace-nowrap border border-rose-300">
+                          <span className="absolute -top-3.5 bg-rose-500 text-white text-[9px] font-extrabold px-1.5 py-0.2 rounded-full shadow z-30 whitespace-nowrap border border-rose-300">
                             🔴 Depredador
                           </span>
                         )}
 
-                        {/* Circular Avatar Button */}
+                        {/* Circular Avatar Button with strict sizing */}
                         <div
-                          className={`${sizeClasses} rounded-full border-2 bg-black relative overflow-hidden transition-all flex items-center justify-center ${ringBorder}`}
+                          className={`trophic-node-avatar ${sp.level === 'apex' ? 'apex' : ''} border-2 bg-black flex items-center justify-center transition-all ${ringBorder}`}
                         >
                           <img
                             src={sp.image}
                             alt={sp.name}
-                            className={`w-full h-full object-cover rounded-full ${isDisabled ? 'grayscale opacity-40' : ''}`}
+                            className={`w-full h-full object-cover object-center rounded-full pointer-events-none ${isDisabled ? 'grayscale opacity-40' : ''}`}
                           />
 
                           {/* Extinction overlay indicator */}
                           {isDisabled && (
-                            <div className="absolute inset-0 bg-rose-950/70 flex items-center justify-center">
-                              <X className="w-6 h-6 text-rose-400 stroke-[3]" />
+                            <div className="absolute inset-0 bg-rose-950/75 flex items-center justify-center pointer-events-none">
+                              <X className="w-5 h-5 text-rose-400 stroke-[3]" />
                             </div>
                           )}
                         </div>
 
                         {/* Species Name Tag & Quick Toggle Button Below Circle */}
-                        <div className="flex items-center gap-0.5 mt-0.5">
-                          <span className={`text-[9px] sm:text-[10px] font-bold px-1.5 py-0.5 rounded-full backdrop-blur border whitespace-nowrap shadow-md ${
+                        <div className="flex items-center gap-0.5 mt-1 z-30">
+                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full backdrop-blur border whitespace-nowrap shadow-md ${
                             isSelected
-                              ? 'bg-sun text-forest border-sun ring-1 ring-sun font-black'
+                              ? 'bg-sun text-forest border-sun ring-1 ring-sun font-black scale-105'
                               : isDisabled
-                              ? 'bg-rose-950 text-rose-200 border-rose-600 font-extrabold'
+                              ? 'bg-rose-950 text-rose-200 border-rose-600 line-through'
                               : 'bg-black/90 text-white border-white/30'
                           }`}>
-                            {sp.name.split(' ')[0]}
+                            {sp.shortName || sp.name.split(' ')[0]}
                           </span>
 
                           {/* Quick Apagar / Restaurar Power Button */}
                           <button
                             onClick={(e) => handleToggleSpecies(sp.id, e)}
                             title={isDisabled ? 'Restaurar especie' : 'Simular falta de esta especie'}
-                            className={`w-4 h-4 rounded-full text-[9px] font-black shadow-md flex items-center justify-center transition ${
+                            className={`w-4 h-4 rounded-full text-[9px] font-black shadow-md flex items-center justify-center transition active:scale-90 ${
                               isDisabled
                                 ? 'bg-emerald-500 text-black hover:bg-emerald-400'
-                                : 'bg-rose-600/90 hover:bg-rose-500 text-white'
+                                : 'bg-rose-600 hover:bg-rose-500 text-white'
                             }`}
                           >
                             {isDisabled ? '+' : '✕'}
@@ -567,89 +564,221 @@ export const TrophicWebScreen = () => {
                   })}
                 </div>
 
-                {/* Bottom Interactive Legend outside the canvas */}
-                <div className="bg-[#0f271c] rounded-3xl p-4 border-2 border-[#204e38] space-y-3.5 shadow-xl">
-                  <div className="flex items-center justify-between border-b border-white/10 pb-2">
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-sun animate-pulse" />
-                      <h4 className="font-serif text-sm font-bold text-white tracking-wide">
-                        ¿Qué significan los Círculos y Conexiones?
-                      </h4>
-                    </div>
-                    {disabledSpeciesIds.length > 0 ? (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/40">
-                        ⚠️ {disabledSpeciesIds.length} ausente(s)
-                      </span>
-                    ) : selectedSpecies ? (
-                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-sun/20 text-sun border border-sun/40">
-                        {selectedSpecies.name}
-                      </span>
-                    ) : null}
-                  </div>
+                {/* 🌿 CUADRO INFORMATIVO DE INTERFAZ DE USUARIO: DETALLE Y QUÉ PASA SI DESAPARECE */}
+                <div className="bg-[#0e241b] rounded-3xl p-4 sm:p-5 border-2 border-[#1f4a36] shadow-xl space-y-3.5 transition-all">
+                  {selectedSpecies ? (
+                    <div className="space-y-3">
+                      {/* Header de la Especie Seleccionada */}
+                      <div className="flex items-start justify-between border-b border-white/10 pb-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-13 h-13 min-w-[52px] min-h-[52px] rounded-2xl overflow-hidden border-2 border-sun shadow-md shrink-0 bg-black">
+                            <img
+                              src={selectedSpecies.image}
+                              alt={selectedSpecies.name}
+                              className={`w-full h-full object-cover ${disabledSpeciesIds.includes(selectedSpecies.id) ? 'grayscale opacity-50' : ''}`}
+                            />
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className={`text-[11px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                                selectedSpecies.level === 'apex'
+                                  ? 'bg-rose-950 text-rose-300 border border-rose-700/60'
+                                  : selectedSpecies.level === 'carnivores'
+                                  ? 'bg-amber-950 text-amber-300 border border-amber-700/60'
+                                  : selectedSpecies.level === 'herbivores'
+                                  ? 'bg-emerald-950 text-emerald-300 border border-emerald-700/60'
+                                  : 'bg-teal-950 text-teal-300 border border-teal-700/60'
+                              }`}>
+                                {selectedSpecies.role}
+                              </span>
+                              {disabledSpeciesIds.includes(selectedSpecies.id) && (
+                                <span className="text-[11px] font-bold bg-rose-600 text-white px-2 py-0.5 rounded-full border border-rose-300 animate-pulse">
+                                  ✕ Actualmente Ausente
+                                </span>
+                              )}
+                            </div>
+                            <h3 className="font-serif text-lg font-bold text-white mt-1 leading-tight">
+                              {selectedSpecies.name}
+                            </h3>
+                            <span className="text-xs text-mint/80 italic font-mono block">
+                              {selectedSpecies.scientific} · {selectedSpecies.status}
+                            </span>
+                          </div>
+                        </div>
 
-                  {/* Niveles de los círculos */}
-                  <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-white/60 block mb-1.5">
-                      Bordes de los Círculos (Nivel Trófico):
+                        <button
+                          onClick={() => setSelectedSpeciesId(null)}
+                          className="text-xs font-bold text-white/50 hover:text-white px-2 py-1 rounded-lg hover:bg-white/10 transition"
+                          title="Cerrar detalle"
+                        >
+                          ✕
+                        </button>
+                      </div>
+
+                      {/* 🚨 CUADRO DESTACADO: ¿QUÉ PASA SI DESAPARECE? (Impacto de Colapso) */}
+                      <div className="bg-rose-950/60 border-2 border-rose-600/70 rounded-2xl p-3.5 space-y-1.5 shadow-md">
+                        <div className="flex items-center gap-2 text-rose-300 text-xs font-extrabold uppercase tracking-wide">
+                          <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0 animate-bounce" />
+                          <span>¿Qué pasa si desaparece de Villa Cielo?</span>
+                        </div>
+                        <p className="text-sm text-rose-100 font-medium leading-relaxed">
+                          {selectedSpecies.collapseEffect}
+                        </p>
+                      </div>
+
+                      {/* 🌱 SERVICIO ECOLÓGICO */}
+                      <div className="bg-[#143224] border border-[#23533c] rounded-2xl p-3.5 space-y-1">
+                        <div className="flex items-center gap-1.5 text-sun text-xs font-bold uppercase tracking-wider">
+                          <Sparkles className="w-3.5 h-3.5 text-sun shrink-0" />
+                          <span>Servicio Ecosistémico en el Monte:</span>
+                        </div>
+                        <p className="text-sm text-white/90 leading-relaxed font-normal">
+                          {selectedSpecies.ecologicalService}
+                        </p>
+                      </div>
+
+                      {/* 🍽️ CADENA ALIMENTARIA: QUÉ COME Y QUIÉN SE LA COME */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                        <div className="bg-black/30 border border-emerald-500/30 rounded-xl p-2.5 space-y-1">
+                          <span className="text-[11px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1">
+                            <ArrowDown className="w-3 h-3" />
+                            <span>Alimento (Presas):</span>
+                          </span>
+                          <div className="flex flex-wrap gap-1 pt-0.5">
+                            {selectedSpecies.eats.length > 0 ? (
+                              selectedSpecies.eats.map(eatId => {
+                                const target = TROPHIC_SPECIES.find(s => s.id === eatId);
+                                return (
+                                  <span key={eatId} className="bg-emerald-950 border border-emerald-500/50 text-emerald-200 text-xs px-2 py-0.5 rounded-full font-semibold">
+                                    {target?.name || eatId}
+                                  </span>
+                                );
+                              })
+                            ) : (
+                              <span className="text-xs text-white/60 italic">Autótrofo (Fotosíntesis)</span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="bg-black/30 border border-rose-500/30 rounded-xl p-2.5 space-y-1">
+                          <span className="text-[11px] font-bold text-rose-400 uppercase tracking-wider flex items-center gap-1">
+                            <ArrowUp className="w-3 h-3" />
+                            <span>Depredadores:</span>
+                          </span>
+                          <div className="flex flex-wrap gap-1 pt-0.5">
+                            {selectedSpecies.eatenBy.length > 0 ? (
+                              selectedSpecies.eatenBy.map(predId => {
+                                const target = TROPHIC_SPECIES.find(s => s.id === predId);
+                                return (
+                                  <span key={predId} className="bg-rose-950 border border-rose-500/50 text-rose-200 text-xs px-2 py-0.5 rounded-full font-semibold">
+                                    {target?.name || predId}
+                                  </span>
+                                );
+                              })
+                            ) : (
+                              <span className="text-xs text-white/60 italic">Sin depredadores (Tope)</span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* BOTÓN DE ACCIÓN FUNCIONAL (Elemento Interactivo de la Unidad 4) */}
+                      <div className="pt-1">
+                        <button
+                          onClick={(e) => handleToggleSpecies(selectedSpecies.id, e)}
+                          className={`w-full py-2.5 px-4 rounded-xl font-bold text-xs flex items-center justify-center gap-2 shadow-md transition active:scale-98 ${
+                            disabledSpeciesIds.includes(selectedSpecies.id)
+                              ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
+                              : 'bg-rose-600 hover:bg-rose-500 text-white'
+                          }`}
+                        >
+                          {disabledSpeciesIds.includes(selectedSpecies.id) ? (
+                            <>
+                              <CheckCircle2 className="w-4 h-4" />
+                              <span>Restaurar {selectedSpecies.name} a la Red</span>
+                            </>
+                          ) : (
+                            <>
+                              <AlertTriangle className="w-4 h-4" />
+                              <span>Simular Extinción / Apagar {selectedSpecies.name}</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Estado inicial cuando no se tocó ningún animal */
+                    <div className="space-y-3">
+                      <div className="flex items-center gap-2.5">
+                        <span className="w-9 h-9 rounded-2xl bg-forest-light text-sun grid place-items-center shadow-md shrink-0">
+                          <Network className="w-5 h-5 stroke-[2.2]" />
+                        </span>
+                        <div>
+                          <h3 className="font-serif text-base font-bold text-white leading-tight">
+                            Laboratorio de Ausencia e Impacto Ambiental
+                          </h3>
+                          <p className="text-xs text-white/70 mt-0.5">
+                            Tocá cualquier círculo del mapa para ver en este recuadro qué desastre ocurre si desaparece.
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Accesos rápidos sugeridos */}
+                      <div className="bg-black/30 border border-white/10 rounded-2xl p-3 space-y-2">
+                        <span className="text-[11px] font-bold text-sun uppercase tracking-wider block">
+                          Probar con especies clave del Uritorco:
+                        </span>
+                        <div className="flex flex-wrap gap-2">
+                          {['puma', 'peperina', 'condor', 'zorro', 'pajaBrava'].map(id => {
+                            const sp = TROPHIC_SPECIES.find(s => s.id === id);
+                            if (!sp) return null;
+                            return (
+                              <button
+                                key={id}
+                                onClick={() => {
+                                  playClick();
+                                  setSelectedSpeciesId(id);
+                                }}
+                                className="bg-[#143224] hover:bg-[#1c4431] border border-[#275c44] text-white text-xs font-semibold px-2.5 py-1 rounded-xl transition flex items-center gap-1.5"
+                              >
+                                <span>{sp.name}</span>
+                                <span className="text-sun">➔</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Leyenda concisa de bordes y niveles */}
+                <div className="bg-[#0f271c] rounded-3xl p-3 border border-[#204e38] space-y-2 text-xs">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-1.5">
+                    <span className="font-serif text-xs font-bold text-white flex items-center gap-1.5">
+                      <Sparkles className="w-3.5 h-3.5 text-sun" />
+                      <span>Guía de Niveles Tróficos (Bordes)</span>
                     </span>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-[10px]">
-                      <div className="flex items-center gap-2 bg-black/40 px-2.5 py-1.5 rounded-xl border border-rose-500/40">
-                        <span className="w-3 h-3 rounded-full border-2 border-rose-500 bg-rose-950 shrink-0" />
-                        <span className="text-rose-200 truncate">Círculo Rojo (Tope)</span>
-                      </div>
-                      <div className="flex items-center gap-2 bg-black/40 px-2.5 py-1.5 rounded-xl border border-amber-500/40">
-                        <span className="w-3 h-3 rounded-full border-2 border-amber-400 bg-amber-950 shrink-0" />
-                        <span className="text-amber-200 truncate">Círculo Amarillo (Carnívoro)</span>
-                      </div>
-                      <div className="flex items-center gap-2 bg-black/40 px-2.5 py-1.5 rounded-xl border border-emerald-500/40">
-                        <span className="w-3 h-3 rounded-full border-2 border-emerald-400 bg-emerald-950 shrink-0" />
-                        <span className="text-emerald-200 truncate">Círculo Verde (Herbívoro)</span>
-                      </div>
-                      <div className="flex items-center gap-2 bg-black/40 px-2.5 py-1.5 rounded-xl border border-teal-500/40">
-                        <span className="w-3 h-3 rounded-full border-2 border-teal-400 bg-teal-950 shrink-0" />
-                        <span className="text-teal-200 truncate">Círculo Celeste (Flora)</span>
-                      </div>
-                    </div>
+                    <span className="text-[10px] text-white/60">Tocá ✕ en un círculo para apagar</span>
                   </div>
 
-                  {/* Estado de selección y flechas */}
-                  <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-white/60 block mb-1.5">
-                      Al tocar un círculo:
-                    </span>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-                      <div className="flex items-center gap-2.5 bg-black/40 px-3 py-2 rounded-2xl border border-emerald-500/40">
-                        <span className="w-4 h-4 rounded-full bg-emerald-400 shrink-0 shadow-[0_0_8px_#10b981]" />
-                        <div className="flex flex-col">
-                          <strong className="text-emerald-300 text-[11px] leading-tight">Círculos / Líneas Verdes</strong>
-                          <span className="text-[9.5px] text-white/70">Es lo que come esa especie</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2.5 bg-black/40 px-3 py-2 rounded-2xl border border-rose-500/40">
-                        <span className="w-4 h-4 rounded-full bg-rose-500 shrink-0 shadow-[0_0_8px_#f43f5e]" />
-                        <div className="flex flex-col">
-                          <strong className="text-rose-300 text-[11px] leading-tight">Círculos / Líneas Rojas</strong>
-                          <span className="text-[9.5px] text-white/70">Es quién se come a esa especie</span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2.5 bg-black/40 px-3 py-2 rounded-2xl border border-amber-500/40">
-                        <span className="w-4 h-4 rounded-full bg-amber-400 shrink-0 shadow-[0_0_8px_#fb923c] animate-pulse" />
-                        <div className="flex flex-col">
-                          <strong className="text-amber-300 text-[11px] leading-tight">Flechas Punteadas</strong>
-                          <span className="text-[9.5px] text-white/70">Hambre o desbalance si falta</span>
-                        </div>
-                      </div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 text-[11px]">
+                    <div className="flex items-center gap-1.5 bg-black/40 px-2 py-1 rounded-lg border border-rose-500/40">
+                      <span className="w-2.5 h-2.5 rounded-full border border-rose-500 bg-rose-950 shrink-0" />
+                      <span className="text-rose-200 truncate">Rojo: Tope</span>
                     </div>
-                  </div>
-
-                  {/* Instrucción interactiva */}
-                  <div className="bg-black/30 rounded-2xl p-2.5 border border-white/10 flex items-start gap-2 text-[11px] text-white/90">
-                    <span className="text-sun font-bold shrink-0 text-xs">👉</span>
-                    <p className="leading-snug">
-                      Tocá cualquier círculo para ver quién se lo come o de qué se alimenta. Toca la <strong className="text-rose-400 bg-rose-950/80 px-1.5 py-0.5 rounded-md border border-rose-600 font-extrabold">✕</strong> de cualquier animal para simular su desaparición y ver el colapso.
-                    </p>
+                    <div className="flex items-center gap-1.5 bg-black/40 px-2 py-1 rounded-lg border border-amber-500/40">
+                      <span className="w-2.5 h-2.5 rounded-full border border-amber-400 bg-amber-950 shrink-0" />
+                      <span className="text-amber-200 truncate">Amarillo: Carnívoro</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 bg-black/40 px-2 py-1 rounded-lg border border-emerald-500/40">
+                      <span className="w-2.5 h-2.5 rounded-full border border-emerald-400 bg-emerald-950 shrink-0" />
+                      <span className="text-emerald-200 truncate">Verde: Herbívoro</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 bg-black/40 px-2 py-1 rounded-lg border border-teal-500/40">
+                      <span className="w-2.5 h-2.5 rounded-full border border-teal-400 bg-teal-950 shrink-0" />
+                      <span className="text-teal-200 truncate">Celeste: Flora</span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -838,141 +967,6 @@ export const TrophicWebScreen = () => {
           </div>
         )}
       </div>
-
-      {/* 📋 MODAL INFORMATIVO: DETALLE DE ESPECIE Y SU ROL TRÓFICO */}
-      <AnimatePresence>
-        {selectedSpecies && (
-          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md">
-            <motion.div
-              initial={{ y: '100%', opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: '100%', opacity: 0 }}
-              className="w-full max-w-sm bg-[#0e2118] border border-[#1d4332] rounded-t-3xl sm:rounded-3xl p-5 text-white max-h-[85vh] overflow-y-auto space-y-3.5 shadow-2xl"
-            >
-              {/* Header */}
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-3">
-                  <img
-                    src={selectedSpecies.image}
-                    alt={selectedSpecies.name}
-                    className="w-14 h-14 rounded-2xl object-cover border-2 border-sun shadow-md"
-                  />
-                  <div>
-                    <span className="text-[9px] font-bold text-mint uppercase tracking-wider block">
-                      {selectedSpecies.role}
-                    </span>
-                    <h3 className="font-serif text-lg font-bold text-white leading-tight">
-                      {selectedSpecies.name}
-                    </h3>
-                    <i className="text-[10px] text-white/60 not-italic">
-                      {selectedSpecies.scientific}
-                    </i>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setSelectedSpeciesId(null)}
-                  className="w-7 h-7 rounded-full bg-white/10 grid place-items-center text-white/70 hover:text-white"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-
-              {/* Conexiones Tróficas */}
-              <div className="bg-black/30 rounded-2xl p-3 border border-white/10 space-y-2 text-xs">
-                {/* De qué se alimenta */}
-                <div>
-                  <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1 mb-1">
-                    <ArrowDown className="w-3 h-3" />
-                    <span>Se alimenta de (Presas / Frutos):</span>
-                  </span>
-                  {selectedSpecies.eats.length > 0 ? (
-                    <div className="flex flex-wrap gap-1">
-                      {selectedSpecies.eats.map(eatId => {
-                        const target = TROPHIC_SPECIES.find(s => s.id === eatId);
-                        return (
-                          <span key={eatId} className="bg-emerald-950/80 border border-emerald-500/40 text-emerald-200 text-[9px] px-2 py-0.5 rounded-full font-semibold">
-                            {target?.name || eatId}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <span className="text-[10px] text-white/60 italic">
-                      Produce su propio alimento a través de la fotosíntesis y el agua de neblina serrana.
-                    </span>
-                  )}
-                </div>
-
-                {/* Quién se alimenta de ella */}
-                <div className="pt-1.5 border-t border-white/10">
-                  <span className="text-[9px] font-bold text-rose-400 uppercase tracking-wider flex items-center gap-1 mb-1">
-                    <ArrowUp className="w-3 h-3" />
-                    <span>Es presa / consumida por:</span>
-                  </span>
-                  {selectedSpecies.eatenBy.length > 0 ? (
-                    <div className="flex flex-wrap gap-1">
-                      {selectedSpecies.eatenBy.map(predId => {
-                        const target = TROPHIC_SPECIES.find(s => s.id === predId);
-                        return (
-                          <span key={predId} className="bg-rose-950/80 border border-rose-500/40 text-rose-200 text-[9px] px-2 py-0.5 rounded-full font-semibold">
-                            {target?.name || predId}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  ) : (
-                    <span className="text-[10px] text-white/60 italic">
-                      Depredador tope: ningún animal silvestre la caza activamente en las sierras.
-                    </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Servicio Ecosistémico Vital */}
-              <div className="bg-[#142e22] rounded-2xl p-3 border border-[#23503b] space-y-1">
-                <span className="text-[9px] font-bold text-sun uppercase tracking-wider flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-sun" />
-                  <span>Servicio Ecosistémico Vital</span>
-                </span>
-                <p className="text-[11px] text-white/90 leading-relaxed">
-                  {selectedSpecies.ecologicalService}
-                </p>
-              </div>
-
-              {/* Qué pasa si desaparece */}
-              <div className="bg-rose-950/40 rounded-2xl p-3 border border-rose-800/40 space-y-1">
-                <span className="text-[9px] font-bold text-rose-300 uppercase tracking-wider flex items-center gap-1">
-                  <AlertTriangle className="w-3 h-3 text-rose-400" />
-                  <span>¿Qué pasa si falta en Villa Cielo?</span>
-                </span>
-                <p className="text-[11px] text-rose-100/90 leading-relaxed">
-                  {selectedSpecies.collapseEffect}
-                </p>
-              </div>
-
-              {/* Action */}
-              <button
-                onClick={() => {
-                  handleToggleSpecies(selectedSpecies.id);
-                  setSelectedSpeciesId(null);
-                }}
-                className={`w-full h-11 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 shadow-lg transition active:scale-95 ${
-                  disabledSpeciesIds.includes(selectedSpecies.id)
-                    ? 'bg-emerald-600 hover:bg-emerald-500 text-white'
-                    : 'bg-rose-700 hover:bg-rose-600 text-white'
-                }`}
-              >
-                <span>
-                  {disabledSpeciesIds.includes(selectedSpecies.id)
-                    ? 'Restaurar esta especie en la Red'
-                    : 'Simular su desaparición de la Red'}
-                </span>
-              </button>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
       {/* 🚨 MODAL DE IMPACTO: DETALLE DE CRISIS AMBIENTAL (INCENDIOS, CAZA, ETC.) */}
       <AnimatePresence>
